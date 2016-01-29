@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="match_parent"
+	android:layout_width="match_parent"
+	android:orientation="vertical"
+	android:background="#151414">
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:orientation="horizontal"
+		android:layout_gravity="center_horizontal">
+
+		<Button
+			android:layout_height="match_parent"
+			android:text="Restore Default"
+			android:layout_width="wrap_content"
+			android:id="@+id/playlistmanagerButton4"
+			android:onClick="restoreDefault"/>
+
+		<Button
+			android:layout_height="wrap_content"
+			android:text="Add new Playlist"
+			android:layout_width="wrap_content"
+			android:id="@+id/playlistManagerButton1"
+			android:onClick="addNewPlaylist"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:orientation="horizontal"
+		android:layout_gravity="center_horizontal">
+
+		<Button
+			android:layout_height="wrap_content"
+			android:text="Enabled"
+			android:layout_width="wrap_content"
+			android:id="@+id/playlistmanagerButton2"
+			android:onClick="showEnabled"/>
+
+		<Button
+			android:layout_height="wrap_content"
+			android:text="Disabled"
+			android:layout_width="wrap_content"
+			android:id="@+id/playlistmanagerButton3"
+			android:onClick="showDisabled"/>
+
+	</LinearLayout>
+
+	<TextView
+		android:layout_height="wrap_content"
+		android:text="Info"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:layout_width="wrap_content"
+		android:id="@+id/playlistManagerTextView1"
+		android:layout_gravity="center_horizontal"/>
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_gravity="center_horizontal">
+
+		<ListView
+			android:layout_height="match_parent"
+			android:layout_width="match_parent"
+			android:id="@+id/playlistManagerListView1"/>
+
+		<ListView
+			android:layout_height="match_parent"
+			android:layout_width="match_parent"
+			android:id="@+id/playlistManagerListView2"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:orientation="horizontal"/>
+
+</LinearLayout>
+

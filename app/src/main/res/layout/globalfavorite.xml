@@ -1,0 +1,23 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="match_parent"
+	android:layout_width="match_parent"
+	style="@android:style/Theme.Holo"
+	android:orientation="vertical"
+	android:background="#151414">
+	
+	<TextView
+		android:layout_height="wrap_content"
+		android:text="Global Favorites"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:layout_width="wrap_content"
+		android:id="@+id/globalfavoriteTextView1"
+		android:layout_gravity="center_horizontal"/>
+
+	<ListView
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:id="@+id/globalfavoriteListView1"/>
+
+</LinearLayout>
+

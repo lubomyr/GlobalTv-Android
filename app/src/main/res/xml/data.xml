@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+
+    <torrentkey>
+        WXdYUlhmMm84Tnk0Q2kyWlovQytBU2FybGJYVVpySkcxaGFnY2pzVTQxdWEwUzE0Y0k3cFRLcnlnMlAxL3hTTitvcEwxMTlndnEvNzJpOVpQRm41Ymc9PQ
+    </torrentkey>
+
+    <provider>
+        <name>Torrent TV (super-pomoyka)</name>
+        <url>http://super-pomoyka.us.to/trash/ttv-list/ttv.m3u</url>
+        <type>1</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>Torrent TV (super-pomoyka)2</name>
+        <url>http://super-pomoyka.us.to/trash/ttv-list/ttv.all.player.m3u</url>
+        <type>1</type>
+        <enable>false</enable>
+    </provider>
+
+    <provider>
+        <name>Torrent TV (allfon.tv)</name>
+        <url>http://allfon.tv/autogenplaylist/allfontv.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>BestTV</name>
+        <url>http://pastebin.com/raw.php?i=p9f2GF2C</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>BestTV SlyNet</name>
+        <url>http://iptv.slynet.tv/FreeSlyNet.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>BestTV World</name>
+        <url>http://pastebin.com/raw.php?i=0v7dwrnb</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>Adults SlyNet</name>
+        <url>http://slynet.do.am/AdultsSlyNet.m3u</url>
+        <type>0</type>
+        <enable>false</enable>
+    </provider>
+
+    <provider>
+        <name>Webcam World</name>
+        <url>http://pastebin.com/raw.php?i=4zkncmD3</url>
+        <type>0</type>
+        <enable>false</enable>
+    </provider>
+
+    <provider>
+        <name>Peers tv SlyNet</name>
+        <url>http://slynet.do.am/PeerstvSlyNet.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>Kinodrom SlyNet</name>
+        <url>http://slynet.do.am/KinodromSlyNet.m3u</url>
+        <type>0</type>
+        <enable>false</enable>
+    </provider>
+
+    <provider>
+        <name>TV.posle.info</name>
+        <url>http://tv.posle.info/smart_tv.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>tv4p.ru Zabava TV</name>
+        <url>http://tv4p.ru/01z.m3u</url>
+        <type>0</type>
+        <enable>false</enable>
+    </provider>
+
+    <provider>
+        <name>tv4p.ru Vintera TV</name>
+        <url>http://tv4p.ru/05v.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>tv4p.ru Bonus TV</name>
+        <url>http://tv4p.ru/04b.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>Denms.ru</name>
+        <url>http://iptv.denms.ru</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>Moyo.tv</name>
+        <url>http://moa.ucoz.com/XML/moyo.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>Lamp.ufa-it.ru</name>
+        <url>http://iptv.lamp.ufa-it.ru/generate_m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>Playlist-iptv @ Ucoz</name>
+        <url>http://playlist-iptv.ucoz.ua/trenie/m3u/new_playlist.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>Lanet</name>
+        <url>http://lanet.tv/playlist.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>Rubin+</name>
+        <url>http://rubinplus.net/unicast.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>Iptv-360</name>
+        <url>http://iptv-360.esy.es/public_http/pleulist/stream.m3u</url>
+        <type>0</type>
+        <enable>false</enable>
+    </provider>
+
+    <provider>
+        <name>ListIPTV</name>
+        <url>http://listiptv.ru/iptv.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>dostupnoe-iptv</name>
+        <url>http://iptv.rumedia.biz/dostupnoe-iptv.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>edem.tv</name>
+        <url>https://edem.tv/playlists/uplist/c0501458db7536739c23049fda773bf6/edem_pl.m3u8</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>RealWeb</name>
+        <url>http://iptv.usafreespace.com/webtv.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>Максимум TV</name>
+        <url>http://tv.maximuma.net/iptv.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>545-TV(UA)</name>
+        <url>http://545-tv.com/listUA.php</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>545-TV(RU)</name>
+        <url>http://545-tv.com/listRU.php</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>RuMedia</name>
+        <url>http://iptv.rumedia.biz/list-test.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>SlimIptv</name>
+        <url>http://slimiptv.ru/iptv.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>Solomon Adult Playlist</name>
+        <url>http://bit.ly/solomanadult</url>
+        <type>0</type>
+        <enable>false</enable>
+    </provider>
+
+    <provider>
+        <name>playlistX</name>
+        <url>https://dl.dropboxusercontent.com/u/47797448/playlist/all_vlc.m3u</url>
+        <type>0</type>
+        <enable>false</enable>
+    </provider>
+
+    <provider>
+        <name>Films EX.UA</name>
+        <url>http://iptv-sima.ucoz.ru/film.m3u</url>
+        <type>0</type>
+        <enable>false</enable>
+    </provider>
+
+</data>

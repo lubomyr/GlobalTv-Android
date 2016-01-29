@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">GlobalTV</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="updatePlaylistButton">Оновити Плейлист</string>
+    <string name="openPlaylistButton">Відкрити Плейлист</string>
+	<string name="globalSearchButton">Глобальний Пошук</string>
+	<string name="playlistsManagerButton">Керування Плейлистами</string>
+    <string name="playlist">Плейлист</string>
+	<string name="pcs">шт.</string>
+    <string name="autoUpdate">автооновлення</string>
+	<string name="every24h">кожні 24 год.</string>
+    <string name="updated">оновлено </string>
+    <string name="dayago"> день назад</string>
+    <string name="daysago"> дні назад</string>
+    <string name="fivedaysago"> днів назад</string>
+    <string name="all">Всі</string>
+    <string name="favorites">Вибрані</string>
+    <string name="selectCategory">Виберіть категорію</string>
+    <string name="search">Пошук</string>
+	<string name="searching">Пошук...</string>
+    <string name="channels"> каналів</string>
+    <string name="request">Запит</string>
+    <string name="doyouwant">Чи ви хочете </string>
+    <string name="add">Додати</string>
+    <string name="remove">Видалити</string>
+    <string name="cancel">Відмінити</string>
+    <string name="tofavorites">до вибраного списку</string>
+    <string name="fromfavorites">з вибраного списку</string>
+    <string name="pleaseentertext">Введіть тект для пошуку</string>
+    <string name="playlistupdated">Плейлист %s оновлено</string>
+    <string name="playlistnotexist">Плейлист не завантажений</string>
+    <string name="updatefailed">Оновлення %s невдале</string>
+    <string name="resultsfor">Результати для </string>
+	<string name="addnewplaylist">Додати Новий Плейлист</string>
+	<string name="delete">Видалити</string>
+	<string name="modify">Змінити</string>
+	<string name="name">Назва</string>
+	<string name="url">Ссилка</string>
+	<string name="savefile">Зберегти як файл</string>
+	<string name="type">Тип</string>
+	<string name="standardplaylist">Стандартинй плейлист</string>
+	<string name="torrenttvplaylist">TorrentTV плейлист</string>
+	<string name="enabled">Активні</string>
+	<string name="disabled">Вимкнені</string>
+	<string name="enable">увімкнути</string>
+	<string name="disable">вимкнути</string>
+	<string name="pleasefillallfields">Прошу заповнити всі поля</string>
+	<string name="updateOutdatedPlaylists">Онов. заст. Плейлисти</string>
+	<string name="restoreDefaults">Відновити</string>
+
+	<string-array name="categories_list_orig">
+        <item>Музыка</item>
+        <item>Общие</item>
+        <item>Региональные</item>
+        <item>Новостные</item>
+		<item>Новости</item>
+        <item>Познавательные</item>
+		<item>Познавательные HD</item>
+		<item>Познавательные каналы</item>
+		<item>Познавательные и Развлекательные</item>
+        <item>Развлекательные</item>
+        <item>Фильмы</item>
+        <item>Фильмы и сериалы</item>
+        <item>Детские</item>
+        <item>Для взрослых</item>
+		<item>Взрослые</item>
+        <item>Мужские</item>
+        <item>Религиозные</item>
+        <item>Музыкальные</item>
+        <item>Спортивные</item>
+        <item>Кино</item>
+        <item>Юмористические</item>
+        <item>Стандартные</item>
+		<item>Мобильные</item>
+		<item>HD Каналы</item>
+		<item>3D Каналы</item>
+		<item>Детские каналы</item>
+		<item>Юмор</item>
+		<item>Деловые</item>
+		<item>Мир</item>
+		<item>Позновательные</item>
+		<item>Новостные каналы</item>
+		<item>Эфирные</item>
+		<item>Эфирные каналы</item>
+		<item>Информационные каналы</item>
+		<item>Мода и стиль</item>
+		<item>Кино и сериалы</item>
+		<item>Мир и познание</item>
+		<item>Детское</item>
+		<item>Другие</item>
+		<item>Другие каналы</item>
+		<item>Радио</item>
+		<item>Камеры</item>
+		<item>Камера из студии</item>
+		<item>Не работают</item>
+		<item>Информация</item>
+        <item>Украина</item>
+        <item>Региональные Украина</item>
+		<item>Украинское ТВ</item>
+		<item>Украинские</item>
+		<item>Прочие Регионы</item>
+		<item>Иностранные</item>
+        <item>Россия</item>
+		<item>Российские</item>
+		<item>Российские региональные</item>
+        <item>Региональные Россия</item>
+		<item>Регионы Россия</item>
+		<item>Europe</item>
+		<item>Турция</item>
+		<item>Беларусь</item>
+		<item>Великобритания</item>
+		<item>Германия</item>
+		<item>Сербия</item>
+		<item>Испания</item>
+		<item>Франция</item>
+		<item>Италия</item>
+		<item>Чехия</item>
+		<item>Нидерланды</item>
+		<item>Хорватия</item>
+		<item>Латвия</item>
+		<item>Румыния</item>
+		<item>Грузия и Армения</item>
+    </string-array>
+
+	<string-array name="categories_list_translated">
+        <item>Музика</item>
+        <item>Загальні</item>
+        <item>Регіональні</item>
+        <item>Новини</item>
+		<item>Новини</item>
+        <item>Пізнавальні</item>
+		<item>Пізнавальні HD</item>
+		<item>Пізнавальні канали</item>
+		<item>Пізнавальні і Розважальні</item>
+        <item>Розважальні</item>
+        <item>Фільми</item>
+        <item>Фільми і серіали</item>
+        <item>Дитячі</item>
+        <item>Для дорослих</item>
+		<item>Дорослі</item>
+        <item>Чоловічі</item>
+        <item>Релігійні</item>
+        <item>Музичні</item>
+        <item>Спортивні</item>
+        <item>Кіно</item>
+        <item>Гумористичні</item>
+        <item>Стандартні</item>
+		<item>Мобільні</item>
+		<item>HD Канали</item>
+		<item>3D Канали</item>
+		<item>Дитячі канали</item>
+		<item>Гумор</item>
+		<item>Ділові</item>
+		<item>Світ</item>
+		<item>Пізнавальні</item>
+		<item>Новини</item>
+		<item>Ефірні</item>
+		<item>Ефірні канали</item>
+		<item>Інформаційні канали</item>
+		<item>Мода і стиль</item>
+		<item>Кіно і серіали</item>
+		<item>Світ і пізнання</item>
+		<item>Дитяче</item>
+		<item>Інші</item>
+		<item>Інші канали</item>
+		<item>Радіо</item>
+		<item>Камери</item>
+		<item>Камера з студії</item>
+		<item>Не працюють</item>
+		<item>Інформація</item>
+        <item>Україна</item>
+        <item>Регіональні Україна</item>
+		<item>Українське ТБ</item>
+		<item>Українські</item>
+		<item>Інші Регіони</item>
+		<item>Іноземні</item>
+        <item>Росія</item>
+		<item>Російські</item>
+        <item>Російські регіональні</item>
+        <item>Регіональні Росія</item>
+		<item>Регіони Росія</item>
+		<item>Європа</item>
+		<item>Туреччина</item>
+		<item>Білорусь</item>
+		<item>Великобританія</item>
+		<item>Німеччина</item>
+		<item>Сербія</item>
+		<item>Іспанія</item>
+		<item>Франція</item>
+		<item>Італія</item>
+		<item>Чехія</item>
+		<item>Нідерланди</item>
+		<item>Хорватія</item>
+		<item>Латвія</item>
+		<item>Румунія</item>
+		<item>Грузія і Вірменія</item>
+    </string-array>
+
+</resources>

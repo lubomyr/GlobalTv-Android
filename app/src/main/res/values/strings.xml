@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">GlobalTV</string>
+    <string name="hello_world">Hello world!</string>
+	<string name="updatePlaylistButton">Update Playlist</string>
+	<string name="openPlaylistButton">Open Playlist</string>
+	<string name="globalSearchButton">Global Search</string>
+	<string name="playlistsManagerButton">Playlists Manager</string>
+	<string name="playlist">Playlist</string>
+	<string name="pcs">pcs</string>
+	<string name="autoUpdate">autoupdate</string>
+	<string name="every24h">every 24h</string>
+	<string name="updated">updated </string>
+	<string name="dayago"> day ago</string>
+	<string name="daysago"> days ago</string>
+	<string name="fivedaysago"> days ago</string>
+	<string name="all">All</string>
+	<string name="favorites">Favorites</string>
+	<string name="selectCategory">Select category</string>
+	<string name="search">Search</string>
+	<string name="searching">Searching...</string>
+	<string name="channels"> channel(s)</string>
+	<string name="request">Request</string>
+	<string name="doyouwant">Do you want </string>
+	<string name="add">Add</string>
+	<string name="remove">Remove</string>
+	<string name="cancel">Cancel</string>
+	<string name="tofavorites">to favorite list</string>
+	<string name="fromfavorites">from favorite list</string>
+	<string name="pleaseentertext">Please enter text</string>
+	<string name="playlistupdated">Playlist %s updated</string>
+	<string name="playlistnotexist">Playlist not exist</string>
+	<string name="updatefailed">Update %s failed</string>
+	<string name="resultsfor">results for </string>
+	<string name="addnewplaylist">Add New Playlist</string>
+	<string name="delete">Delete</string>
+	<string name="modify">Modify</string>
+	<string name="name">Name</string>
+	<string name="url">Url</string>
+	<string name="savefile">Save as file</string>
+	<string name="type">Type</string>
+	<string name="standardplaylist">Standard playlist</string>
+	<string name="torrenttvplaylist">TorrentTV playlist</string>
+	<string name="enabled">Enabled</string>
+	<string name="disabled">Disabled</string>
+	<string name="enable">enable</string>
+	<string name="disable">disable</string>
+	<string name="pleasefillallfields">Please fill all fields</string>
+	<string name="updateOutdatedPlaylists">Update Outdated Playlists</string>
+	<string name="restoreDefaults">Restore Default</string>
+
+	<string-array name="categories_list_orig">
+        <item>Музыка</item>
+        <item>Общие</item>
+        <item>Региональные</item>
+        <item>Новостные</item>
+        <item>Познавательные</item>
+        <item>Развлекательные</item>
+        <item>Фильмы</item>
+        <item>Детские</item>
+        <item>Для взрослых</item>
+        <item>Мужские</item>
+        <item>Религиозные</item>
+        <item>Музыкальные</item>
+        <item>Спортивные</item>
+        <item>Кино</item>
+        <item>Юмористические</item>
+        <item>Стандартные</item>
+		<item>Мобильные</item>
+        <item>Украина</item>
+        <item>Региональные Украина</item>
+		<item>Украинское ТВ</item>
+		<item>Украинские</item>
+        <item>Россия</item>
+        <item>Региональные Россия</item>
+    </string-array>	
+
+	<string-array name="categories_list_translated">
+        <item>Music</item>
+        <item>Common</item>
+        <item>Regional</item>
+        <item>News</item>
+        <item>Educational</item>
+        <item>Entertainment</item>
+        <item>Films</item>
+        <item>Child</item>
+        <item>For adults</item>
+        <item>Men</item>
+        <item>Religious</item>
+        <item>Music</item>
+        <item>Sport</item>
+        <item>Cinema</item>
+        <item>Humorous</item>
+        <item>Standard</item>
+		<item>Mobile</item>
+        <item>Ukraine</item>
+        <item>Regional Ukraine</item>
+		<item>Ukrainian TV</item>
+		<item>Ukrainian</item>
+        <item>Russia</item>
+        <item>Regional Russia</item>
+    </string-array>
+
+</resources>

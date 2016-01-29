@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="atua.anddev.globaltv">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+
+    <uses-sdk android:minSdkVersion="11" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Holo">
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".CatlistActivity"
+            android:label="Categories list"
+            android:theme="@android:style/Theme.Holo"></activity>
+
+        <activity
+            android:name=".PlaylistActivity"
+            android:label="Playlist"
+            android:theme="@android:style/Theme.Holo"></activity>
+
+        <activity
+            android:name=".FavlistActivity"
+            android:label="Favorites"
+            android:theme="@android:style/Theme.Holo"></activity>
+
+        <activity
+            android:name=".SearchlistActivity"
+            android:label="Search"
+            android:theme="@android:style/Theme.Holo"></activity>
+
+        <activity
+            android:name=".GlobalSearchActivity"
+            android:label="Global Search"
+            android:theme="@android:style/Theme.Holo"></activity>
+
+        <activity
+            android:name=".PlaylistManagerActivity"
+            android:label="Playlist Manager"
+            android:theme="@android:style/Theme.Holo"></activity>
+
+        <activity
+            android:name=".PlaylistEditActivity"
+            android:label="Playlist add/edit"
+            android:theme="@android:style/Theme.Holo"></activity>
+
+        <activity
+            android:name=".GlobalFavoriteActivity"
+            android:label="Global Favorite"
+            android:theme="@android:style/Theme.Holo"></activity>
+
+        <activity
+            android:name=".UpdatePlistActivity"
+            android:label="Update Outdated Playlist"
+            android:theme="@android:style/Theme.Holo"></activity>
+
+        <activity
+            android:name=".PlayerActivity"
+            android:label="Player"
+            android:theme="@android:style/Theme.Holo"></activity>
+
+    </application>
+
+</manifest>

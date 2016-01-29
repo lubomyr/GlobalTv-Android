@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="match_parent"
+	android:layout_width="match_parent"
+	style="@android:style/Theme.Holo"
+	android:orientation="vertical"
+	android:background="#151414"
+	android:layout_gravity="center_horizontal">
+
+	<TextView
+		android:layout_height="wrap_content"
+		android:text="name"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:layout_width="wrap_content"
+		android:layout_gravity="center_horizontal"
+		android:layout_marginTop="10dp"
+		android:id="@+id/playlisteditTextView1"/>
+
+	<EditText
+		android:layout_height="wrap_content"
+		android:ems="10"
+		android:layout_width="match_parent"
+		android:layout_gravity="center_horizontal"
+		android:id="@+id/playlisteditEditText1"/>
+
+	<TextView
+		android:layout_height="wrap_content"
+		android:text="url"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:layout_width="wrap_content"
+		android:layout_gravity="center_horizontal"
+		android:layout_marginTop="10dp"
+		android:id="@+id/playlisteditTextView2"/>
+
+	<EditText
+		android:layout_height="wrap_content"
+		android:ems="10"
+		android:layout_width="match_parent"
+		android:layout_gravity="center_horizontal"
+		android:id="@+id/playlisteditEditText2"/>
+
+	<TextView
+		android:layout_height="wrap_content"
+		android:text="type"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:layout_width="wrap_content"
+		android:layout_gravity="center_horizontal"
+		android:layout_marginTop="10dp"
+		android:id="@+id/playlisteditTextView4"/>
+
+	<Spinner
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_gravity="center_horizontal"
+		android:id="@+id/playlisteditSpinner1"
+		android:layout_marginTop="10dp"/>
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:orientation="horizontal"
+		android:layout_gravity="center_vertical|center_horizontal"
+		android:layout_marginTop="10dp">
+
+		<Button
+			android:layout_height="wrap_content"
+			android:text="Delete"
+			android:layout_width="wrap_content"
+			android:id="@+id/playlisteditButton1"
+			android:onClick="deletePlaylist"/>
+
+		<Button
+			android:layout_height="wrap_content"
+			android:text="Modify"
+			android:layout_width="wrap_content"
+			android:layout_marginLeft="50dp"
+			android:id="@+id/playlisteditButton2"
+			android:onClick="addEdit"/>
+
+	</LinearLayout>
+
+</LinearLayout>
+
