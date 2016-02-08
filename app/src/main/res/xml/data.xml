@@ -202,8 +202,22 @@
     </provider>
 
     <provider>
-        <name>RuMedia</name>
-        <url>http://iptv.rumedia.biz/list-test.m3u</url>
+        <name>RuMedia 2 (test)</name>
+        <url>http://iptv.rumedia.biz/friazino.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>RuMedia (DOM)</name>
+        <url>http://iptv.rumedia.biz/iptv-playlist/potok_6/DOM.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>RuMedia (Multi)</name>
+        <url>http://iptv.rumedia.biz/iptv-playlist/potok_6/iptv-multi.m3u</url>
         <type>0</type>
         <enable>true</enable>
     </provider>
@@ -216,10 +230,10 @@
     </provider>
 
     <provider>
-        <name>Solomon Adult Playlist</name>
-        <url>http://bit.ly/solomanadult</url>
+        <name>TV Israel</name>
+        <url>http://anarchitv.gq/TV/IPTV</url>
         <type>0</type>
-        <enable>false</enable>
+        <enable>true</enable>
     </provider>
 
     <provider>
@@ -234,6 +248,41 @@
         <url>http://iptv-sima.ucoz.ru/film.m3u</url>
         <type>0</type>
         <enable>false</enable>
+    </provider>
+
+    <provider>
+        <name>Armenia @ Ucoz</name>
+        <url>http://sascha.ucoz.net/plst/iptv/armenian_dejtakom_kampni-15.01.2016.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>Kineskop.tv</name>
+        <url>http://kineskop.tv/pl/</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>Ratus @ Ucoz</name>
+        <url>http://moa.ucoz.com/iptv_moa/ratus.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>Music Channels @ iptv56</name>
+        <url>http://iptv56.ru/_fr/0/Mzik_Kanall.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>Music Channels VIP @ iptv56</name>
+        <url>http://iptv56.ru/liststart/VIP_MUZIC_IPTV56.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
     </provider>
 
 </data>
