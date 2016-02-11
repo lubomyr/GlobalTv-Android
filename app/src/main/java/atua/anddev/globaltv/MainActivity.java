@@ -356,7 +356,7 @@ public class MainActivity extends Activity
                     playlistWithGroup = true;
                 }
                 if (lineStr.startsWith("#EXTINF:") && (type != 1)) {
-                    chName = lineStr.substring(lineStr.indexOf(",") + 1, lineStr.length());
+                    chName = lineStr.substring(lineStr.lastIndexOf(",") + 1, lineStr.length());
                 }
                 if (lineStr.contains("group-title=") && lineStr.contains(",") && (lineStr.substring(lineStr.indexOf("group-title="), lineStr.indexOf("group-title=") + 12).equals("group-title="))) {
                     groupName = lineStr.substring(lineStr.indexOf("group-title=") + 13, lineStr.indexOf('"', lineStr.indexOf("group-title=") + 13));
