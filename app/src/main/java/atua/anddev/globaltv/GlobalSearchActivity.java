@@ -26,7 +26,7 @@ public class GlobalSearchActivity extends MainActivity
 			showSearchResults();
 	}
 
-	public void runProgressBar()
+	private void runProgressBar()
 	{
 		progress = new ProgressDialog(this);
 		progress.setMessage(getResources().getString(R.string.searching));
@@ -53,7 +53,7 @@ public class GlobalSearchActivity extends MainActivity
 		t.start();
 	}
 
-	public void prepare_globalSearch()
+	private void prepare_globalSearch()
 	{
 		for (int i=0; i < ActivePlaylist.size(); i++)
 		{

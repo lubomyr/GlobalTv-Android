@@ -22,7 +22,7 @@ public class CatlistActivity extends MainActivity
 		showCatlist();
 	}
 
-	public void applyLocals()
+	private void applyLocals()
 	{
 		Button buttonFavorite = (Button) findViewById(R.id.catlistButton1);
 		buttonFavorite.setText(getResources().getString(R.string.favorites));
@@ -30,7 +30,7 @@ public class CatlistActivity extends MainActivity
 		buttonSearch.setText(getResources().getString(R.string.search));
 	}
 
-	public void createCatlist()
+	private void createCatlist()
 	{
 		boolean cat_exist=false;
 

@@ -49,6 +49,7 @@
 	<string name="pleasefillallfields">Please fill all fields</string>
 	<string name="updateOutdatedPlaylists">Update Outdated Playlists</string>
 	<string name="restoreDefaults">Restore Default</string>
+	<string name="action_settings">Settings</string>
 
 	<string-array name="categories_list_orig">
         <item>Музыка</item>
