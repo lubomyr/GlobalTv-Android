@@ -19,7 +19,6 @@ import org.xmlpull.v1.*;
 
 public class MainActivity extends Activity {
     Configuration conf;
-    DBHelper dbHelper;
 
     static ArrayList<String> globalSearchName = new ArrayList<String>();
     static ArrayList<String> globalSearchUrl = new ArrayList<String>();
@@ -42,7 +41,6 @@ public class MainActivity extends Activity {
     static String torrentKey;
     static Boolean playlistWithGroup;
     static String selectedUrl;
-    private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +54,6 @@ public class MainActivity extends Activity {
             lang = Locale.getDefault().getISO3Language();
 
         conf = getResources().getConfiguration();
-        dbHelper = new DBHelper(this);
 
         if (ActivePlaylist.size() == 0) {
             if (checkFile("userdata.xml"))

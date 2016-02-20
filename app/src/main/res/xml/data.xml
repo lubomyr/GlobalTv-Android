@@ -93,14 +93,14 @@
         <name>tv4p.ru Vintera TV</name>
         <url>http://tv4p.ru/05v.m3u</url>
         <type>0</type>
-        <enable>true</enable>
+        <enable>false</enable>
     </provider>
 
     <provider>
         <name>tv4p.ru Bonus TV</name>
         <url>http://tv4p.ru/04b.m3u</url>
         <type>0</type>
-        <enable>true</enable>
+        <enable>false</enable>
     </provider>
 
     <provider>
@@ -160,13 +160,6 @@
     </provider>
 
     <provider>
-        <name>dostupnoe-iptv</name>
-        <url>http://iptv.rumedia.biz/dostupnoe-iptv.m3u</url>
-        <type>0</type>
-        <enable>true</enable>
-    </provider>
-
-    <provider>
         <name>edem.tv</name>
         <url>https://edem.tv/playlists/uplist/c0501458db7536739c23049fda773bf6/edem_pl.m3u8</url>
         <type>0</type>
@@ -197,13 +190,6 @@
     <provider>
         <name>545-TV(RU)</name>
         <url>http://545-tv.com/listRU.php</url>
-        <type>0</type>
-        <enable>true</enable>
-    </provider>
-
-    <provider>
-        <name>RuMedia 2 (test)</name>
-        <url>http://iptv.rumedia.biz/friazino.m3u</url>
         <type>0</type>
         <enable>true</enable>
     </provider>
@@ -281,6 +267,20 @@
     <provider>
         <name>Music Channels VIP @ iptv56</name>
         <url>http://iptv56.ru/liststart/VIP_MUZIC_IPTV56.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>Aladex</name>
+        <url>https://aladex.ru/iptv/iptv-1.m3u</url>
+        <type>0</type>
+        <enable>true</enable>
+    </provider>
+
+    <provider>
+        <name>Edem TV тест</name>
+        <url>http://btcf.ru/list.m3u</url>
         <type>0</type>
         <enable>true</enable>
     </provider>
