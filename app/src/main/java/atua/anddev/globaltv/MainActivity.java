@@ -17,7 +17,8 @@ import java.util.*;
 
 import org.xmlpull.v1.*;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity
+{
     Configuration conf;
 
     static ArrayList<String> globalSearchName = new ArrayList<String>();
@@ -25,7 +26,7 @@ public class MainActivity extends Activity {
     static ArrayList<String> globalSearchProv = new ArrayList<String>();
     static Channel channel = new Channel();
     static Playlist ActivePlaylist = new Playlist();
-    static Playlist DisabledPlaylist = new Playlist();
+    static Playlist offeredPlaylist = new Playlist();
     static ArrayList<String> categoryList = new ArrayList<String>();
     static String selectedCategory;
     static ArrayList<String> favoriteList = new ArrayList<String>();
@@ -43,10 +44,10 @@ public class MainActivity extends Activity {
     static String selectedUrl;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+	{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        //Context context = null;
 
         myPath = this.getApplicationContext().getFilesDir().toString();
         //myPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Android/data/"+context.getPackageName()+"/files";
@@ -55,33 +56,43 @@ public class MainActivity extends Activity {
 
         conf = getResources().getConfiguration();
 
-        if (ActivePlaylist.size() == 0) {
+        if (offeredPlaylist.size() == 0)
+		{
+			setupProvider("default");
             if (checkFile("userdata.xml"))
                 setupProvider("user");
-            else
-                setupProvider("default");
         }
-        setupProviderView();
-        showLocals();
+		if (ActivePlaylist.size() == 0)
+		{
+			Toast.makeText(MainActivity.this, getResources().getString(R.string.plstmanwarn), Toast.LENGTH_SHORT).show();
+			ActivePlaylist.add(offeredPlaylist.getName(0), offeredPlaylist.getUrl(0), offeredPlaylist.getFile(0), offeredPlaylist.getType(0));
+		}
+			setupProviderView();
+			showLocals();
+		
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+	{
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+	{
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_settings)
+		{
             Toast.makeText(MainActivity.this, "Setting test", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void applyLocals() {
+    private void applyLocals()
+	{
         Button updateButton = (Button) findViewById(R.id.mainButton2);
         updateButton.setText(getResources().getString(R.string.updatePlaylistButton));
         Button openButton = (Button) findViewById(R.id.mainButton1);
@@ -102,7 +113,8 @@ public class MainActivity extends Activity {
         every24hView.setText(getResources().getString(R.string.every24h));
     }
 
-    private void showLocals() {
+    private void showLocals()
+	{
         ArrayList<String> localsList = new ArrayList<String>();
         localsList.add("English");
         localsList.add("Українська");
@@ -120,76 +132,87 @@ public class MainActivity extends Activity {
 
         spinnerView.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-            @Override
-            public void onItemSelected(AdapterView<?> p1, View p2, int p3, long p4) {
+				@Override
+				public void onItemSelected(AdapterView<?> p1, View p2, int p3, long p4)
+				{
 
-                String s = (String) p1.getItemAtPosition(p3);
-                switch (s) {
-                    case "English":
-                        MainActivity.lang = "eng";
-                        conf.locale = new Locale("en");
-                        break;
-                    case "Українська":
-                        MainActivity.lang = "ukr";
-                        conf.locale = new Locale("uk");
-                        break;
-                    case "Русский":
-                        MainActivity.lang = "rus";
-                        conf.locale = new Locale("ru");
-                        break;
-                }
-                new Resources(getAssets(), getResources().getDisplayMetrics(), conf);
-                origNames = getResources().getStringArray(R.array.categories_list_orig);
-                translatedNames = getResources().getStringArray(R.array.categories_list_translated);
-                applyLocals();
-                checkPlaylistFile(ActivePlaylist.getFile(selectedProvider));
-            }
+					String s = (String) p1.getItemAtPosition(p3);
+					switch (s)
+					{
+						case "English":
+							MainActivity.lang = "eng";
+							conf.locale = new Locale("en");
+							break;
+						case "Українська":
+							MainActivity.lang = "ukr";
+							conf.locale = new Locale("uk");
+							break;
+						case "Русский":
+							MainActivity.lang = "rus";
+							conf.locale = new Locale("ru");
+							break;
+					}
+					new Resources(getAssets(), getResources().getDisplayMetrics(), conf);
+					origNames = getResources().getStringArray(R.array.categories_list_orig);
+					translatedNames = getResources().getStringArray(R.array.categories_list_translated);
+					applyLocals();
 
-            @Override
-            public void onNothingSelected(AdapterView<?> p1) {
-                // TODO: Implement this method
-            }
-        });
+					checkPlaylistFile(ActivePlaylist.getFile(selectedProvider));
+				}
+
+				@Override
+				public void onNothingSelected(AdapterView<?> p1)
+				{
+					// TODO: Implement this method
+				}
+			});
     }
 
 
-    private void setupProviderView() {
-
+    private void setupProviderView()
+	{
         Spinner spinnerView = (Spinner) findViewById(R.id.mainSpinner1);
-        SpinnerAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ActivePlaylist.name);
+		SpinnerAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ActivePlaylist.name);
+
         spinnerView.setAdapter(adapter);
         spinnerView.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-            @Override
-            public void onItemSelected(AdapterView<?> p1, View p2, int p3, long p4) {
+				@Override
+				public void onItemSelected(AdapterView<?> p1, View p2, int p3, long p4)
+				{
 
-                String s = (String) p1.getItemAtPosition(p3);
-                selectedProvider = p3;
-                checkPlaylistFile(ActivePlaylist.getFile(p3));
+					String s = (String) p1.getItemAtPosition(p3);
+					selectedProvider = p3;
+					checkPlaylistFile(ActivePlaylist.getFile(p3));
 
-            }
+				}
 
-            @Override
-            public void onNothingSelected(AdapterView<?> p1) {
-                // TODO: Implement this method
-            }
-        });
+				@Override
+				public void onNothingSelected(AdapterView<?> p1)
+				{
+					// TODO: Implement this method
+				}
+			});
     }
 
-    public void catlistActivity() {
+    public void catlistActivity()
+	{
         Intent intent = new Intent(this, CatlistActivity.class);
         startActivity(intent);
     }
 
-    private boolean checkPlaylistFile(String fname) {
+    private boolean checkPlaylistFile(String fname)
+	{
         TextView textView = (TextView) findViewById(R.id.mainTextView1);
-        try {
+        try
+		{
             File file = new File(myPath + "/" + fname);
             long fileDate = file.lastModified();
             long currDate = (new Date()).getTime();
             long upDate = currDate - fileDate;
             String tmpText;
-            switch (new Date(upDate).getDate()) {
+            switch (new Date(upDate).getDate())
+			{
                 case 1:
                     tmpText = getResources().getString(R.string.updated) + " " + new Date(fileDate).toLocaleString();
                     needUpdate = false;
@@ -213,7 +236,9 @@ public class MainActivity extends Activity {
 
             textView.setText(tmpText);
             InputStream myfile = new FileInputStream(myPath + "/" + fname);
-        } catch (FileNotFoundException e) {
+        }
+		catch (FileNotFoundException e)
+		{
             textView.setText(getResources().getString(R.string.playlistnotexist));
             needUpdate = true;
             return false;
@@ -221,30 +246,40 @@ public class MainActivity extends Activity {
         return true;
     }
 
-    private boolean checkFile(String fname) {
-        try {
+    private boolean checkFile(String fname)
+	{
+        try
+		{
             InputStream myfile = new FileInputStream(myPath + "/" + fname);
-        } catch (FileNotFoundException e) {
+        }
+		catch (FileNotFoundException e)
+		{
             return false;
         }
         return true;
     }
 
-    public void playlistActivity() {
+    public void playlistActivity()
+	{
         selectedCategory = getResources().getString(R.string.all);
         Intent intent = new Intent(this, PlaylistActivity.class);
         startActivity(intent);
     }
 
-    public void openPlaylist(View view) {
-        if (needUpdate) {
+    public void openPlaylist(View view)
+	{
+        if (needUpdate)
+		{
             downloadPlaylist(selectedProvider);
         }
         readPlaylist(ActivePlaylist.getFile(selectedProvider), ActivePlaylist.getType(selectedProvider));
-        try {
+        try
+		{
             if (favoriteList.size() == 0)
                 loadFavorites();
-        } catch (IOException e) {
+        }
+		catch (IOException e)
+		{
         }
         if (playlistWithGroup)
             catlistActivity();
@@ -252,66 +287,86 @@ public class MainActivity extends Activity {
             playlistActivity();
     }
 
-    public void downloadButton(View view) {
+    public void downloadButton(View view)
+	{
         downloadPlaylist(selectedProvider);
     }
 
-    public void updateAll(View view) {
-        for (int i = 0; i < ActivePlaylist.size(); i++) {
+    public void updateAll(View view)
+	{
+        for (int i = 0; i < ActivePlaylist.size(); i++)
+		{
             checkPlaylistFile(ActivePlaylist.getFile(i));
-            if (needUpdate) {
+            if (needUpdate)
+			{
                 downloadPlaylist(i);
             }
         }
     }
 
-    private void downloadPlaylist(final int num) {
+    private void downloadPlaylist(final int num)
+	{
         new Thread(new Runnable() {
-            public void run() {
-                try {
-                    String path = myPath + "/" + ActivePlaylist.getFile(num);
-                    saveUrl(path, ActivePlaylist.getUrl(num));
+				public void run()
+				{
+					try
+					{
+						String path = myPath + "/" + ActivePlaylist.getFile(num);
+						saveUrl(path, ActivePlaylist.getUrl(num));
 
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            needUpdate = false;
-                            checkPlaylistFile(ActivePlaylist.getFile(selectedProvider));
-                            Toast.makeText(MainActivity.this, getResources().getString(R.string.playlistupdated, ActivePlaylist.getName(num)), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } catch (Exception e) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(MainActivity.this, getResources().getString(R.string.updatefailed, ActivePlaylist.getName(num)), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    Log.i("SDL", "Error: " + e.toString());
-                }
-            }
-        }).start();
+						runOnUiThread(new Runnable() {
+								public void run()
+								{
+									needUpdate = false;
+									checkPlaylistFile(ActivePlaylist.getFile(selectedProvider));
+									Toast.makeText(MainActivity.this, getResources().getString(R.string.playlistupdated, ActivePlaylist.getName(num)), Toast.LENGTH_SHORT).show();
+								}
+							});
+					}
+					catch (Exception e)
+					{
+						runOnUiThread(new Runnable() {
+								public void run()
+								{
+									Toast.makeText(MainActivity.this, getResources().getString(R.string.updatefailed, ActivePlaylist.getName(num)), Toast.LENGTH_SHORT).show();
+								}
+							});
+						Log.i("SDL", "Error: " + e.toString());
+					}
+				}
+			}).start();
     }
 
-    public void readPlaylist(String fname, int type) {
+    public void readPlaylist(String fname, int type)
+	{
         playlistWithGroup = false;
-        String lineStr, chName = "", chCategory = "", chLink = "", totalString = "";
+        String lineStr, chName = "", chCategory = "", chLink = "";
         String groupName = "", groupName2 = "";
         channel.clear();
-        try {
+        try
+		{
             InputStream myfile = new FileInputStream(myPath + "/" + fname);
             Scanner myInputFile = new Scanner(myfile, "UTF8").useDelimiter("[\n]");
-            ;
-            while (myInputFile.hasNext()) {
+            while (myInputFile.hasNext())
+			{
                 lineStr = myInputFile.next();
                 if (lineStr.startsWith("acestream:") || lineStr.startsWith("http:") || lineStr.startsWith("https:")
-                        || lineStr.startsWith("rtmp:") || lineStr.startsWith("rtsp:") || lineStr.startsWith("mmsh:")
-                        || lineStr.startsWith("mms:") || lineStr.startsWith("rtmpt:")) {
+					|| lineStr.startsWith("rtmp:") || lineStr.startsWith("rtsp:") || lineStr.startsWith("mmsh:")
+					|| lineStr.startsWith("mms:") || lineStr.startsWith("rtmpt:"))
+				{
                     chLink = lineStr;
-                    if (chName.startsWith("ALLFON.TV")) {
+                    if (chName.startsWith("ALLFON.TV"))
+					{
                         chName = chName.substring(10, chName.length());
                     }
-                    if (chName.startsWith(" ")) {
+                    if (chName.startsWith(" "))
+					{
                         chName = chName.substring(1, chName.length());
                     }
+					if (chName.charAt(chName.length() - 1) == '\15')
+					{
+						chName = chName.substring(0, chName.length() - 1);
+					}
                     chCategory = translate(chCategory);
                     channel.add(chName, chCategory, chLink);
                     if (!chCategory.equals(""))
@@ -322,45 +377,57 @@ public class MainActivity extends Activity {
                     groupName = "";
                     groupName2 = "";
                 }
-                if ((type == 1) && lineStr.startsWith("#EXTINF:-1,") && (lineStr.indexOf("(") == lineStr.lastIndexOf("("))) {
+                if ((type == 1) && lineStr.startsWith("#EXTINF:-1,") && (lineStr.indexOf("(") == lineStr.lastIndexOf("(")))
+				{
                     chName = lineStr.substring(11, lineStr.indexOf("(") - 1);
                     chCategory = lineStr.substring(lineStr.lastIndexOf("(") + 1, lineStr.lastIndexOf(")"));
                     playlistWithGroup = true;
                 }
-                if ((type == 1) && lineStr.startsWith("#EXTINF:-1,") && (lineStr.indexOf("(") != lineStr.lastIndexOf("("))) {
+                if ((type == 1) && lineStr.startsWith("#EXTINF:-1,") && (lineStr.indexOf("(") != lineStr.lastIndexOf("(")))
+				{
                     chName = lineStr.substring(11, lineStr.lastIndexOf("(") - 1);
                     chCategory = lineStr.substring(lineStr.lastIndexOf("(") + 1, lineStr.lastIndexOf(")"));
                     playlistWithGroup = true;
                 }
-                if (lineStr.startsWith("#EXTINF:") && (type != 1)) {
+                if (lineStr.startsWith("#EXTINF:") && (type != 1))
+				{
                     chName = lineStr.substring(lineStr.lastIndexOf(",") + 1, lineStr.length());
                 }
-                if (lineStr.contains("group-title=") && lineStr.contains(",") && (lineStr.substring(lineStr.indexOf("group-title="), lineStr.indexOf("group-title=") + 12).equals("group-title="))) {
+                if (lineStr.contains("group-title=") && lineStr.contains(",") && (lineStr.substring(lineStr.indexOf("group-title="), lineStr.indexOf("group-title=") + 12).equals("group-title=")))
+				{
                     groupName = lineStr.substring(lineStr.indexOf("group-title=") + 13, lineStr.indexOf('"', lineStr.indexOf("group-title=") + 13));
                     playlistWithGroup = true;
                 }
-                if (lineStr.contains("#EXTGRP:") && (lineStr.substring(lineStr.indexOf("#EXTGRP:"), lineStr.indexOf("#EXTGRP:") + 8).equals("#EXTGRP:"))) {
+                if (lineStr.contains("#EXTGRP:") && (lineStr.substring(lineStr.indexOf("#EXTGRP:"), lineStr.indexOf("#EXTGRP:") + 8).equals("#EXTGRP:")))
+				{
                     groupName2 = lineStr.substring(lineStr.indexOf("#EXTGRP:") + 8, lineStr.length());
                     playlistWithGroup = true;
                 }
-                if (!groupName.equals("")) {
+                if (!groupName.equals(""))
+				{
                     chCategory = groupName;
-                } else if (!groupName2.equals("")) {
+                }
+				else if (!groupName2.equals(""))
+				{
                     groupName2 = groupName2.replace('\15', ' ');
                     groupName2 = groupName2.replace(" ", "");
                     chCategory = groupName2;
                 }
             }
             myInputFile.close();
-        } catch (Exception E1) { /*Toast.makeText(MainActivity.this, "openning playlist - failed " + E1.toString(), Toast.LENGTH_SHORT).show();*/}
+        }
+		catch (Exception E1)
+		{ /*Toast.makeText(MainActivity.this, "openning playlist - failed " + E1.toString(), Toast.LENGTH_SHORT).show();*/}
     }
 
-    private String fixKey(String str) {
+    private String fixKey(String str)
+	{
         String output;
         output = str;
         String startStr = "http://content.torrent-tv.ru/";
         String endStr;
-        if (str.startsWith(startStr) && str.contains("/cdn/")) {
+        if (str.startsWith(startStr) && str.contains("/cdn/"))
+		{
             endStr = str.substring(str.indexOf("/cdn/"), str.length());
             output = startStr + torrentKey + endStr;
         }
@@ -368,69 +435,92 @@ public class MainActivity extends Activity {
     }
 
     public static void saveUrl(final String filename, final String urlString)
-            throws MalformedURLException, IOException {
+	throws MalformedURLException, IOException
+	{
         BufferedInputStream in = null;
         FileOutputStream fout = null;
-        try {
+        try
+		{
             in = new BufferedInputStream(new URL(urlString).openStream());
             fout = new FileOutputStream(filename);
 
             final byte data[] = new byte[1024];
             int count;
-            while ((count = in.read(data, 0, 1024)) != -1) {
+            while ((count = in.read(data, 0, 1024)) != -1)
+			{
                 fout.write(data, 0, count);
             }
-        } finally {
-            if (in != null) {
+        }
+		finally
+		{
+            if (in != null)
+			{
                 in.close();
             }
-            if (fout != null) {
+            if (fout != null)
+			{
                 fout.close();
             }
         }
     }
 
-    private void downloadAllPlaylist() {
-        for (int i = 0; i < ActivePlaylist.size(); i++) {
-            if (!checkPlaylistFile(ActivePlaylist.getFile(i))) {
+    private void downloadAllPlaylist()
+	{
+        for (int i = 0; i < ActivePlaylist.size(); i++)
+		{
+            if (!checkPlaylistFile(ActivePlaylist.getFile(i)))
+			{
                 downloadPlaylist(i);
             }
         }
     }
 
-    public void openChannel(String chName) {
-        for (int i = 0; i < channel.size(); i++) {
-            if (chName.equals(channel.getName(i))) {
+    public void openChannel(String chName)
+	{
+        for (int i = 0; i < channel.size(); i++)
+		{
+            if (chName.equals(channel.getName(i)))
+			{
                 openURL(channel.getLink(i));
                 return;
             }
         }
     }
 
-    public void openURL(final String chURL) {
+    public void openURL(final String chURL)
+	{
         new Thread(new Runnable() {
-            public void run() {
-                try {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(chURL));
-                    if (chURL.startsWith("http")) {
-                        browserIntent.setDataAndType(Uri.parse(chURL), "video/*");
-                    }
-                    startActivity(browserIntent);
+				public void run()
+				{
+					try
+					{
+						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(chURL));
+						if (chURL.startsWith("http"))
+						{
+							browserIntent.setDataAndType(Uri.parse(chURL), "video/*");
+						}
+						startActivity(browserIntent);
 
-                } catch (Exception e) {
-                    Log.i("SDL", "Error: " + e.toString());
-                }
-            }
-        }).start();
+					}
+					catch (Exception e)
+					{
+						Log.i("SDL", "Error: " + e.toString());
+					}
+				}
+			}).start();
     }
 
-    private String translate(String input) {
+    private String translate(String input)
+	{
         String output;
         output = input;
 
-        if (origNames.length > 0) {
-            for (int i = 0; i < origNames.length; i++) {
-                if (origNames[i].equalsIgnoreCase(input)) {
+        if (origNames.length > 0)
+		{
+            for (int i = 0; i < origNames.length; i++)
+			{
+                if (origNames[i].equalsIgnoreCase(input))
+				{
                     output = translatedNames[i];
                     break;
                 }
@@ -439,64 +529,75 @@ public class MainActivity extends Activity {
         return output;
     }
 
-    public void globalSearch(View view) {
+    public void globalSearch(View view)
+	{
         globalSearchName.clear();
         globalSearchUrl.clear();
         globalSearchProv.clear();
         final EditText input = new EditText(this);
         input.setSingleLine();
         new AlertDialog.Builder(MainActivity.this)
-                .setTitle(getResources().getString(R.string.request))
-                .setMessage(getResources().getString(R.string.pleaseentertext))
-                .setView(input)
-                .setPositiveButton(getResources().getString(R.string.search), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Editable value = input.getText();
-                        searchString = value.toString();
-                        globalSearchActivity();
-                    }
-                }).setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Do nothing.
-            }
-        }).show();
+			.setTitle(getResources().getString(R.string.request))
+			.setMessage(getResources().getString(R.string.pleaseentertext))
+			.setView(input)
+			.setPositiveButton(getResources().getString(R.string.search), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton)
+				{
+					Editable value = input.getText();
+					searchString = value.toString();
+					globalSearchActivity();
+				}
+			}).setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton)
+				{
+					// Do nothing.
+				}
+			}).show();
     }
 
-    public void playlistManager(View view) {
+    public void playlistManager(View view)
+	{
         playlistManagerActivity();
     }
 
-    public void favlistActivity() {
+    public void favlistActivity()
+	{
         Intent intent = new Intent(this, FavlistActivity.class);
         startActivity(intent);
     }
 
-    public void searchlistActivity() {
+    public void searchlistActivity()
+	{
         Intent intent = new Intent(this, SearchlistActivity.class);
         startActivity(intent);
     }
 
-    public void globalSearchActivity() {
+    public void globalSearchActivity()
+	{
         Intent intent = new Intent(this, GlobalSearchActivity.class);
         startActivity(intent);
     }
 
-    public void playlistManagerActivity() {
+    public void playlistManagerActivity()
+	{
         Intent intent = new Intent(this, PlaylistManagerActivity.class);
         startActivity(intent);
     }
 
-    public void globalFavoriteActivity() {
+    public void globalFavoriteActivity()
+	{
         Intent intent = new Intent(this, GlobalFavoriteActivity.class);
         startActivity(intent);
     }
 
-    public void playerActivity() {
+    public void playerActivity()
+	{
         Intent intent = new Intent(this, PlayerActivity.class);
         startActivity(intent);
     }
 
-    public void saveFavorites() throws FileNotFoundException, IOException {
+    public void saveFavorites() throws FileNotFoundException, IOException
+	{
         FileOutputStream fos;
         fos = openFileOutput("favorites.xml", Context.MODE_WORLD_WRITEABLE);
         XmlSerializer serializer = Xml.newSerializer();
@@ -505,7 +606,8 @@ public class MainActivity extends Activity {
         serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
         serializer.startTag(null, "root");
 
-        for (int j = 0; j < favoriteList.size(); j++) {
+        for (int j = 0; j < favoriteList.size(); j++)
+		{
             serializer.startTag(null, "favorites");
 
             serializer.startTag(null, "channel");
@@ -523,9 +625,11 @@ public class MainActivity extends Activity {
         fos.close();
     }
 
-    private void loadFavorites() throws IOException {
+    private void loadFavorites() throws IOException
+	{
         String text = null, name = null, prov = null, endTag;
-        try {
+        try
+		{
             XmlPullParserFactory xppf = XmlPullParserFactory.newInstance();
             xppf.setNamespaceAware(true);
             XmlPullParser xpp = xppf.newPullParser();
@@ -534,49 +638,69 @@ public class MainActivity extends Activity {
             FileInputStream fis = new FileInputStream(myXML);
             xpp.setInput(fis, null);
             int type = xpp.getEventType();
-            while (type != XmlPullParser.END_DOCUMENT) {
-                if (type == XmlPullParser.START_DOCUMENT) {
-                } else if (type == XmlPullParser.START_TAG) {
+            while (type != XmlPullParser.END_DOCUMENT)
+			{
+                if (type == XmlPullParser.START_DOCUMENT)
+				{
+                }
+				else if (type == XmlPullParser.START_TAG)
+				{
 
-                } else if (type == XmlPullParser.END_TAG) {
+                }
+				else if (type == XmlPullParser.END_TAG)
+				{
                     endTag = xpp.getName();
                     if (endTag.equals("channel"))
                         name = text;
                     if (endTag.equals("playlist"))
                         prov = text;
-                    if (endTag.equals("favorites")) {
+                    if (endTag.equals("favorites"))
+					{
                         favoriteList.add(name);
                         favoriteProvList.add(prov);
                     }
-                } else if (type == XmlPullParser.TEXT) {
+                }
+				else if (type == XmlPullParser.TEXT)
+				{
                     text = xpp.getText();
                 }
                 type = xpp.next();
             }
-        } catch (XmlPullParserException e) {
+        }
+		catch (XmlPullParserException e)
+		{
             // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (IOException e) {
+        }
+		catch (IOException e)
+		{
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
-    public void globalFavorite(View view) {
-        try {
+    public void globalFavorite(View view)
+	{
+        try
+		{
             if (favoriteList.size() == 0)
                 loadFavorites();
-        } catch (IOException e) {
+        }
+		catch (IOException e)
+		{
         }
         globalFavoriteActivity();
     }
 
-    public void setupProvider(String opt) {
-        String name = null, url = null, file = null, type = null, enable = null;
+    public void setupProvider(String opt)
+	{
+        String name = null, url = null, file = null, type = null;
         String endTag, text = null;
-        try {
+        try
+		{
             XmlPullParser xpp;
-            if (opt.equals("user")) {
+            if (opt.equals("user"))
+			{
                 XmlPullParserFactory xppf = XmlPullParserFactory.newInstance();
                 xppf.setNamespaceAware(true);
                 xpp = xppf.newPullParser();
@@ -584,11 +708,15 @@ public class MainActivity extends Activity {
                 File myXML = new File(myPath + "/userdata.xml");
                 FileInputStream fis = new FileInputStream(myXML);
                 xpp.setInput(fis, null);
-            } else {
+            }
+			else
+			{
                 xpp = getResources().getXml(R.xml.data);
             }
-            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
-                switch (xpp.getEventType()) {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT)
+			{
+                switch (xpp.getEventType())
+				{
                     case XmlPullParser.START_DOCUMENT:
                         break;
 
@@ -603,17 +731,18 @@ public class MainActivity extends Activity {
                             url = text;
                         if (endTag.equals("type"))
                             type = text;
-                        if (endTag.equals("enable"))
-                            enable = text;
                         if (endTag.equals("torrentkey"))
                             torrentKey = text;
-                        if (endTag.equals("provider")) {
+                        if (endTag.equals("provider"))
+						{
                             file = getFileName(name);
-                            if (enable.equals("true")) {
+                            if (opt.equals("user"))
+							{
                                 ActivePlaylist.add(name, url, file, Integer.parseInt(type));
                             }
-                            if (enable.equals("false")) {
-                                DisabledPlaylist.add(name, url, file, Integer.parseInt(type));
+                            if (opt.equals("default"))
+							{
+                                offeredPlaylist.add(name, url, file, Integer.parseInt(type));
                             }
                         }
                         break;
@@ -627,17 +756,23 @@ public class MainActivity extends Activity {
                 }
                 xpp.next();
             }
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        }
+		catch (XmlPullParserException e)
+		{
             e.printStackTrace();
         }
-        if (opt.equals("default")) {
+		catch (IOException e)
+		{
+            e.printStackTrace();
+        }
+        if (opt.equals("default"))
+		{
             downloadAllPlaylist();
         }
     }
 
-    public String getFileName(String input) {
+    public String getFileName(String input)
+	{
         String output = "playlist_" + input + ".m3u";
         output = output.replace(" ", "_");
         output = output.replace("(", "_");
@@ -645,4 +780,19 @@ public class MainActivity extends Activity {
         output = output.replace("@", "_");
         return output;
     }
+
+	private void playlistManagerActivityAlert()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Look at this dialog!")
+			.setCancelable(false)
+			.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id)
+				{
+					playlistManagerActivity();
+				}
+			});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
 }

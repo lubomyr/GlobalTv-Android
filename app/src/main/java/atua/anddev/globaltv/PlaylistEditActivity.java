@@ -13,10 +13,10 @@ import org.w3c.dom.*;
 import java.io.*;
 
 public class PlaylistEditActivity extends PlaylistManagerActivity {
-    int selectedType;
-    Button addEditButton;
-    Button deleteButton;
-    Editable name, url;
+    private int selectedType;
+    private Button addEditButton;
+    private Button deleteButton;
+    private Editable name, url;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,13 +37,18 @@ public class PlaylistEditActivity extends PlaylistManagerActivity {
         deleteButton = (Button) findViewById(R.id.playlisteditButton1);
         deleteButton.setText(getResources().getString(R.string.delete));
         addEditButton = (Button) findViewById(R.id.playlisteditButton2);
-        if (editAction.equals("add")) {
+        if (editAction.equals("addNew")) {
             addEditButton.setText(getResources().getString(R.string.add));
             deleteButton.setVisibility(View.GONE);
         }
         if (editAction.equals("modify")) {
-            addEditButton.setText(getResources().getString(R.string.modify));
-            deleteButton.setVisibility(View.VISIBLE);
+            if (enable) {
+                addEditButton.setText(getResources().getString(R.string.modify));
+                deleteButton.setVisibility(View.VISIBLE);
+            } else {
+                addEditButton.setText(getResources().getString(R.string.add));
+                deleteButton.setVisibility(View.GONE);
+            }
         }
 
     }
@@ -65,10 +70,10 @@ public class PlaylistEditActivity extends PlaylistManagerActivity {
                 selectedType = ActivePlaylist.getType(editNum);
                 spinnerView.setSelection(ActivePlaylist.getType(editNum));
             } else {
-                editTextName.setText(DisabledPlaylist.getName(editNum));
-                editTextUrl.setText(DisabledPlaylist.getUrl(editNum));
-                selectedType = DisabledPlaylist.getType(editNum);
-                spinnerView.setSelection(DisabledPlaylist.getType(editNum));
+                editTextName.setText(offeredPlaylist.getName(editNum));
+                editTextUrl.setText(offeredPlaylist.getUrl(editNum));
+                selectedType = offeredPlaylist.getType(editNum);
+                spinnerView.setSelection(offeredPlaylist.getType(editNum));
             }
         }
         spinnerView.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -98,7 +103,11 @@ public class PlaylistEditActivity extends PlaylistManagerActivity {
                 if (enable) {
                     ActivePlaylist.set(editNum, name.toString(), url.toString(), getFileName(name.toString()), selectedType);
                 } else {
-                    DisabledPlaylist.set(editNum, name.toString(), url.toString(), getFileName(name.toString()), selectedType);
+                    // check if playlist already exist in selected playlist
+                    if (ActivePlaylist.indexOfName(name.toString()) == -1)
+                        ActivePlaylist.add(name.toString(), url.toString(), getFileName(name.toString()), selectedType);
+                    else
+                        Toast.makeText(PlaylistEditActivity.this, getResources().getString(R.string.playlistexist), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -107,7 +116,11 @@ public class PlaylistEditActivity extends PlaylistManagerActivity {
                 Toast.makeText(PlaylistEditActivity.this, getResources().getString(R.string.pleasefillallfields), Toast.LENGTH_SHORT).show();
             } else {
                 success = true;
-                ActivePlaylist.add(name.toString(), url.toString(), getFileName(name.toString()), selectedType);
+                // check if playlist already exist in selected playlist
+                if (ActivePlaylist.indexOfName(name.toString()) == -1)
+                    ActivePlaylist.add(name.toString(), url.toString(), getFileName(name.toString()), selectedType);
+                else
+                    Toast.makeText(PlaylistEditActivity.this, getResources().getString(R.string.playlistexist), Toast.LENGTH_SHORT).show();
             }
         }
         try {
@@ -123,7 +136,7 @@ public class PlaylistEditActivity extends PlaylistManagerActivity {
         if (enable) {
             ActivePlaylist.remove(editNum);
         } else {
-            DisabledPlaylist.remove(editNum);
+            offeredPlaylist.remove(editNum);
         }
         super.onBackPressed();
     }

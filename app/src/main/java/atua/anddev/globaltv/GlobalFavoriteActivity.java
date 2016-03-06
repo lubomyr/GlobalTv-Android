@@ -83,13 +83,13 @@ public class GlobalFavoriteActivity extends MainActivity {
         int getProvType = 0;
         String getProvName = favoriteProvList.get(itemNum);
         int numA = ActivePlaylist.indexOfName(getProvName);
-        int numD = DisabledPlaylist.indexOfName(getProvName);
+        int numD = offeredPlaylist.indexOfName(getProvName);
         if (numA >= 0) {
             getProvFile = ActivePlaylist.getFile(numA);
             getProvType = ActivePlaylist.getType(ActivePlaylist.indexOfName(getProvName));
         } else if (numD >= 0) {
-            getProvFile = DisabledPlaylist.getFile(numD);
-            getProvType = DisabledPlaylist.getType(DisabledPlaylist.indexOfName(getProvName));
+            getProvFile = offeredPlaylist.getFile(numD);
+            getProvType = offeredPlaylist.getType(offeredPlaylist.indexOfName(getProvName));
         } else {
             Toast.makeText(GlobalFavoriteActivity.this, getResources().getString(R.string.playlistnotexist), Toast.LENGTH_SHORT).show();
             return;

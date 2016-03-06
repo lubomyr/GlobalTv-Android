@@ -13,14 +13,14 @@ import java.io.*;
 import org.xmlpull.v1.*;
 
 public class PlaylistManagerActivity extends MainActivity {
-    static int editNum;
-    static String editAction;
-    static Boolean enable = true;
-    ListView listView;
-    ListView DlistView;
-    TextView textView;
-    ArrayAdapter adapter;
-    ArrayAdapter Dadapter;
+    protected static int editNum;
+    protected static String editAction;
+    protected static Boolean enable = true;
+    private ListView selectedlistView;
+    private ListView offeredlistView;
+    private TextView textView;
+    private ArrayAdapter selectedAdapter;
+    private ArrayAdapter offeredAdapter;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,33 +36,33 @@ public class PlaylistManagerActivity extends MainActivity {
     private void applyLocals() {
         Button buttonAddnewPlaylist = (Button) findViewById(R.id.playlistManagerButton1);
         buttonAddnewPlaylist.setText(getResources().getString(R.string.addnewplaylist));
-        Button buttonEnabled = (Button) findViewById(R.id.playlistmanagerButton2);
-        buttonEnabled.setText(getResources().getString(R.string.enabled));
-        Button buttonDisabled = (Button) findViewById(R.id.playlistmanagerButton3);
-        buttonDisabled.setText(getResources().getString(R.string.disabled));
+        Button buttonSelected = (Button) findViewById(R.id.playlistmanagerButton2);
+        buttonSelected.setText(getResources().getString(R.string.selected));
+        Button buttonOffered = (Button) findViewById(R.id.playlistmanagerButton3);
+        buttonOffered.setText(getResources().getString(R.string.offered));
         Button buttonRestore = (Button) findViewById(R.id.playlistmanagerButton4);
-        buttonRestore.setText(getResources().getString(R.string.restoreDefaults));
+        buttonRestore.setText(getResources().getString(R.string.reset));
     }
 
     private void createProvlist() {
-        listView = (ListView) findViewById(R.id.playlistManagerListView1);
-        DlistView = (ListView) findViewById(R.id.playlistManagerListView2);
+        selectedlistView = (ListView) findViewById(R.id.playlistManagerListView1);
+        offeredlistView = (ListView) findViewById(R.id.playlistManagerListView2);
         textView = (TextView) findViewById(R.id.playlistManagerTextView1);
         if (enable) {
-            listView.setVisibility(View.VISIBLE);
-            DlistView.setVisibility(View.GONE);
-            textView.setText(getResources().getString(R.string.enabled) + " - " + ActivePlaylist.size() + " " + getResources().getString(R.string.pcs));
+            selectedlistView.setVisibility(View.VISIBLE);
+            offeredlistView.setVisibility(View.GONE);
+            textView.setText(getResources().getString(R.string.selected) + " - " + ActivePlaylist.size() + " " + getResources().getString(R.string.pcs));
         } else {
-            listView.setVisibility(View.GONE);
-            DlistView.setVisibility(View.VISIBLE);
-            textView.setText(getResources().getString(R.string.disabled) + " - " + DisabledPlaylist.size() + " " + getResources().getString(R.string.pcs));
+            selectedlistView.setVisibility(View.GONE);
+            offeredlistView.setVisibility(View.VISIBLE);
+            textView.setText(getResources().getString(R.string.offered) + " - " + offeredPlaylist.size() + " " + getResources().getString(R.string.pcs));
         }
     }
 
-    public void showProvlist() {
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ActivePlaylist.name);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new OnItemClickListener() {
+    private void showProvlist() {
+        selectedAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ActivePlaylist.name);
+        selectedlistView.setAdapter(selectedAdapter);
+        selectedlistView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4) {
                 // TODO: Implement this method
@@ -73,24 +73,23 @@ public class PlaylistManagerActivity extends MainActivity {
                 playlistEditActivity();
             }
         });
-        listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+        selectedlistView.setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> p1, View p2, int p3, long p4) {
                 final String s = (String) p1.getItemAtPosition(p3);
                 Toast.makeText(PlaylistManagerActivity.this, s, Toast.LENGTH_SHORT).show();
                 editNum = p3;
-                // disable playlist dialog
+                // offered playlist dialog
                 runOnUiThread(new Runnable() {
                     public void run() {
                         AlertDialog.Builder builder = new AlertDialog.Builder(PlaylistManagerActivity.this);
                         builder.setTitle(getResources().getString(R.string.request));
-                        builder.setMessage(getResources().getString(R.string.doyouwant) + " " + getResources().getString(R.string.disable) + " '" + s + "'");
-                        builder.setPositiveButton(getResources().getString(R.string.disable), new DialogInterface.OnClickListener() {
+                        builder.setMessage(getResources().getString(R.string.doyouwant) + " " + getResources().getString(R.string.remove) + " '" + s + "'");
+                        builder.setPositiveButton(getResources().getString(R.string.remove), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface p1, int p2) {
-                                DisabledPlaylist.add(ActivePlaylist.getName(editNum), ActivePlaylist.getUrl(editNum), ActivePlaylist.getFile(editNum), ActivePlaylist.getType(editNum));
                                 ActivePlaylist.remove(editNum);
-                                adapter.notifyDataSetChanged();
+                                selectedAdapter.notifyDataSetChanged();
                                 try {
                                     saveData();
                                 } catch (IOException e) {
@@ -113,9 +112,9 @@ public class PlaylistManagerActivity extends MainActivity {
             }
         });
 
-        Dadapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, DisabledPlaylist.name);
-        DlistView.setAdapter(Dadapter);
-        DlistView.setOnItemClickListener(new OnItemClickListener() {
+        offeredAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, offeredPlaylist.name);
+        offeredlistView.setAdapter(offeredAdapter);
+        offeredlistView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4) {
                 final String s = (String) p1.getItemAtPosition(p3);
@@ -125,28 +124,32 @@ public class PlaylistManagerActivity extends MainActivity {
                 playlistEditActivity();
             }
         });
-        DlistView.setOnItemLongClickListener(new OnItemLongClickListener() {
+        offeredlistView.setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> p1, View p2, int p3, long p4) {
                 final String s = (String) p1.getItemAtPosition(p3);
                 Toast.makeText(PlaylistManagerActivity.this, s, Toast.LENGTH_SHORT).show();
                 editNum = p3;
-                // enable playlist dialog
+                // selected playlist dialog
                 runOnUiThread(new Runnable() {
                     public void run() {
                         AlertDialog.Builder builder = new AlertDialog.Builder(PlaylistManagerActivity.this);
                         builder.setTitle(getResources().getString(R.string.request));
-                        builder.setMessage(getResources().getString(R.string.doyouwant) + " " + getResources().getString(R.string.enable) + " '" + s + "'");
-                        builder.setPositiveButton(getResources().getString(R.string.enable), new DialogInterface.OnClickListener() {
+                        builder.setMessage(getResources().getString(R.string.doyouwant) + " " + getResources().getString(R.string.add) + " '" + s + "'");
+                        builder.setPositiveButton(getResources().getString(R.string.add), new DialogInterface.OnClickListener() {
 
                             @Override
                             public void onClick(DialogInterface p1, int p2) {
-                                ActivePlaylist.add(DisabledPlaylist.getName(editNum), DisabledPlaylist.getUrl(editNum), DisabledPlaylist.getFile(editNum), DisabledPlaylist.getType(editNum));
-                                DisabledPlaylist.remove(editNum);
-                                Dadapter.notifyDataSetChanged();
-                                try {
-                                    saveData();
-                                } catch (IOException e) {
+                                // check if playlist already exist in selected playlist
+                                if (ActivePlaylist.indexOfName(offeredPlaylist.getName(editNum)) == -1) {
+                                    ActivePlaylist.add(offeredPlaylist.getName(editNum), offeredPlaylist.getUrl(editNum), offeredPlaylist.getFile(editNum), offeredPlaylist.getType(editNum));
+                                    offeredAdapter.notifyDataSetChanged();
+                                    try {
+                                        saveData();
+                                    } catch (IOException e) {
+                                    }
+                                } else {
+                                    Toast.makeText(PlaylistManagerActivity.this, getResources().getString(R.string.playlistexist), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -191,66 +194,34 @@ public class PlaylistManagerActivity extends MainActivity {
             serializer.text(ActivePlaylist.getUrl(j));
             serializer.endTag(null, "url");
 
-//			serializer.startTag(null, "file");
-//			serializer.text(ActivePlaylist.getFile(j));
-//			serializer.endTag(null, "file");
-
             serializer.startTag(null, "type");
             serializer.text(ActivePlaylist.getTypeString(j));
             serializer.endTag(null, "type");
 
-            serializer.startTag(null, "enable");
-            serializer.text("true");
-            serializer.endTag(null, "enable");
-
             serializer.endTag(null, "provider");
         }
-        for (int j = 0; j < DisabledPlaylist.size(); j++) {
-            serializer.startTag(null, "provider");
 
-            serializer.startTag(null, "name");
-            serializer.text(DisabledPlaylist.getName(j));
-            serializer.endTag(null, "name");
-
-            serializer.startTag(null, "url");
-            serializer.text(DisabledPlaylist.getUrl(j));
-            serializer.endTag(null, "url");
-
-//			serializer.startTag(null, "file");
-//			serializer.text(DisabledPlaylist.getFile(j));
-//			serializer.endTag(null, "file");
-
-            serializer.startTag(null, "type");
-            serializer.text(DisabledPlaylist.getTypeString(j));
-            serializer.endTag(null, "type");
-
-            serializer.startTag(null, "enable");
-            serializer.text("false");
-            serializer.endTag(null, "enable");
-
-            serializer.endTag(null, "provider");
-        }
         serializer.endDocument();
         serializer.flush();
         fos.close();
     }
 
     public void addNewPlaylist(View view) {
-        editAction = "add";
+        editAction = "addNew";
         playlistEditActivity();
     }
 
-    public void showEnabled(View view) {
-        listView.setVisibility(View.VISIBLE);
-        DlistView.setVisibility(View.GONE);
-        textView.setText(getResources().getString(R.string.enabled) + " - " + ActivePlaylist.size() + " " + getResources().getString(R.string.pcs));
+    public void showSelected(View view) {
+        selectedlistView.setVisibility(View.VISIBLE);
+        offeredlistView.setVisibility(View.GONE);
+        textView.setText(getResources().getString(R.string.selected) + " - " + ActivePlaylist.size() + " " + getResources().getString(R.string.pcs));
         enable = true;
     }
 
-    public void showDisabled(View view) {
-        listView.setVisibility(View.GONE);
-        DlistView.setVisibility(View.VISIBLE);
-        textView.setText(getResources().getString(R.string.disabled) + " - " + DisabledPlaylist.size() + " " + getResources().getString(R.string.pcs));
+    public void showOffered(View view) {
+        selectedlistView.setVisibility(View.GONE);
+        offeredlistView.setVisibility(View.VISIBLE);
+        textView.setText(getResources().getString(R.string.offered) + " - " + offeredPlaylist.size() + " " + getResources().getString(R.string.pcs));
         enable = false;
     }
 
@@ -260,19 +231,39 @@ public class PlaylistManagerActivity extends MainActivity {
     }
 
     public void restoreDefault(View view) {
-        ActivePlaylist.clear();
-        DisabledPlaylist.clear();
-        try {
-            setupProvider("default");
-        } catch (Exception e1) {
-            Toast.makeText(PlaylistManagerActivity.this, e1.toString(), Toast.LENGTH_SHORT).show();
-        }
-        adapter.notifyDataSetChanged();
-        Dadapter.notifyDataSetChanged();
-        try {
-            saveData();
-        } catch (IOException e) {
-        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(PlaylistManagerActivity.this);
+        builder.setTitle(getResources().getString(R.string.request));
+        builder.setMessage(getResources().getString(R.string.resetwarn));
+        builder.setPositiveButton(getResources().getString(R.string.reset), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface p1, int p2) {
+                ActivePlaylist.clear();
+                offeredPlaylist.clear();
+                try {
+                    setupProvider("default");
+                } catch (Exception e1) {
+                    Toast.makeText(PlaylistManagerActivity.this, e1.toString(), Toast.LENGTH_SHORT).show();
+                }
+                selectedAdapter.notifyDataSetChanged();
+                offeredAdapter.notifyDataSetChanged();
+                try {
+                    saveData();
+                } catch (IOException e) {
+                }
+            }
+        });
+        builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface p1, int p2) {
+                // TODO: Implement this method
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.setOwnerActivity(PlaylistManagerActivity.this);
+        alert.show();
+
+
     }
 
 }
