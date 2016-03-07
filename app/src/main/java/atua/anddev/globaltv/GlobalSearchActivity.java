@@ -19,7 +19,7 @@ public class GlobalSearchActivity extends MainActivity {
 
         // Set sub.xml as user interface layout
         setContentView(R.layout.globalsearch);
-        if (globalSearchName.size() == 0)
+        if (searchService.sizeOfSearchList() == 0)
             runProgressBar();
         else
             showSearchResults();
@@ -29,7 +29,7 @@ public class GlobalSearchActivity extends MainActivity {
         progress = new ProgressDialog(this);
         progress.setMessage(getResources().getString(R.string.searching));
         progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progress.setMax(ActivePlaylist.size());
+        progress.setMax(playlistService.sizeOfActivePlaylist());
         progress.setProgress(0);
         progress.show();
 
@@ -50,17 +50,15 @@ public class GlobalSearchActivity extends MainActivity {
     }
 
     private void prepare_globalSearch() {
-        for (int i = 0; i < ActivePlaylist.size(); i++) {
+        for (int i = 0; i < playlistService.sizeOfActivePlaylist(); i++) {
             progress.setProgress(i);
-            readPlaylist(ActivePlaylist.getFile(i), ActivePlaylist.getType(i));
+            readPlaylist(playlistService.getActivePlaylistById(i).getFile(), playlistService.getActivePlaylistById(i).getType());
 
             String chName;
-            for (int j = 0; j < channel.size(); j++) {
-                chName = channel.getName(j).toLowerCase();
+            for (int j = 0; j < channelService.sizeOfChannelList(); j++) {
+                chName = channelService.getChannelById(j).getName().toLowerCase();
                 if (chName.contains(searchString.toLowerCase())) {
-                    globalSearchName.add(channel.getName(j));
-                    globalSearchUrl.add(channel.getLink(j));
-                    globalSearchProv.add(ActivePlaylist.getName(i));
+                    searchService.addToSearchList(channelService.getChannelById(j).getName(), channelService.getChannelById(j).getUrl(), playlistService.getActivePlaylistById(i).getName());
                 }
             }
         }
@@ -69,9 +67,9 @@ public class GlobalSearchActivity extends MainActivity {
 
     public void showSearchResults() {
         TextView textView = (TextView) findViewById(R.id.globalsearchTextView1);
-        textView.setText(getResources().getString(R.string.resultsfor) + " '" + searchString + "' - " + globalSearchName.size() + " " + getResources().getString(R.string.channels));
+        textView.setText(getResources().getString(R.string.resultsfor) + " '" + searchString + "' - " + searchService.sizeOfSearchList() + " " + getResources().getString(R.string.channels));
 
-        GlobalAdapter adapter = new GlobalAdapter(this, globalSearchName, globalSearchProv);
+        GlobalAdapter adapter = new GlobalAdapter(this, searchService.searchNameList, searchService.searchProvList);
         ListView list = (ListView) findViewById(R.id.globalsearchListView1);
         list.setAdapter(adapter);
         list.setOnItemClickListener(new OnItemClickListener() {
@@ -79,7 +77,7 @@ public class GlobalSearchActivity extends MainActivity {
             public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4) {
                 String s = (String) p1.getItemAtPosition(p3);
                 Toast.makeText(GlobalSearchActivity.this, s, Toast.LENGTH_SHORT).show();
-                openURL(globalSearchUrl.get(p3));
+                openURL(searchService.getSearchListById(p3).getUrl());
             }
 
         });
@@ -90,8 +88,8 @@ public class GlobalSearchActivity extends MainActivity {
                 final int selectedItem = p3;
                 Toast.makeText(GlobalSearchActivity.this, s, Toast.LENGTH_SHORT).show();
                 Boolean changesAllowed = true;
-                for (int i = 0; i < favoriteList.size(); i++) {
-                    if (globalSearchName.get(selectedItem).equals(favoriteList.get(i)) && globalSearchProv.get(selectedItem).equals(favoriteProvList.get(i)))
+                for (int i = 0; i < favoriteService.sizeOfFavoriteList(); i++) {
+                    if (searchService.getSearchListById(selectedItem).getName().equals(favoriteService.getFavoriteById(i).getName()) && searchService.getSearchListById(selectedItem).getProv().equals(favoriteService.getFavoriteById(i).getProv()))
                         changesAllowed = false;
                 }
                 if (changesAllowed) {
@@ -105,8 +103,7 @@ public class GlobalSearchActivity extends MainActivity {
 
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
-                                    MainActivity.favoriteList.add(s);
-                                    MainActivity.favoriteProvList.add(globalSearchProv.get(selectedItem));
+                                    favoriteService.addToFavoriteList(s, searchService.getSearchListById(selectedItem).getProv());
                                     try {
                                         saveFavorites();
                                     } catch (IOException e) {

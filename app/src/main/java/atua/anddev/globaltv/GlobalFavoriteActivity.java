@@ -9,6 +9,8 @@ import android.widget.AdapterView.*;
 
 import java.io.*;
 
+import atua.anddev.globaltv.service.*;
+
 public class GlobalFavoriteActivity extends MainActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +24,7 @@ public class GlobalFavoriteActivity extends MainActivity {
         TextView textview = (TextView) findViewById(R.id.globalfavoriteTextView1);
         textview.setText(getResources().getString(R.string.favorites));
 
-        final GlobalAdapter adapter = new GlobalAdapter(this, favoriteList, favoriteProvList);
+        final GlobalAdapter adapter = new GlobalAdapter(this, favoriteService.favoriteList, favoriteService.favoriteProvList);
         ListView list = (ListView) findViewById(R.id.globalfavoriteListView1);
         list.setAdapter(adapter);
         list.setOnItemClickListener(new OnItemClickListener() {
@@ -50,8 +52,7 @@ public class GlobalFavoriteActivity extends MainActivity {
 
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
-                                    favoriteList.remove(selectedItem);
-                                    favoriteProvList.remove(selectedItem);
+                                    favoriteService.deleteFromFavoritesById(selectedItem);
                                     try {
                                         saveFavorites();
                                     } catch (IOException e) {
@@ -81,23 +82,23 @@ public class GlobalFavoriteActivity extends MainActivity {
     public void openFavorite(int itemNum) {
         String getProvFile = null;
         int getProvType = 0;
-        String getProvName = favoriteProvList.get(itemNum);
-        int numA = ActivePlaylist.indexOfName(getProvName);
-        int numD = offeredPlaylist.indexOfName(getProvName);
+        String getProvName = favoriteService.getFavoriteById(itemNum).getProv();
+        int numA = playlistService.indexNameForActivePlaylist(getProvName);
+        int numD = playlistService.indexNameForOfferedPlaylist(getProvName);
         if (numA >= 0) {
-            getProvFile = ActivePlaylist.getFile(numA);
-            getProvType = ActivePlaylist.getType(ActivePlaylist.indexOfName(getProvName));
+            getProvFile = playlistService.getActivePlaylistById(numA).getFile();
+            getProvType = playlistService.getActivePlaylistById(playlistService.indexNameForActivePlaylist(getProvName)).getType();
         } else if (numD >= 0) {
-            getProvFile = offeredPlaylist.getFile(numD);
-            getProvType = offeredPlaylist.getType(offeredPlaylist.indexOfName(getProvName));
+            getProvFile = playlistService.getOfferedPlaylistById(numD).getFile();
+            getProvType = playlistService.getOfferedPlaylistById(playlistService.indexNameForOfferedPlaylist(getProvName)).getType();
         } else {
             Toast.makeText(GlobalFavoriteActivity.this, getResources().getString(R.string.playlistnotexist), Toast.LENGTH_SHORT).show();
             return;
         }
         readPlaylist(getProvFile, getProvType);
-        for (int j = 0; j < channel.size(); j++) {
-            if (channel.getName(j).equals(favoriteList.get(itemNum))) {
-                openURL(channel.getLink(j));
+        for (int j = 0; j < channelService.sizeOfChannelList(); j++) {
+            if (channelService.getChannelById(j).getName().equals(favoriteService.getFavoriteById(itemNum).getName())) {
+                openURL(channelService.getChannelById(j).getUrl());
                 break;
             }
         }

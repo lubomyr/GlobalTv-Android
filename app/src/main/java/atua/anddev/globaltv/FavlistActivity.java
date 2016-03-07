@@ -22,10 +22,10 @@ public class FavlistActivity extends CatlistActivity {
 
     public void showFavlist() {
         final ArrayList<String> playlist = new ArrayList<String>();
-        for (int i = 0; i < favoriteList.size(); i++) {
-            for (int j = 0; j < channel.size(); j++) {
-                if (favoriteList.get(i).equals(channel.getName(j)) && !playlist.contains(favoriteList.get(i))) {
-                    playlist.add(favoriteList.get(i));
+        for (int i = 0; i < favoriteService.sizeOfFavoriteList(); i++) {
+            for (int j = 0; j < channelService.sizeOfChannelList(); j++) {
+                if (favoriteService.getFavoriteById(i).getName().equals(channelService.getChannelById(j).getName()) && !playlist.contains(favoriteService.getFavoriteById(i).getName())) {
+                    playlist.add(favoriteService.getFavoriteById(i).getName());
                 }
             }
         }
@@ -64,8 +64,7 @@ public class FavlistActivity extends CatlistActivity {
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
                                     playlist.remove(s);
-                                    favoriteList.remove(s);
-                                    favoriteProvList.remove(favoriteList.indexOf(s));
+                                    favoriteService.deleteFromFavoritesById(favoriteService.indexNameForFavorite(s));
                                     try {
                                         saveFavorites();
                                     } catch (IOException e) {

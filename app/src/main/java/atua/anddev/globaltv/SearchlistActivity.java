@@ -25,11 +25,11 @@ public class SearchlistActivity extends CatlistActivity {
         final ArrayList<String> playlist = new ArrayList<String>();
         final ArrayList<String> playlistUrl = new ArrayList<String>();
         String chName;
-        for (int i = 0; i < channel.size(); i++) {
-            chName = channel.getName(i).toLowerCase();
+        for (int i = 0; i < channelService.sizeOfChannelList(); i++) {
+            chName = channelService.getChannelById(i).getName().toLowerCase();
             if (chName.contains(searchString.toLowerCase())) {
-                playlist.add(channel.getName(i));
-                playlistUrl.add(channel.getLink(i));
+                playlist.add(channelService.getChannelById(i).getName());
+                playlistUrl.add(channelService.getChannelById(i).getUrl());
             }
         }
 
@@ -55,7 +55,7 @@ public class SearchlistActivity extends CatlistActivity {
                 // TODO: Implement this method
                 final String s = (String) p1.getItemAtPosition(p3);
                 Toast.makeText(SearchlistActivity.this, s, Toast.LENGTH_SHORT).show();
-                if (!favoriteList.contains(s)) {
+                if (!favoriteService.containsNameForFavorite(s)) {
                     // Add to favourite list dialog
                     runOnUiThread(new Runnable() {
                         public void run() {
@@ -66,8 +66,7 @@ public class SearchlistActivity extends CatlistActivity {
 
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
-                                    MainActivity.favoriteList.add(s);
-                                    MainActivity.favoriteProvList.add(ActivePlaylist.getName(selectedProvider));
+                                    favoriteService.addToFavoriteList(s, playlistService.getActivePlaylistById(selectedProvider).getName());
                                     try {
                                         saveFavorites();
                                     } catch (IOException e) {

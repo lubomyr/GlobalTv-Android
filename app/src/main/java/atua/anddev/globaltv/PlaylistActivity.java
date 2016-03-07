@@ -38,13 +38,13 @@ public class PlaylistActivity extends MainActivity {
     private void openCategory(final String catName) {
         final ArrayList<String> playlist = new ArrayList<String>();
         final ArrayList<String> playlistUrl = new ArrayList<String>();
-        for (int i = 0; i < channel.size(); i++) {
+        for (int i = 0; i < channelService.sizeOfChannelList(); i++) {
             if (catName.equals(getResources().getString(R.string.all))) {
-                playlist.add(channel.getName(i));
-                playlistUrl.add(channel.getLink(i));
-            } else if (catName.equals(channel.getCategory(i))) {
-                playlist.add(channel.getName(i));
-                playlistUrl.add(channel.getLink(i));
+                playlist.add(channelService.getChannelById(i).getName());
+                playlistUrl.add(channelService.getChannelById(i).getUrl());
+            } else if (catName.equals(channelService.getChannelById(i).getCategory())) {
+                playlist.add(channelService.getChannelById(i).getName());
+                playlistUrl.add(channelService.getChannelById(i).getUrl());
             }
         }
 
@@ -70,7 +70,7 @@ public class PlaylistActivity extends MainActivity {
                 // TODO: Implement this method
                 final String s = (String) p1.getItemAtPosition(p3);
                 Toast.makeText(PlaylistActivity.this, s, Toast.LENGTH_SHORT).show();
-                if (!(favoriteList.contains(s) && ActivePlaylist.getName(selectedProvider).equals(favoriteProvList.get(favoriteList.indexOf(s))))) {
+                if (!(favoriteService.containsNameForFavorite(s) && playlistService.getActivePlaylistById(selectedProvider).getName().equals(favoriteService.getFavoriteById(favoriteService.indexNameForFavorite(s)).getProv()))) {
                     // Add to favourite list dialog
                     runOnUiThread(new Runnable() {
                         public void run() {
@@ -81,8 +81,7 @@ public class PlaylistActivity extends MainActivity {
 
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
-                                    MainActivity.favoriteList.add(s);
-                                    MainActivity.favoriteProvList.add(ActivePlaylist.getName(selectedProvider));
+                                    favoriteService.addToFavoriteList(s, playlistService.getActivePlaylistById(selectedProvider).getName());
                                     try {
                                         saveFavorites();
                                     } catch (IOException e) {
@@ -112,8 +111,7 @@ public class PlaylistActivity extends MainActivity {
 
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
-                                    favoriteProvList.remove(favoriteList.indexOf(s));
-                                    favoriteList.remove(s);
+                                    favoriteService.deleteFromFavoritesById(favoriteService.indexNameForFavorite(s));
                                     try {
                                         saveFavorites();
                                     } catch (IOException e) {

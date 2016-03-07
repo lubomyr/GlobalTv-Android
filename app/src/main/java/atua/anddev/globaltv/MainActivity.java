@@ -17,19 +17,12 @@ import java.util.*;
 
 import org.xmlpull.v1.*;
 
+import atua.anddev.globaltv.service.*;
+
 public class MainActivity extends Activity {
     Configuration conf;
 
-    static ArrayList<String> globalSearchName = new ArrayList<String>();
-    static ArrayList<String> globalSearchUrl = new ArrayList<String>();
-    static ArrayList<String> globalSearchProv = new ArrayList<String>();
-    static Channel channel = new Channel();
-    static Playlist ActivePlaylist = new Playlist();
-    static Playlist offeredPlaylist = new Playlist();
-    static ArrayList<String> categoryList = new ArrayList<String>();
     static String selectedCategory;
-    static ArrayList<String> favoriteList = new ArrayList<String>();
-    static ArrayList<String> favoriteProvList = new ArrayList<String>();
     static int selectedProvider;
     static String myPath;
     static Boolean needUpdate;
@@ -41,6 +34,11 @@ public class MainActivity extends Activity {
     static String torrentKey;
     static Boolean playlistWithGroup;
     static String selectedUrl;
+    protected PlaylistService playlistService = new PlaylistServiceImpl();
+    protected ChannelService channelService = new ChannelServiceImpl();
+    protected FavoriteService favoriteService = new FavoriteServiceImpl();
+    protected SearchService searchService = new SearchServiceImpl();
+    static ArrayAdapter provAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +52,14 @@ public class MainActivity extends Activity {
 
         conf = getResources().getConfiguration();
 
-        if (offeredPlaylist.size() == 0) {
+        if (playlistService.sizeOfOfferedPlaylist() == 0) {
             setupProvider("default");
             if (checkFile("userdata.xml"))
                 setupProvider("user");
         }
-        if (ActivePlaylist.size() == 0) {
+        if (playlistService.sizeOfActivePlaylist() == 0) {
             Toast.makeText(MainActivity.this, getResources().getString(R.string.plstmanwarn), Toast.LENGTH_SHORT).show();
-            ActivePlaylist.add(offeredPlaylist.getName(0), offeredPlaylist.getUrl(0), offeredPlaylist.getFile(0), offeredPlaylist.getType(0));
+            playlistService.addToActivePlaylist(playlistService.getOfferedPlaylistById(0).getName(), playlistService.getOfferedPlaylistById(0).getUrl(), playlistService.getOfferedPlaylistById(0).getType());
         }
         setupProviderView();
         showLocals();
@@ -146,7 +144,7 @@ public class MainActivity extends Activity {
                 translatedNames = getResources().getStringArray(R.array.categories_list_translated);
                 applyLocals();
 
-                checkPlaylistFile(ActivePlaylist.getFile(selectedProvider));
+                checkPlaylistFile(playlistService.getActivePlaylistById(selectedProvider).getFile());
             }
 
             @Override
@@ -159,9 +157,9 @@ public class MainActivity extends Activity {
 
     private void setupProviderView() {
         Spinner spinnerView = (Spinner) findViewById(R.id.mainSpinner1);
-        SpinnerAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ActivePlaylist.name);
+        provAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, playlistService.activePlaylistName);
 
-        spinnerView.setAdapter(adapter);
+        spinnerView.setAdapter(provAdapter);
         spinnerView.setOnItemSelectedListener(new OnItemSelectedListener() {
 
             @Override
@@ -169,8 +167,7 @@ public class MainActivity extends Activity {
 
                 String s = (String) p1.getItemAtPosition(p3);
                 selectedProvider = p3;
-                checkPlaylistFile(ActivePlaylist.getFile(p3));
-
+                checkPlaylistFile(playlistService.getActivePlaylistById(p3).getFile());
             }
 
             @Override
@@ -244,9 +241,9 @@ public class MainActivity extends Activity {
         if (needUpdate) {
             downloadPlaylist(selectedProvider);
         }
-        readPlaylist(ActivePlaylist.getFile(selectedProvider), ActivePlaylist.getType(selectedProvider));
+        readPlaylist(playlistService.getActivePlaylistById(selectedProvider).getFile(), playlistService.getActivePlaylistById(selectedProvider).getType());
         try {
-            if (favoriteList.size() == 0)
+            if (favoriteService.sizeOfFavoriteList() == 0)
                 loadFavorites();
         } catch (IOException e) {
         }
@@ -261,8 +258,8 @@ public class MainActivity extends Activity {
     }
 
     public void updateAll(View view) {
-        for (int i = 0; i < ActivePlaylist.size(); i++) {
-            checkPlaylistFile(ActivePlaylist.getFile(i));
+        for (int i = 0; i < playlistService.sizeOfActivePlaylist(); i++) {
+            checkPlaylistFile(playlistService.getActivePlaylistById(i).getFile());
             if (needUpdate) {
                 downloadPlaylist(i);
             }
@@ -273,20 +270,20 @@ public class MainActivity extends Activity {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    String path = myPath + "/" + ActivePlaylist.getFile(num);
-                    saveUrl(path, ActivePlaylist.getUrl(num));
+                    String path = myPath + "/" + playlistService.getActivePlaylistById(num).getFile();
+                    saveUrl(path, playlistService.getActivePlaylistById(num).getUrl());
 
                     runOnUiThread(new Runnable() {
                         public void run() {
                             needUpdate = false;
-                            checkPlaylistFile(ActivePlaylist.getFile(selectedProvider));
-                            Toast.makeText(MainActivity.this, getResources().getString(R.string.playlistupdated, ActivePlaylist.getName(num)), Toast.LENGTH_SHORT).show();
+                            checkPlaylistFile(playlistService.getActivePlaylistById(selectedProvider).getFile());
+                            Toast.makeText(MainActivity.this, getResources().getString(R.string.playlistupdated, playlistService.getActivePlaylistById(num).getName()), Toast.LENGTH_SHORT).show();
                         }
                     });
                 } catch (Exception e) {
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(MainActivity.this, getResources().getString(R.string.updatefailed, ActivePlaylist.getName(num)), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, getResources().getString(R.string.updatefailed, playlistService.getActivePlaylistById(num).getName()), Toast.LENGTH_SHORT).show();
                         }
                     });
                     Log.i("SDL", "Error: " + e.toString());
@@ -299,7 +296,7 @@ public class MainActivity extends Activity {
         playlistWithGroup = false;
         String lineStr, chName = "", chCategory = "", chLink = "";
         String groupName = "", groupName2 = "";
-        channel.clear();
+        channelService.clearAllChannel();
         try {
             InputStream myfile = new FileInputStream(myPath + "/" + fname);
             Scanner myInputFile = new Scanner(myfile, "UTF8").useDelimiter("[\n]");
@@ -319,7 +316,7 @@ public class MainActivity extends Activity {
                         chName = chName.substring(0, chName.length() - 1);
                     }
                     chCategory = translate(chCategory);
-                    channel.add(chName, chCategory, chLink);
+                    channelService.addToChannelList(chName, chLink, chCategory);
                     if (!chCategory.equals(""))
                         playlistWithGroup = true;
                     chName = "";
@@ -397,17 +394,17 @@ public class MainActivity extends Activity {
     }
 
     private void downloadAllPlaylist() {
-        for (int i = 0; i < ActivePlaylist.size(); i++) {
-            if (!checkPlaylistFile(ActivePlaylist.getFile(i))) {
+        for (int i = 0; i < playlistService.sizeOfActivePlaylist(); i++) {
+            if (!checkPlaylistFile(playlistService.getActivePlaylistById(i).getFile())) {
                 downloadPlaylist(i);
             }
         }
     }
 
     public void openChannel(String chName) {
-        for (int i = 0; i < channel.size(); i++) {
-            if (chName.equals(channel.getName(i))) {
-                openURL(channel.getLink(i));
+        for (int i = 0; i < channelService.sizeOfChannelList(); i++) {
+            if (chName.equals(channelService.getChannelById(i).getName())) {
+                openURL(channelService.getChannelById(i).getUrl());
                 return;
             }
         }
@@ -446,9 +443,7 @@ public class MainActivity extends Activity {
     }
 
     public void globalSearch(View view) {
-        globalSearchName.clear();
-        globalSearchUrl.clear();
-        globalSearchProv.clear();
+        searchService.clearSearchList();
         final EditText input = new EditText(this);
         input.setSingleLine();
         new AlertDialog.Builder(MainActivity.this)
@@ -511,15 +506,15 @@ public class MainActivity extends Activity {
         serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
         serializer.startTag(null, "root");
 
-        for (int j = 0; j < favoriteList.size(); j++) {
+        for (int j = 0; j < favoriteService.sizeOfFavoriteList(); j++) {
             serializer.startTag(null, "favorites");
 
             serializer.startTag(null, "channel");
-            serializer.text(favoriteList.get(j));
+            serializer.text(favoriteService.getFavoriteById(j).getName());
             serializer.endTag(null, "channel");
 
             serializer.startTag(null, "playlist");
-            serializer.text(favoriteProvList.get(j));
+            serializer.text(favoriteService.getFavoriteById(j).getProv());
             serializer.endTag(null, "playlist");
 
             serializer.endTag(null, "favorites");
@@ -551,8 +546,7 @@ public class MainActivity extends Activity {
                     if (endTag.equals("playlist"))
                         prov = text;
                     if (endTag.equals("favorites")) {
-                        favoriteList.add(name);
-                        favoriteProvList.add(prov);
+                        favoriteService.addToFavoriteList(name, prov);
                     }
                 } else if (type == XmlPullParser.TEXT) {
                     text = xpp.getText();
@@ -570,7 +564,7 @@ public class MainActivity extends Activity {
 
     public void globalFavorite(View view) {
         try {
-            if (favoriteList.size() == 0)
+            if (favoriteService.sizeOfFavoriteList() == 0)
                 loadFavorites();
         } catch (IOException e) {
         }
@@ -578,7 +572,7 @@ public class MainActivity extends Activity {
     }
 
     public void setupProvider(String opt) {
-        String name = null, url = null, file = null, type = null;
+        String name = null, url = null, type = null;
         String endTag, text = null;
         try {
             XmlPullParser xpp;
@@ -612,12 +606,11 @@ public class MainActivity extends Activity {
                         if (endTag.equals("torrentkey"))
                             torrentKey = text;
                         if (endTag.equals("provider")) {
-                            file = getFileName(name);
                             if (opt.equals("user")) {
-                                ActivePlaylist.add(name, url, file, Integer.parseInt(type));
+                                playlistService.addToActivePlaylist(name, url, Integer.parseInt(type));
                             }
                             if (opt.equals("default")) {
-                                offeredPlaylist.add(name, url, file, Integer.parseInt(type));
+                                playlistService.addToOfferedPlaylist(name, url, Integer.parseInt(type));
                             }
                         }
                         break;
@@ -641,25 +634,5 @@ public class MainActivity extends Activity {
         }
     }
 
-    public String getFileName(String input) {
-        String output = "playlist_" + input + ".m3u";
-        output = output.replace(" ", "_");
-        output = output.replace("(", "_");
-        output = output.replace(")", "_");
-        output = output.replace("@", "_");
-        return output;
-    }
 
-    private void playlistManagerActivityAlert() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Look at this dialog!")
-                .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        playlistManagerActivity();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
 }

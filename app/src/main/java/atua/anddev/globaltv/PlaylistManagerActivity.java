@@ -8,14 +8,17 @@ import android.view.*;
 import android.widget.*;
 import android.widget.AdapterView.*;
 
+import atua.anddev.globaltv.service.*;
+
 import java.io.*;
 
 import org.xmlpull.v1.*;
 
-public class PlaylistManagerActivity extends MainActivity {
+public class PlaylistManagerActivity extends Activity {
     protected static int editNum;
     protected static String editAction;
     protected static Boolean enable = true;
+    protected PlaylistService playlistService = new PlaylistServiceImpl();
     private ListView selectedlistView;
     private ListView offeredlistView;
     private TextView textView;
@@ -51,16 +54,16 @@ public class PlaylistManagerActivity extends MainActivity {
         if (enable) {
             selectedlistView.setVisibility(View.VISIBLE);
             offeredlistView.setVisibility(View.GONE);
-            textView.setText(getResources().getString(R.string.selected) + " - " + ActivePlaylist.size() + " " + getResources().getString(R.string.pcs));
+            textView.setText(getResources().getString(R.string.selected) + " - " + playlistService.sizeOfActivePlaylist() + " " + getResources().getString(R.string.pcs));
         } else {
             selectedlistView.setVisibility(View.GONE);
             offeredlistView.setVisibility(View.VISIBLE);
-            textView.setText(getResources().getString(R.string.offered) + " - " + offeredPlaylist.size() + " " + getResources().getString(R.string.pcs));
+            textView.setText(getResources().getString(R.string.offered) + " - " + playlistService.sizeOfOfferedPlaylist() + " " + getResources().getString(R.string.pcs));
         }
     }
 
     private void showProvlist() {
-        selectedAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, ActivePlaylist.name);
+        selectedAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, playlistService.activePlaylistName);
         selectedlistView.setAdapter(selectedAdapter);
         selectedlistView.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -88,8 +91,9 @@ public class PlaylistManagerActivity extends MainActivity {
                         builder.setPositiveButton(getResources().getString(R.string.remove), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface p1, int p2) {
-                                ActivePlaylist.remove(editNum);
+                                playlistService.deleteActivePlaylistById(editNum);
                                 selectedAdapter.notifyDataSetChanged();
+                                MainActivity.provAdapter.notifyDataSetChanged();
                                 try {
                                     saveData();
                                 } catch (IOException e) {
@@ -112,7 +116,7 @@ public class PlaylistManagerActivity extends MainActivity {
             }
         });
 
-        offeredAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, offeredPlaylist.name);
+        offeredAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, playlistService.getAllNamesOfOfferedPlaylist());
         offeredlistView.setAdapter(offeredAdapter);
         offeredlistView.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -141,9 +145,10 @@ public class PlaylistManagerActivity extends MainActivity {
                             @Override
                             public void onClick(DialogInterface p1, int p2) {
                                 // check if playlist already exist in selected playlist
-                                if (ActivePlaylist.indexOfName(offeredPlaylist.getName(editNum)) == -1) {
-                                    ActivePlaylist.add(offeredPlaylist.getName(editNum), offeredPlaylist.getUrl(editNum), offeredPlaylist.getFile(editNum), offeredPlaylist.getType(editNum));
+                                if (playlistService.indexNameForActivePlaylist(playlistService.getOfferedPlaylistById(editNum).getName()) == -1) {
+                                    playlistService.addToActivePlaylist(playlistService.getOfferedPlaylistById(editNum).getName(), playlistService.getOfferedPlaylistById(editNum).getUrl(), playlistService.getOfferedPlaylistById(editNum).getType());
                                     offeredAdapter.notifyDataSetChanged();
+                                    MainActivity.provAdapter.notifyDataSetChanged();
                                     try {
                                         saveData();
                                     } catch (IOException e) {
@@ -180,22 +185,22 @@ public class PlaylistManagerActivity extends MainActivity {
         serializer.startTag(null, "data");
 
         serializer.startTag(null, "torrentkey");
-        serializer.text(torrentKey);
+        serializer.text(MainActivity.torrentKey);
         serializer.endTag(null, "torrentkey");
 
-        for (int j = 0; j < ActivePlaylist.size(); j++) {
+        for (int j = 0; j < playlistService.sizeOfActivePlaylist(); j++) {
             serializer.startTag(null, "provider");
 
             serializer.startTag(null, "name");
-            serializer.text(ActivePlaylist.getName(j));
+            serializer.text(playlistService.getActivePlaylistById(j).getName());
             serializer.endTag(null, "name");
 
             serializer.startTag(null, "url");
-            serializer.text(ActivePlaylist.getUrl(j));
+            serializer.text(playlistService.getActivePlaylistById(j).getUrl());
             serializer.endTag(null, "url");
 
             serializer.startTag(null, "type");
-            serializer.text(ActivePlaylist.getTypeString(j));
+            serializer.text(playlistService.getActivePlaylistById(j).getTypeString());
             serializer.endTag(null, "type");
 
             serializer.endTag(null, "provider");
@@ -214,14 +219,14 @@ public class PlaylistManagerActivity extends MainActivity {
     public void showSelected(View view) {
         selectedlistView.setVisibility(View.VISIBLE);
         offeredlistView.setVisibility(View.GONE);
-        textView.setText(getResources().getString(R.string.selected) + " - " + ActivePlaylist.size() + " " + getResources().getString(R.string.pcs));
+        textView.setText(getResources().getString(R.string.selected) + " - " + playlistService.sizeOfActivePlaylist() + " " + getResources().getString(R.string.pcs));
         enable = true;
     }
 
     public void showOffered(View view) {
         selectedlistView.setVisibility(View.GONE);
         offeredlistView.setVisibility(View.VISIBLE);
-        textView.setText(getResources().getString(R.string.offered) + " - " + offeredPlaylist.size() + " " + getResources().getString(R.string.pcs));
+        textView.setText(getResources().getString(R.string.offered) + " - " + playlistService.sizeOfOfferedPlaylist() + " " + getResources().getString(R.string.pcs));
         enable = false;
     }
 
@@ -237,15 +242,8 @@ public class PlaylistManagerActivity extends MainActivity {
         builder.setPositiveButton(getResources().getString(R.string.reset), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface p1, int p2) {
-                ActivePlaylist.clear();
-                offeredPlaylist.clear();
-                try {
-                    setupProvider("default");
-                } catch (Exception e1) {
-                    Toast.makeText(PlaylistManagerActivity.this, e1.toString(), Toast.LENGTH_SHORT).show();
-                }
+                playlistService.clearActivePlaylist();
                 selectedAdapter.notifyDataSetChanged();
-                offeredAdapter.notifyDataSetChanged();
                 try {
                     saveData();
                 } catch (IOException e) {
@@ -262,8 +260,6 @@ public class PlaylistManagerActivity extends MainActivity {
         AlertDialog alert = builder.create();
         alert.setOwnerActivity(PlaylistManagerActivity.this);
         alert.show();
-
-
     }
 
 }

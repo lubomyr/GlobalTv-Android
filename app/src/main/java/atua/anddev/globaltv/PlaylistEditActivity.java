@@ -65,15 +65,15 @@ public class PlaylistEditActivity extends PlaylistManagerActivity {
         EditText editTextUrl = (EditText) findViewById(R.id.playlisteditEditText2);
         if (editAction.equals("modify")) {
             if (enable) {
-                editTextName.setText(ActivePlaylist.getName(editNum));
-                editTextUrl.setText(ActivePlaylist.getUrl(editNum));
-                selectedType = ActivePlaylist.getType(editNum);
-                spinnerView.setSelection(ActivePlaylist.getType(editNum));
+                editTextName.setText(playlistService.getActivePlaylistById(editNum).getName());
+                editTextUrl.setText(playlistService.getActivePlaylistById(editNum).getUrl());
+                selectedType = playlistService.getActivePlaylistById(editNum).getType();
+                spinnerView.setSelection(playlistService.getActivePlaylistById(editNum).getType());
             } else {
-                editTextName.setText(offeredPlaylist.getName(editNum));
-                editTextUrl.setText(offeredPlaylist.getUrl(editNum));
-                selectedType = offeredPlaylist.getType(editNum);
-                spinnerView.setSelection(offeredPlaylist.getType(editNum));
+                editTextName.setText(playlistService.getOfferedPlaylistById(editNum).getName());
+                editTextUrl.setText(playlistService.getOfferedPlaylistById(editNum).getUrl());
+                selectedType = playlistService.getOfferedPlaylistById(editNum).getType();
+                spinnerView.setSelection(playlistService.getOfferedPlaylistById(editNum).getType());
             }
         }
         spinnerView.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -101,11 +101,11 @@ public class PlaylistEditActivity extends PlaylistManagerActivity {
             } else {
                 success = true;
                 if (enable) {
-                    ActivePlaylist.set(editNum, name.toString(), url.toString(), getFileName(name.toString()), selectedType);
+                    playlistService.setActivePlaylistById(editNum, name.toString(), url.toString(), selectedType);
                 } else {
                     // check if playlist already exist in selected playlist
-                    if (ActivePlaylist.indexOfName(name.toString()) == -1)
-                        ActivePlaylist.add(name.toString(), url.toString(), getFileName(name.toString()), selectedType);
+                    if (playlistService.indexNameForActivePlaylist(name.toString()) == -1)
+                        playlistService.addToActivePlaylist(name.toString(), url.toString(), selectedType);
                     else
                         Toast.makeText(PlaylistEditActivity.this, getResources().getString(R.string.playlistexist), Toast.LENGTH_SHORT).show();
                 }
@@ -117,8 +117,8 @@ public class PlaylistEditActivity extends PlaylistManagerActivity {
             } else {
                 success = true;
                 // check if playlist already exist in selected playlist
-                if (ActivePlaylist.indexOfName(name.toString()) == -1)
-                    ActivePlaylist.add(name.toString(), url.toString(), getFileName(name.toString()), selectedType);
+                if (playlistService.indexNameForActivePlaylist(name.toString()) == -1)
+                    playlistService.addToActivePlaylist(name.toString(), url.toString(), selectedType);
                 else
                     Toast.makeText(PlaylistEditActivity.this, getResources().getString(R.string.playlistexist), Toast.LENGTH_SHORT).show();
             }
@@ -134,9 +134,7 @@ public class PlaylistEditActivity extends PlaylistManagerActivity {
 
     public void deletePlaylist(View view) {
         if (enable) {
-            ActivePlaylist.remove(editNum);
-        } else {
-            offeredPlaylist.remove(editNum);
+            playlistService.deleteActivePlaylistById(editNum);
         }
         super.onBackPressed();
     }

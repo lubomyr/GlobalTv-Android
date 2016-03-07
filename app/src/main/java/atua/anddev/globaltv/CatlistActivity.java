@@ -8,7 +8,11 @@ import android.view.*;
 import android.widget.*;
 import android.widget.AdapterView.*;
 
+import java.util.*;
+
 public class CatlistActivity extends MainActivity {
+    private ArrayList<String> categoryList = new ArrayList<String>();
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -28,20 +32,8 @@ public class CatlistActivity extends MainActivity {
     }
 
     private void createCatlist() {
-        boolean cat_exist = false;
-
-        categoryList.clear();
-
         categoryList.add(getResources().getString(R.string.all));
-
-        for (int i = 0; i < channel.size() - 1; i++) {
-            cat_exist = false;
-            for (int j = 0; j <= categoryList.size() - 1; j++)
-                if (channel.getCategory(i).equalsIgnoreCase(categoryList.get(j)))
-                    cat_exist = true;
-            if (cat_exist == false && !channel.getCategory(i).equals(""))
-                categoryList.add(channel.getCategory(i));
-        }
+        categoryList.addAll(channelService.getCategoriesList());
     }
 
     public void showCatlist() {
