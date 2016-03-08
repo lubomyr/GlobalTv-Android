@@ -13,7 +13,6 @@ public class GlobalAdapter extends ArrayAdapter<String> {
 
     public GlobalAdapter(Activity context, ArrayList<String> itemname1, ArrayList<String> itemname2) {
         super(context, R.layout.myglobalsearch, itemname1);
-        // TODO Auto-generated constructor stub
 
         this.context = context;
         this.itemname1 = itemname1;

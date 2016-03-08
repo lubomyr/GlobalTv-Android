@@ -1,5 +1,7 @@
 package atua.anddev.globaltv.service;
 
+import android.content.*;
+
 import atua.anddev.globaltv.entity.*;
 
 import java.util.*;
@@ -19,4 +21,8 @@ public interface ChannelService {
     public int indexNameForChannel(String name);
 
     public List<String> getCategoriesList();
+
+    public void openChannel(String chName, Context context);
+
+    public void openURL(final String chURL, final Context context);
 }

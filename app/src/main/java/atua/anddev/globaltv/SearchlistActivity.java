@@ -7,16 +7,24 @@ import android.view.*;
 import android.widget.*;
 import android.widget.AdapterView.*;
 
-import java.util.*;
-import java.io.*;
+import atua.anddev.globaltv.*;
+import atua.anddev.globaltv.service.*;
 
-public class SearchlistActivity extends CatlistActivity {
+import java.io.*;
+import java.util.*;
+
+public class SearchlistActivity extends Activity {
+    private ChannelService channelService = MainActivity.channelService;
+    private FavoriteService favoriteService = MainActivity.favoriteService;
+    private PlaylistService playlistService = MainActivity.playlistService;
+    private int selectedProvider = MainActivity.selectedProvider;
+    private String searchString = MainActivity.searchString;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Set sub.xml as user interface layout
         setContentView(R.layout.searchlist);
-
         showSearchResults();
 
     }
@@ -42,17 +50,15 @@ public class SearchlistActivity extends CatlistActivity {
         listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4) {
-                // TODO: Implement this method
                 String s = (String) p1.getItemAtPosition(p3);
                 Toast.makeText(SearchlistActivity.this, s, Toast.LENGTH_SHORT).show();
-                openURL(playlistUrl.get(p3));
+                channelService.openURL(playlistUrl.get(p3), SearchlistActivity.this);
             }
 
         });
         listView.setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> p1, View p2, int p3, long p4) {
-                // TODO: Implement this method
                 final String s = (String) p1.getItemAtPosition(p3);
                 Toast.makeText(SearchlistActivity.this, s, Toast.LENGTH_SHORT).show();
                 if (!favoriteService.containsNameForFavorite(s)) {
@@ -68,7 +74,7 @@ public class SearchlistActivity extends CatlistActivity {
                                 public void onClick(DialogInterface p1, int p2) {
                                     favoriteService.addToFavoriteList(s, playlistService.getActivePlaylistById(selectedProvider).getName());
                                     try {
-                                        saveFavorites();
+                                        favoriteService.saveFavorites(SearchlistActivity.this);
                                     } catch (IOException e) {
                                     }
                                 }
@@ -77,7 +83,7 @@ public class SearchlistActivity extends CatlistActivity {
 
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
-                                    // TODO: Implement this method
+                                    // nothing to do
                                 }
                             });
                             AlertDialog alert = builder.create();

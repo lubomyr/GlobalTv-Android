@@ -12,6 +12,8 @@ import java.io.*;
 import atua.anddev.globaltv.service.*;
 
 public class GlobalFavoriteActivity extends MainActivity {
+    FavoriteService favoriteService = MainActivity.favoriteService;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -54,7 +56,7 @@ public class GlobalFavoriteActivity extends MainActivity {
                                 public void onClick(DialogInterface p1, int p2) {
                                     favoriteService.deleteFromFavoritesById(selectedItem);
                                     try {
-                                        saveFavorites();
+                                        favoriteService.saveFavorites(GlobalFavoriteActivity.this);
                                     } catch (IOException e) {
                                     }
                                     adapter.notifyDataSetChanged();
@@ -64,7 +66,7 @@ public class GlobalFavoriteActivity extends MainActivity {
 
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
-                                    // TODO: Implement this method
+                                    // Nothing to do
                                 }
                             });
                             AlertDialog alert = builder.create();
@@ -98,7 +100,7 @@ public class GlobalFavoriteActivity extends MainActivity {
         readPlaylist(getProvFile, getProvType);
         for (int j = 0; j < channelService.sizeOfChannelList(); j++) {
             if (channelService.getChannelById(j).getName().equals(favoriteService.getFavoriteById(itemNum).getName())) {
-                openURL(channelService.getChannelById(j).getUrl());
+                channelService.openURL(channelService.getChannelById(j).getUrl(), GlobalFavoriteActivity.this);
                 break;
             }
         }

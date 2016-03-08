@@ -7,10 +7,18 @@ import android.view.*;
 import android.widget.*;
 import android.widget.AdapterView.*;
 
+import atua.anddev.globaltv.*;
+import atua.anddev.globaltv.service.*;
+
 import java.io.*;
 import java.util.*;
 
-public class FavlistActivity extends CatlistActivity {
+public class FavlistActivity extends Activity {
+    private ChannelService channelService = MainActivity.channelService;
+    private FavoriteService favoriteService = MainActivity.favoriteService;
+    private PlaylistService playlistService = MainActivity.playlistService;
+    private int selectedProvider = MainActivity.selectedProvider;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -21,14 +29,7 @@ public class FavlistActivity extends CatlistActivity {
     }
 
     public void showFavlist() {
-        final ArrayList<String> playlist = new ArrayList<String>();
-        for (int i = 0; i < favoriteService.sizeOfFavoriteList(); i++) {
-            for (int j = 0; j < channelService.sizeOfChannelList(); j++) {
-                if (favoriteService.getFavoriteById(i).getName().equals(channelService.getChannelById(j).getName()) && !playlist.contains(favoriteService.getFavoriteById(i).getName())) {
-                    playlist.add(favoriteService.getFavoriteById(i).getName());
-                }
-            }
-        }
+        final List<String> playlist = favoriteService.getFavoriteListForSelProv();
         TextView textview = (TextView) findViewById(R.id.favlistTextView1);
         textview.setText(getResources().getString(R.string.favorites));
         ListView listView = (ListView) findViewById(R.id.favlistListView1);
@@ -37,19 +38,16 @@ public class FavlistActivity extends CatlistActivity {
         listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4) {
-                // TODO: Implement this method
                 String s = (String) p1.getItemAtPosition(p3);
                 Toast.makeText(FavlistActivity.this, s, Toast.LENGTH_SHORT).show();
-                openChannel(s);
+                channelService.openChannel(s, FavlistActivity.this);
             }
 
         });
         listView.setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> p1, View p2, int p3, long p4) {
-                // TODO: Implement this method
                 final String s = (String) p1.getItemAtPosition(p3);
-                final int selectedItem = p3;
                 Toast.makeText(FavlistActivity.this, s, Toast.LENGTH_SHORT).show();
                 {
 
@@ -64,9 +62,12 @@ public class FavlistActivity extends CatlistActivity {
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
                                     playlist.remove(s);
-                                    favoriteService.deleteFromFavoritesById(favoriteService.indexNameForFavorite(s));
+                                    String provName = playlistService.getActivePlaylistById(selectedProvider).getName();
+                                    int index = favoriteService.indexOfFavoriteByNameAndProv(s, provName);
+                                    if (index != -1)
+                                        favoriteService.deleteFromFavoritesById(index);
                                     try {
-                                        saveFavorites();
+                                        favoriteService.saveFavorites(FavlistActivity.this);
                                     } catch (IOException e) {
                                     }
                                     adapter.notifyDataSetChanged();
@@ -77,7 +78,7 @@ public class FavlistActivity extends CatlistActivity {
 
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
-                                    // TODO: Implement this method
+                                    // Nothing to do
                                 }
                             });
                             AlertDialog alert = builder.create();

@@ -18,7 +18,7 @@ public class PlaylistManagerActivity extends Activity {
     protected static int editNum;
     protected static String editAction;
     protected static Boolean enable = true;
-    protected PlaylistService playlistService = new PlaylistServiceImpl();
+    protected PlaylistService playlistService = MainActivity.playlistService;
     private ListView selectedlistView;
     private ListView offeredlistView;
     private TextView textView;
@@ -68,7 +68,6 @@ public class PlaylistManagerActivity extends Activity {
         selectedlistView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4) {
-                // TODO: Implement this method
                 final String s = (String) p1.getItemAtPosition(p3);
                 Toast.makeText(PlaylistManagerActivity.this, s, Toast.LENGTH_SHORT).show();
                 editNum = p3;
@@ -94,6 +93,7 @@ public class PlaylistManagerActivity extends Activity {
                                 playlistService.deleteActivePlaylistById(editNum);
                                 selectedAdapter.notifyDataSetChanged();
                                 MainActivity.provAdapter.notifyDataSetChanged();
+
                                 try {
                                     saveData();
                                 } catch (IOException e) {
@@ -104,7 +104,7 @@ public class PlaylistManagerActivity extends Activity {
 
                             @Override
                             public void onClick(DialogInterface p1, int p2) {
-                                // TODO: Implement this method
+                                // nothing to do
                             }
                         });
                         AlertDialog alert = builder.create();
@@ -162,7 +162,7 @@ public class PlaylistManagerActivity extends Activity {
 
                             @Override
                             public void onClick(DialogInterface p1, int p2) {
-                                // TODO: Implement this method
+                                // nothing to do
                             }
                         });
                         AlertDialog alert = builder.create();
@@ -254,12 +254,14 @@ public class PlaylistManagerActivity extends Activity {
 
             @Override
             public void onClick(DialogInterface p1, int p2) {
-                // TODO: Implement this method
+                // nothing to do
             }
         });
         AlertDialog alert = builder.create();
         alert.setOwnerActivity(PlaylistManagerActivity.this);
         alert.show();
+
+
     }
 
 }

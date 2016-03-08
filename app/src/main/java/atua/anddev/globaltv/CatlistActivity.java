@@ -8,9 +8,13 @@ import android.view.*;
 import android.widget.*;
 import android.widget.AdapterView.*;
 
+import atua.anddev.globaltv.*;
+import atua.anddev.globaltv.service.*;
+
 import java.util.*;
 
-public class CatlistActivity extends MainActivity {
+public class CatlistActivity extends Activity {
+    private ChannelService channelService = MainActivity.channelService;
     private ArrayList<String> categoryList = new ArrayList<String>();
 
     public void onCreate(Bundle savedInstanceState) {
@@ -56,8 +60,18 @@ public class CatlistActivity extends MainActivity {
     }
 
     public void playlistActivity(String selCat) {
-        selectedCategory = selCat;
+        MainActivity.selectedCategory = selCat;
         Intent intent = new Intent(this, PlaylistActivity.class);
+        startActivity(intent);
+    }
+
+    public void favlistActivity() {
+        Intent intent = new Intent(this, FavlistActivity.class);
+        startActivity(intent);
+    }
+
+    public void searchlistActivity() {
+        Intent intent = new Intent(this, SearchlistActivity.class);
         startActivity(intent);
     }
 
@@ -75,7 +89,7 @@ public class CatlistActivity extends MainActivity {
                 .setPositiveButton(getResources().getString(R.string.search), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Editable value = input.getText();
-                        searchString = value.toString();
+                        MainActivity.searchString = value.toString();
                         searchlistActivity();
                     }
                 }).setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {

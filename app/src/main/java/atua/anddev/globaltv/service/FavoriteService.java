@@ -1,8 +1,11 @@
 package atua.anddev.globaltv.service;
 
-import java.util.*;
+import android.content.*;
 
 import atua.anddev.globaltv.entity.*;
+
+import java.util.*;
+import java.io.*;
 
 public interface FavoriteService {
     List<Favorites> favorites = new ArrayList<Favorites>();
@@ -22,4 +25,12 @@ public interface FavoriteService {
     public boolean containsNameForFavorite(String name);
 
     public void deleteFromFavoritesById(int id);
+
+    public List<String> getFavoriteListForSelProv();
+
+    public int indexOfFavoriteByNameAndProv(String name, String prov);
+
+    public void saveFavorites(Context context) throws FileNotFoundException, IOException;
+
+    public void loadFavorites(Context context) throws IOException;
 }

@@ -79,7 +79,7 @@ public class PlaylistEditActivity extends PlaylistManagerActivity {
         spinnerView.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public void onNothingSelected(AdapterView<?> p1) {
-                // TODO: Implement this method
+                // nothing to do
             }
 
             @Override

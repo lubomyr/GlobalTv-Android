@@ -2,22 +2,26 @@ package atua.anddev.globaltv;
 
 import android.app.*;
 import android.content.*;
-import android.net.*;
 import android.os.*;
 import android.text.*;
-import android.util.*;
 import android.view.*;
 import android.widget.*;
 import android.widget.AdapterView.*;
 
-import java.util.*;
-
-import android.inputmethodservice.*;
-import android.inputmethodservice.KeyboardView.*;
+import atua.anddev.globaltv.*;
 
 import java.io.*;
+import java.util.*;
 
-public class PlaylistActivity extends MainActivity {
+import atua.anddev.globaltv.service.*;
+
+public class PlaylistActivity extends Activity {
+    private ChannelService channelService = MainActivity.channelService;
+    private FavoriteService favoriteService = MainActivity.favoriteService;
+    private PlaylistService playlistService = MainActivity.playlistService;
+    private String selectedCategory = MainActivity.selectedCategory;
+    private int selectedProvider = MainActivity.selectedProvider;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -57,17 +61,15 @@ public class PlaylistActivity extends MainActivity {
         listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4) {
-                // TODO: Implement this method
                 String s = (String) p1.getItemAtPosition(p3);
                 Toast.makeText(PlaylistActivity.this, s, Toast.LENGTH_SHORT).show();
-                openURL(playlistUrl.get(p3));
+                channelService.openURL(playlistUrl.get(p3), PlaylistActivity.this);
             }
 
         });
         listView.setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> p1, View p2, int p3, long p4) {
-                // TODO: Implement this method
                 final String s = (String) p1.getItemAtPosition(p3);
                 Toast.makeText(PlaylistActivity.this, s, Toast.LENGTH_SHORT).show();
                 if (!(favoriteService.containsNameForFavorite(s) && playlistService.getActivePlaylistById(selectedProvider).getName().equals(favoriteService.getFavoriteById(favoriteService.indexNameForFavorite(s)).getProv()))) {
@@ -83,7 +85,7 @@ public class PlaylistActivity extends MainActivity {
                                 public void onClick(DialogInterface p1, int p2) {
                                     favoriteService.addToFavoriteList(s, playlistService.getActivePlaylistById(selectedProvider).getName());
                                     try {
-                                        saveFavorites();
+                                        favoriteService.saveFavorites(PlaylistActivity.this);
                                     } catch (IOException e) {
                                     }
                                 }
@@ -92,7 +94,7 @@ public class PlaylistActivity extends MainActivity {
 
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
-                                    // TODO: Implement this method
+                                    // nothing to do
                                 }
                             });
                             AlertDialog alert = builder.create();
@@ -113,7 +115,7 @@ public class PlaylistActivity extends MainActivity {
                                 public void onClick(DialogInterface p1, int p2) {
                                     favoriteService.deleteFromFavoritesById(favoriteService.indexNameForFavorite(s));
                                     try {
-                                        saveFavorites();
+                                        favoriteService.saveFavorites(PlaylistActivity.this);
                                     } catch (IOException e) {
                                     }
 
@@ -123,7 +125,7 @@ public class PlaylistActivity extends MainActivity {
 
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
-                                    // TODO: Implement this method
+                                    // nothing to do
                                 }
                             });
                             AlertDialog alert = builder.create();
@@ -138,6 +140,15 @@ public class PlaylistActivity extends MainActivity {
         });
     }
 
+    public void favlistActivity() {
+        Intent intent = new Intent(this, FavlistActivity.class);
+        startActivity(intent);
+    }
+
+    public void searchlistActivity() {
+        Intent intent = new Intent(this, SearchlistActivity.class);
+        startActivity(intent);
+    }
 
     public void favButton(View view) {
         favlistActivity();
@@ -153,7 +164,7 @@ public class PlaylistActivity extends MainActivity {
                 .setPositiveButton(getResources().getString(R.string.search), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Editable value = input.getText();
-                        searchString = value.toString();
+                        MainActivity.searchString = value.toString();
                         searchlistActivity();
                     }
                 }).setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {

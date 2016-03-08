@@ -10,8 +10,10 @@ import android.widget.AdapterView.*;
 import java.io.*;
 import java.util.*;
 
-public class GlobalSearchActivity extends MainActivity {
+import atua.anddev.globaltv.service.*;
 
+public class GlobalSearchActivity extends MainActivity {
+    FavoriteService favoriteService = MainActivity.favoriteService;
     private ProgressDialog progress;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -77,7 +79,7 @@ public class GlobalSearchActivity extends MainActivity {
             public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4) {
                 String s = (String) p1.getItemAtPosition(p3);
                 Toast.makeText(GlobalSearchActivity.this, s, Toast.LENGTH_SHORT).show();
-                openURL(searchService.getSearchListById(p3).getUrl());
+                channelService.openURL(searchService.getSearchListById(p3).getUrl(), GlobalSearchActivity.this);
             }
 
         });
@@ -105,7 +107,7 @@ public class GlobalSearchActivity extends MainActivity {
                                 public void onClick(DialogInterface p1, int p2) {
                                     favoriteService.addToFavoriteList(s, searchService.getSearchListById(selectedItem).getProv());
                                     try {
-                                        saveFavorites();
+                                        favoriteService.saveFavorites(GlobalSearchActivity.this);
                                     } catch (IOException e) {
                                     }
                                 }
@@ -114,7 +116,7 @@ public class GlobalSearchActivity extends MainActivity {
 
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
-                                    // TODO: Implement this method
+                                    // Nothing to do
                                 }
                             });
                             AlertDialog alert = builder.create();

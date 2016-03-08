@@ -20,25 +20,22 @@ import org.xmlpull.v1.*;
 import atua.anddev.globaltv.service.*;
 
 public class MainActivity extends Activity {
-    Configuration conf;
-
+    public static PlaylistService playlistService = new PlaylistServiceImpl();
+    public static ChannelService channelService = new ChannelServiceImpl();
+    public static FavoriteService favoriteService = new FavoriteServiceImpl();
+    public static SearchService searchService = new SearchServiceImpl();
     static String selectedCategory;
     static int selectedProvider;
-    static String myPath;
-    static Boolean needUpdate;
     static String lang;
     static String searchString;
-    static MainActivity act;
     static String origNames[];
     static String translatedNames[];
     static String torrentKey;
-    static Boolean playlistWithGroup;
-    static String selectedUrl;
-    protected PlaylistService playlistService = new PlaylistServiceImpl();
-    protected ChannelService channelService = new ChannelServiceImpl();
-    protected FavoriteService favoriteService = new FavoriteServiceImpl();
-    protected SearchService searchService = new SearchServiceImpl();
     static ArrayAdapter provAdapter;
+    Configuration conf;
+    private Boolean playlistWithGroup;
+    public static String myPath;
+    private Boolean needUpdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -244,7 +241,7 @@ public class MainActivity extends Activity {
         readPlaylist(playlistService.getActivePlaylistById(selectedProvider).getFile(), playlistService.getActivePlaylistById(selectedProvider).getType());
         try {
             if (favoriteService.sizeOfFavoriteList() == 0)
-                loadFavorites();
+                favoriteService.loadFavorites(MainActivity.this);
         } catch (IOException e) {
         }
         if (playlistWithGroup)
@@ -401,32 +398,6 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void openChannel(String chName) {
-        for (int i = 0; i < channelService.sizeOfChannelList(); i++) {
-            if (chName.equals(channelService.getChannelById(i).getName())) {
-                openURL(channelService.getChannelById(i).getUrl());
-                return;
-            }
-        }
-    }
-
-    public void openURL(final String chURL) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(chURL));
-                    if (chURL.startsWith("http")) {
-                        browserIntent.setDataAndType(Uri.parse(chURL), "video/*");
-                    }
-                    startActivity(browserIntent);
-
-                } catch (Exception e) {
-                    Log.i("SDL", "Error: " + e.toString());
-                }
-            }
-        }).start();
-    }
-
     private String translate(String input) {
         String output;
         output = input;
@@ -467,16 +438,6 @@ public class MainActivity extends Activity {
         playlistManagerActivity();
     }
 
-    public void favlistActivity() {
-        Intent intent = new Intent(this, FavlistActivity.class);
-        startActivity(intent);
-    }
-
-    public void searchlistActivity() {
-        Intent intent = new Intent(this, SearchlistActivity.class);
-        startActivity(intent);
-    }
-
     public void globalSearchActivity() {
         Intent intent = new Intent(this, GlobalSearchActivity.class);
         startActivity(intent);
@@ -497,75 +458,10 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
-    public void saveFavorites() throws FileNotFoundException, IOException {
-        FileOutputStream fos;
-        fos = openFileOutput("favorites.xml", Context.MODE_WORLD_WRITEABLE);
-        XmlSerializer serializer = Xml.newSerializer();
-        serializer.setOutput(fos, "UTF-8");
-        serializer.startDocument(null, Boolean.valueOf(true));
-        serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
-        serializer.startTag(null, "root");
-
-        for (int j = 0; j < favoriteService.sizeOfFavoriteList(); j++) {
-            serializer.startTag(null, "favorites");
-
-            serializer.startTag(null, "channel");
-            serializer.text(favoriteService.getFavoriteById(j).getName());
-            serializer.endTag(null, "channel");
-
-            serializer.startTag(null, "playlist");
-            serializer.text(favoriteService.getFavoriteById(j).getProv());
-            serializer.endTag(null, "playlist");
-
-            serializer.endTag(null, "favorites");
-        }
-        serializer.endDocument();
-        serializer.flush();
-        fos.close();
-    }
-
-    private void loadFavorites() throws IOException {
-        String text = null, name = null, prov = null, endTag;
-        try {
-            XmlPullParserFactory xppf = XmlPullParserFactory.newInstance();
-            xppf.setNamespaceAware(true);
-            XmlPullParser xpp = xppf.newPullParser();
-
-            File myXML = new File(myPath + "/favorites.xml");
-            FileInputStream fis = new FileInputStream(myXML);
-            xpp.setInput(fis, null);
-            int type = xpp.getEventType();
-            while (type != XmlPullParser.END_DOCUMENT) {
-                if (type == XmlPullParser.START_DOCUMENT) {
-                } else if (type == XmlPullParser.START_TAG) {
-
-                } else if (type == XmlPullParser.END_TAG) {
-                    endTag = xpp.getName();
-                    if (endTag.equals("channel"))
-                        name = text;
-                    if (endTag.equals("playlist"))
-                        prov = text;
-                    if (endTag.equals("favorites")) {
-                        favoriteService.addToFavoriteList(name, prov);
-                    }
-                } else if (type == XmlPullParser.TEXT) {
-                    text = xpp.getText();
-                }
-                type = xpp.next();
-            }
-        } catch (XmlPullParserException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
     public void globalFavorite(View view) {
         try {
             if (favoriteService.sizeOfFavoriteList() == 0)
-                loadFavorites();
+                favoriteService.loadFavorites(MainActivity.this);
         } catch (IOException e) {
         }
         globalFavoriteActivity();
@@ -633,6 +529,4 @@ public class MainActivity extends Activity {
             downloadAllPlaylist();
         }
     }
-
-
 }
