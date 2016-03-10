@@ -12,7 +12,9 @@ import java.io.*;
 import atua.anddev.globaltv.service.*;
 
 public class GlobalFavoriteActivity extends MainActivity {
-    FavoriteService favoriteService = MainActivity.favoriteService;
+    private ChannelService channelService = MainActivity.channelService;
+    private FavoriteService favoriteService = MainActivity.favoriteService;
+    private PlaylistService playlistService = MainActivity.playlistService;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

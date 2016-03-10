@@ -105,7 +105,7 @@ public class PlaylistEditActivity extends PlaylistManagerActivity {
                 } else {
                     // check if playlist already exist in selected playlist
                     if (playlistService.indexNameForActivePlaylist(name.toString()) == -1)
-                        playlistService.addToActivePlaylist(name.toString(), url.toString(), selectedType);
+                        playlistService.addToActivePlaylist(name.toString(), url.toString(), selectedType, "", "");
                     else
                         Toast.makeText(PlaylistEditActivity.this, getResources().getString(R.string.playlistexist), Toast.LENGTH_SHORT).show();
                 }
@@ -118,14 +118,14 @@ public class PlaylistEditActivity extends PlaylistManagerActivity {
                 success = true;
                 // check if playlist already exist in selected playlist
                 if (playlistService.indexNameForActivePlaylist(name.toString()) == -1)
-                    playlistService.addToActivePlaylist(name.toString(), url.toString(), selectedType);
+                    playlistService.addToActivePlaylist(name.toString(), url.toString(), selectedType, "", "");
                 else
                     Toast.makeText(PlaylistEditActivity.this, getResources().getString(R.string.playlistexist), Toast.LENGTH_SHORT).show();
             }
         }
         try {
             if (success)
-                saveData();
+                playlistService.saveData(PlaylistEditActivity.this);
         } catch (IOException e) {
         }
         if (success)

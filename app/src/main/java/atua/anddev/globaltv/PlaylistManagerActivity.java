@@ -14,6 +14,8 @@ import java.io.*;
 
 import org.xmlpull.v1.*;
 
+import atua.anddev.globaltv.entity.*;
+
 public class PlaylistManagerActivity extends Activity {
     protected static int editNum;
     protected static String editAction;
@@ -95,7 +97,7 @@ public class PlaylistManagerActivity extends Activity {
                                 MainActivity.provAdapter.notifyDataSetChanged();
 
                                 try {
-                                    saveData();
+                                    playlistService.saveData(PlaylistManagerActivity.this);
                                 } catch (IOException e) {
                                 }
                             }
@@ -146,11 +148,11 @@ public class PlaylistManagerActivity extends Activity {
                             public void onClick(DialogInterface p1, int p2) {
                                 // check if playlist already exist in selected playlist
                                 if (playlistService.indexNameForActivePlaylist(playlistService.getOfferedPlaylistById(editNum).getName()) == -1) {
-                                    playlistService.addToActivePlaylist(playlistService.getOfferedPlaylistById(editNum).getName(), playlistService.getOfferedPlaylistById(editNum).getUrl(), playlistService.getOfferedPlaylistById(editNum).getType());
+                                    playlistService.addNewActivePlaylist(playlistService.getOfferedPlaylistById(editNum));
                                     offeredAdapter.notifyDataSetChanged();
                                     MainActivity.provAdapter.notifyDataSetChanged();
                                     try {
-                                        saveData();
+                                        playlistService.saveData(PlaylistManagerActivity.this);
                                     } catch (IOException e) {
                                     }
                                 } else {
@@ -173,42 +175,6 @@ public class PlaylistManagerActivity extends Activity {
                 return true;
             }
         });
-    }
-
-    public void saveData() throws FileNotFoundException, IOException {
-        FileOutputStream fos;
-        fos = openFileOutput("userdata.xml", Context.MODE_WORLD_WRITEABLE);
-        XmlSerializer serializer = Xml.newSerializer();
-        serializer.setOutput(fos, "UTF-8");
-        serializer.startDocument(null, Boolean.valueOf(true));
-        serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
-        serializer.startTag(null, "data");
-
-        serializer.startTag(null, "torrentkey");
-        serializer.text(MainActivity.torrentKey);
-        serializer.endTag(null, "torrentkey");
-
-        for (int j = 0; j < playlistService.sizeOfActivePlaylist(); j++) {
-            serializer.startTag(null, "provider");
-
-            serializer.startTag(null, "name");
-            serializer.text(playlistService.getActivePlaylistById(j).getName());
-            serializer.endTag(null, "name");
-
-            serializer.startTag(null, "url");
-            serializer.text(playlistService.getActivePlaylistById(j).getUrl());
-            serializer.endTag(null, "url");
-
-            serializer.startTag(null, "type");
-            serializer.text(playlistService.getActivePlaylistById(j).getTypeString());
-            serializer.endTag(null, "type");
-
-            serializer.endTag(null, "provider");
-        }
-
-        serializer.endDocument();
-        serializer.flush();
-        fos.close();
     }
 
     public void addNewPlaylist(View view) {
@@ -245,7 +211,7 @@ public class PlaylistManagerActivity extends Activity {
                 playlistService.clearActivePlaylist();
                 selectedAdapter.notifyDataSetChanged();
                 try {
-                    saveData();
+                    playlistService.saveData(PlaylistManagerActivity.this);
                 } catch (IOException e) {
                 }
             }
@@ -260,8 +226,6 @@ public class PlaylistManagerActivity extends Activity {
         AlertDialog alert = builder.create();
         alert.setOwnerActivity(PlaylistManagerActivity.this);
         alert.show();
-
-
     }
 
 }
