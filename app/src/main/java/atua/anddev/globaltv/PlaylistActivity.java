@@ -15,12 +15,7 @@ import java.util.*;
 
 import atua.anddev.globaltv.service.*;
 
-public class PlaylistActivity extends Activity {
-    private ChannelService channelService = MainActivity.channelService;
-    private FavoriteService favoriteService = MainActivity.favoriteService;
-    private PlaylistService playlistService = MainActivity.playlistService;
-    private String selectedCategory = MainActivity.selectedCategory;
-    private int selectedProvider = MainActivity.selectedProvider;
+public class PlaylistActivity extends Activity implements Global {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +24,7 @@ public class PlaylistActivity extends Activity {
         setContentView(R.layout.playlist);
 
         applyLocals();
-        openCategory(selectedCategory);
+        openCategory(MainActivity.selectedCategory);
     }
 
     private void applyLocals() {
@@ -72,7 +67,7 @@ public class PlaylistActivity extends Activity {
             public boolean onItemLongClick(AdapterView<?> p1, View p2, int p3, long p4) {
                 final String s = (String) p1.getItemAtPosition(p3);
                 Toast.makeText(PlaylistActivity.this, s, Toast.LENGTH_SHORT).show();
-                if (!(favoriteService.containsNameForFavorite(s) && playlistService.getActivePlaylistById(selectedProvider).getName().equals(favoriteService.getFavoriteById(favoriteService.indexNameForFavorite(s)).getProv()))) {
+                if (!(favoriteService.containsNameForFavorite(s) && playlistService.getActivePlaylistById(MainActivity.selectedProvider).getName().equals(favoriteService.getFavoriteById(favoriteService.indexNameForFavorite(s)).getProv()))) {
                     // Add to favourite list dialog
                     runOnUiThread(new Runnable() {
                         public void run() {
@@ -83,7 +78,7 @@ public class PlaylistActivity extends Activity {
 
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
-                                    favoriteService.addToFavoriteList(s, playlistService.getActivePlaylistById(selectedProvider).getName());
+                                    favoriteService.addToFavoriteList(s, playlistService.getActivePlaylistById(MainActivity.selectedProvider).getName());
                                     try {
                                         favoriteService.saveFavorites(PlaylistActivity.this);
                                     } catch (IOException e) {

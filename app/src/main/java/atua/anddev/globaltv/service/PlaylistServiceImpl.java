@@ -49,7 +49,6 @@ public class PlaylistServiceImpl implements PlaylistService {
         return offeredPlaylist.get(id);
     }
 
-
     @Override
     public void setActivePlaylistById(int id, String name, String url, int type) {
         String file = getFileName(name);

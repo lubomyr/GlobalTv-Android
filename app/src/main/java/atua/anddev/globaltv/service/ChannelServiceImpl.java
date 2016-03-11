@@ -9,6 +9,7 @@ import atua.anddev.globaltv.entity.*;
 import java.util.*;
 
 public class ChannelServiceImpl implements ChannelService {
+
     @Override
     public List<String> getCategoriesList() {
         List<String> arr = new ArrayList<String>();
@@ -24,18 +25,15 @@ public class ChannelServiceImpl implements ChannelService {
         return arr;
     }
 
-
     @Override
     public int indexNameForChannel(String name) {
         return channelName.indexOf(name);
     }
 
-
     @Override
     public Channel getChannelById(int id) {
         return channel.get(id);
     }
-
 
     @Override
     public void addToChannelList(String name, String url, String category) {
@@ -63,6 +61,7 @@ public class ChannelServiceImpl implements ChannelService {
         }
     }
 
+    @Override
     public void openURL(final String chURL, final Context context) {
         new Thread(new Runnable() {
             public void run() {

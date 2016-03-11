@@ -16,11 +16,10 @@ import org.xmlpull.v1.*;
 
 import atua.anddev.globaltv.entity.*;
 
-public class PlaylistManagerActivity extends Activity {
+public class PlaylistManagerActivity extends Activity implements Global {
     protected static int editNum;
     protected static String editAction;
     protected static Boolean enable = true;
-    protected PlaylistService playlistService = MainActivity.playlistService;
     private ListView selectedlistView;
     private ListView offeredlistView;
     private TextView textView;

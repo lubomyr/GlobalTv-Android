@@ -12,8 +12,7 @@ import java.util.*;
 
 import atua.anddev.globaltv.service.*;
 
-public class GlobalSearchActivity extends MainActivity {
-    FavoriteService favoriteService = MainActivity.favoriteService;
+public class GlobalSearchActivity extends MainActivity implements Global {
     private ProgressDialog progress;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -38,7 +37,6 @@ public class GlobalSearchActivity extends MainActivity {
         Thread t = new Thread() {
             @Override
             public void run() {
-
                 prepare_globalSearch();
                 progress.dismiss();
                 runOnUiThread(new Runnable() {
@@ -70,7 +68,6 @@ public class GlobalSearchActivity extends MainActivity {
     public void showSearchResults() {
         TextView textView = (TextView) findViewById(R.id.globalsearchTextView1);
         textView.setText(getResources().getString(R.string.resultsfor) + " '" + searchString + "' - " + searchService.sizeOfSearchList() + " " + getResources().getString(R.string.channels));
-
         GlobalAdapter adapter = new GlobalAdapter(this, searchService.searchNameList, searchService.searchProvList);
         ListView list = (ListView) findViewById(R.id.globalsearchListView1);
         list.setAdapter(adapter);

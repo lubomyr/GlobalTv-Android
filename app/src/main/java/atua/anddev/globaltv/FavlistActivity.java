@@ -13,11 +13,7 @@ import atua.anddev.globaltv.service.*;
 import java.io.*;
 import java.util.*;
 
-public class FavlistActivity extends Activity {
-    private ChannelService channelService = MainActivity.channelService;
-    private FavoriteService favoriteService = MainActivity.favoriteService;
-    private PlaylistService playlistService = MainActivity.playlistService;
-    private int selectedProvider = MainActivity.selectedProvider;
+public class FavlistActivity extends Activity implements Global {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +46,6 @@ public class FavlistActivity extends Activity {
                 final String s = (String) p1.getItemAtPosition(p3);
                 Toast.makeText(FavlistActivity.this, s, Toast.LENGTH_SHORT).show();
                 {
-
                     // Remove from favourite list dialog
                     runOnUiThread(new Runnable() {
                         public void run() {
@@ -62,7 +57,7 @@ public class FavlistActivity extends Activity {
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
                                     playlist.remove(s);
-                                    String provName = playlistService.getActivePlaylistById(selectedProvider).getName();
+                                    String provName = playlistService.getActivePlaylistById(MainActivity.selectedProvider).getName();
                                     int index = favoriteService.indexOfFavoriteByNameAndProv(s, provName);
                                     if (index != -1)
                                         favoriteService.deleteFromFavoritesById(index);

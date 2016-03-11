@@ -12,9 +12,7 @@ import java.util.*;
 
 import org.xmlpull.v1.*;
 
-public class FavoriteServiceImpl implements FavoriteService {
-    ChannelService channelService = MainActivity.channelService;
-    String myPath = MainActivity.myPath;
+public class FavoriteServiceImpl implements FavoriteService, Global {
 
     @Override
     public int indexOfFavoriteByNameAndProv(String name, String prov) {
@@ -40,12 +38,10 @@ public class FavoriteServiceImpl implements FavoriteService {
         return arr;
     }
 
-
     @Override
     public boolean containsNameForFavorite(String name) {
         return favoriteList.contains(name);
     }
-
 
     @Override
     public void deleteFromFavoritesById(int id) {
@@ -53,7 +49,6 @@ public class FavoriteServiceImpl implements FavoriteService {
         favoriteList.remove(id);
         favoriteProvList.remove(id);
     }
-
 
     @Override
     public void addToFavoriteList(String name, String prov) {
@@ -90,7 +85,7 @@ public class FavoriteServiceImpl implements FavoriteService {
         fos = context.getApplicationContext().openFileOutput("favorites.xml", Context.MODE_WORLD_WRITEABLE);
         XmlSerializer serializer = Xml.newSerializer();
         serializer.setOutput(fos, "UTF-8");
-        serializer.startDocument(null, Boolean.valueOf(true));
+        serializer.startDocument(null, true);
         serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
         serializer.startTag(null, "root");
 
@@ -124,8 +119,9 @@ public class FavoriteServiceImpl implements FavoriteService {
             int type = xpp.getEventType();
             while (type != XmlPullParser.END_DOCUMENT) {
                 if (type == XmlPullParser.START_DOCUMENT) {
+                    // nothing to do
                 } else if (type == XmlPullParser.START_TAG) {
-
+                    // nothing to do
                 } else if (type == XmlPullParser.END_TAG) {
                     endTag = xpp.getName();
                     if (endTag.equals("channel"))
@@ -146,5 +142,4 @@ public class FavoriteServiceImpl implements FavoriteService {
             e.printStackTrace();
         }
     }
-
 }

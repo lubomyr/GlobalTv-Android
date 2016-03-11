@@ -19,22 +19,18 @@ import java.util.*;
 
 import org.xmlpull.v1.*;
 
-public class MainActivity extends Activity {
-    public static PlaylistService playlistService = new PlaylistServiceImpl();
-    public static ChannelService channelService = new ChannelServiceImpl();
-    public static FavoriteService favoriteService = new FavoriteServiceImpl();
-    public static SearchService searchService = new SearchServiceImpl();
+public class MainActivity extends Activity implements Global {
+    public static String torrentKey;
     static String selectedCategory;
     static int selectedProvider;
     static String lang;
     static String searchString;
     static String origNames[];
     static String translatedNames[];
-    public static String torrentKey;
     static ArrayAdapter provAdapter;
     Configuration conf;
     private Boolean playlistWithGroup;
-    public static String myPath;
+    private String myPath;
     private Boolean needUpdate;
 
     @Override
@@ -267,12 +263,7 @@ public class MainActivity extends Activity {
     }
 
     public void updateAll(View view) {
-        for (int i = 0; i < playlistService.sizeOfActivePlaylist(); i++) {
-            checkPlaylistFile(i);
-            if (needUpdate) {
-                downloadPlaylist(i);
-            }
-        }
+        downloadAllPlaylist();
     }
 
     private void downloadPlaylist(final int num) {
@@ -418,7 +409,7 @@ public class MainActivity extends Activity {
 
     private void downloadAllPlaylist() {
         for (int i = 0; i < playlistService.sizeOfActivePlaylist(); i++) {
-            if (!checkPlaylistFile(i)) {
+            if (!checkPlaylistFile(i) || needUpdate) {
                 downloadPlaylist(i);
             }
         }

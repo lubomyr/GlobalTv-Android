@@ -13,8 +13,7 @@ import atua.anddev.globaltv.service.*;
 
 import java.util.*;
 
-public class CatlistActivity extends Activity {
-    private ChannelService channelService = MainActivity.channelService;
+public class CatlistActivity extends Activity implements Global {
     private ArrayList<String> categoryList = new ArrayList<String>();
 
     public void onCreate(Bundle savedInstanceState) {

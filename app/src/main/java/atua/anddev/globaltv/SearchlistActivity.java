@@ -13,12 +13,7 @@ import atua.anddev.globaltv.service.*;
 import java.io.*;
 import java.util.*;
 
-public class SearchlistActivity extends Activity {
-    private ChannelService channelService = MainActivity.channelService;
-    private FavoriteService favoriteService = MainActivity.favoriteService;
-    private PlaylistService playlistService = MainActivity.playlistService;
-    private int selectedProvider = MainActivity.selectedProvider;
-    private String searchString = MainActivity.searchString;
+public class SearchlistActivity extends Activity implements Global {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,14 +30,14 @@ public class SearchlistActivity extends Activity {
         String chName;
         for (int i = 0; i < channelService.sizeOfChannelList(); i++) {
             chName = channelService.getChannelById(i).getName().toLowerCase();
-            if (chName.contains(searchString.toLowerCase())) {
+            if (chName.contains(MainActivity.searchString.toLowerCase())) {
                 playlist.add(channelService.getChannelById(i).getName());
                 playlistUrl.add(channelService.getChannelById(i).getUrl());
             }
         }
 
         TextView textView = (TextView) findViewById(R.id.searchlistTextView1);
-        textView.setText(getResources().getString(R.string.resultsfor) + " '" + searchString + "' - " + playlist.size() + " " + getResources().getString(R.string.channels));
+        textView.setText(getResources().getString(R.string.resultsfor) + " '" + MainActivity.searchString + "' - " + playlist.size() + " " + getResources().getString(R.string.channels));
 
         ListView listView = (ListView) findViewById(R.id.searchlistListView1);
         final ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, playlist);
@@ -72,7 +67,7 @@ public class SearchlistActivity extends Activity {
 
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
-                                    favoriteService.addToFavoriteList(s, playlistService.getActivePlaylistById(selectedProvider).getName());
+                                    favoriteService.addToFavoriteList(s, playlistService.getActivePlaylistById(MainActivity.selectedProvider).getName());
                                     try {
                                         favoriteService.saveFavorites(SearchlistActivity.this);
                                     } catch (IOException e) {
