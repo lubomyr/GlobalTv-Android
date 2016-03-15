@@ -1,23 +1,24 @@
 package atua.anddev.globaltv.service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import atua.anddev.globaltv.entity.*;
+import atua.anddev.globaltv.entity.Search;
 
 public interface SearchService {
     List<Search> searchList = new ArrayList<Search>();
-    ArrayList<String> searchNameList = new ArrayList<String>();
-    ArrayList<String> searchProvList = new ArrayList<String>();
+    List<String> searchNameList = new ArrayList<String>();
+    List<String> searchProvList = new ArrayList<String>();
 
-    public void addToSearchList(String name, String url, String prov);
+    void addToSearchList(String name, String url, String prov);
 
-    public Search getSearchListById(int id);
+    Search getSearchListById(int id);
 
-    public void clearSearchList();
+    void clearSearchList();
 
-    public int sizeOfSearchList();
+    int sizeOfSearchList();
 
-    public int indexNameForSearchList(String name);
+    int indexNameForSearchList(String name);
 
-    public boolean containsNameForSearch(String name);
+    boolean containsNameForSearch(String name);
 }

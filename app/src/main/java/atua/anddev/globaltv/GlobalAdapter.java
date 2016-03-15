@@ -1,17 +1,20 @@
 package atua.anddev.globaltv;
 
-import android.app.*;
-import android.view.*;
-import android.widget.*;
+import android.app.Activity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
-import java.util.*;
+import java.util.List;
 
 public class GlobalAdapter extends ArrayAdapter<String> {
     private final Activity context;
-    private final ArrayList<String> itemname1;
-    private final ArrayList<String> itemname2;
+    private final List<String> itemname1;
+    private final List<String> itemname2;
 
-    public GlobalAdapter(Activity context, ArrayList<String> itemname1, ArrayList<String> itemname2) {
+    public GlobalAdapter(Activity context, List<String> itemname1, List<String> itemname2) {
         super(context, R.layout.myglobalsearch, itemname1);
 
         this.context = context;
@@ -22,10 +25,8 @@ public class GlobalAdapter extends ArrayAdapter<String> {
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.myglobalsearch, null, true);
-
         TextView txtTitle1 = (TextView) rowView.findViewById(R.id.myglobalsearchTextView1);
         TextView txtTitle2 = (TextView) rowView.findViewById(R.id.myglobalsearchTextView2);
-
         txtTitle1.setText(itemname1.get(position));
         txtTitle2.setText(itemname2.get(position));
 

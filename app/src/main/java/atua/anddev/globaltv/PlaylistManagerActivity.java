@@ -1,22 +1,23 @@
 package atua.anddev.globaltv;
 
-import android.app.*;
-import android.content.*;
-import android.os.*;
-import android.util.*;
-import android.view.*;
-import android.widget.*;
-import android.widget.AdapterView.*;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import atua.anddev.globaltv.service.*;
+import java.io.IOException;
 
-import java.io.*;
-
-import org.xmlpull.v1.*;
-
-import atua.anddev.globaltv.entity.*;
-
-public class PlaylistManagerActivity extends Activity implements Global {
+public class PlaylistManagerActivity extends Activity implements Services {
     protected static int editNum;
     protected static String editAction;
     protected static Boolean enable = true;

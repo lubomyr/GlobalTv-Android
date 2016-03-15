@@ -1,17 +1,19 @@
 package atua.anddev.globaltv;
 
-import android.app.*;
-import android.content.*;
-import android.os.*;
-import android.view.*;
-import android.widget.*;
-import android.widget.AdapterView.*;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import java.io.*;
+import java.io.IOException;
 
-import atua.anddev.globaltv.service.*;
-
-public class GlobalFavoriteActivity extends MainActivity implements Global {
+public class GlobalFavoriteActivity extends MainActivity implements Services {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,23 +82,14 @@ public class GlobalFavoriteActivity extends MainActivity implements Global {
         });
     }
 
-    public void openFavorite(int itemNum) {
-        String getProvFile = null;
-        int getProvType = 0;
+    private void openFavorite(int itemNum) {
         String getProvName = favoriteService.getFavoriteById(itemNum).getProv();
         int numA = playlistService.indexNameForActivePlaylist(getProvName);
-        int numD = playlistService.indexNameForOfferedPlaylist(getProvName);
-        if (numA >= 0) {
-            getProvFile = playlistService.getActivePlaylistById(numA).getFile();
-            getProvType = playlistService.getActivePlaylistById(playlistService.indexNameForActivePlaylist(getProvName)).getType();
-        } else if (numD >= 0) {
-            getProvFile = playlistService.getOfferedPlaylistById(numD).getFile();
-            getProvType = playlistService.getOfferedPlaylistById(playlistService.indexNameForOfferedPlaylist(getProvName)).getType();
-        } else {
+        if (numA == -1) {
             Toast.makeText(GlobalFavoriteActivity.this, getResources().getString(R.string.playlistnotexist), Toast.LENGTH_SHORT).show();
             return;
         }
-        readPlaylist(getProvFile, getProvType);
+        readPlaylist(numA);
         for (int j = 0; j < channelService.sizeOfChannelList(); j++) {
             if (channelService.getChannelById(j).getName().equals(favoriteService.getFavoriteById(itemNum).getName())) {
                 channelService.openURL(channelService.getChannelById(j).getUrl(), GlobalFavoriteActivity.this);

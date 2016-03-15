@@ -1,18 +1,25 @@
 package atua.anddev.globaltv.service;
 
 
-import android.content.*;
-import android.util.*;
+import android.content.Context;
+import android.util.Xml;
 
-import atua.anddev.globaltv.*;
-import atua.anddev.globaltv.entity.*;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+import org.xmlpull.v1.XmlSerializer;
 
-import java.io.*;
-import java.util.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.xmlpull.v1.*;
+import atua.anddev.globaltv.Services;
+import atua.anddev.globaltv.entity.Favorites;
 
-public class FavoriteServiceImpl implements FavoriteService, Global {
+public class FavoriteServiceImpl implements FavoriteService, Services {
 
     @Override
     public int indexOfFavoriteByNameAndProv(String name, String prov) {

@@ -1,18 +1,20 @@
 package atua.anddev.globaltv;
 
-import android.app.*;
-import android.content.*;
-import android.os.*;
-import android.view.*;
-import android.widget.*;
-import android.widget.AdapterView.*;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
 
-import atua.anddev.globaltv.service.*;
-
-public class GlobalSearchActivity extends MainActivity implements Global {
+public class GlobalSearchActivity extends MainActivity implements Services {
     private ProgressDialog progress;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,7 @@ public class GlobalSearchActivity extends MainActivity implements Global {
     private void prepare_globalSearch() {
         for (int i = 0; i < playlistService.sizeOfActivePlaylist(); i++) {
             progress.setProgress(i);
-            readPlaylist(playlistService.getActivePlaylistById(i).getFile(), playlistService.getActivePlaylistById(i).getType());
+            readPlaylist(i);
 
             String chName;
             for (int j = 0; j < channelService.sizeOfChannelList(); j++) {

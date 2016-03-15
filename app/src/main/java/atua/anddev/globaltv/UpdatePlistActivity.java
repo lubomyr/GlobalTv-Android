@@ -1,6 +1,6 @@
 package atua.anddev.globaltv;
 
-import android.os.*;
+import android.os.Bundle;
 
 public class UpdatePlistActivity extends MainActivity {
     public void onCreate(Bundle savedInstanceState) {

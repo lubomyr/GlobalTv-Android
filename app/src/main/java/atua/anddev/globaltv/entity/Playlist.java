@@ -1,7 +1,5 @@
 package atua.anddev.globaltv.entity;
 
-import java.util.*;
-
 public class Playlist {
     private String name;
     private String url;

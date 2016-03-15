@@ -1,12 +1,8 @@
 package atua.anddev.globaltv;
 
-import android.media.*;
-import android.media.session.*;
-import android.net.*;
-import android.os.*;
-import android.widget.*;
-
-import android.media.session.MediaController;
+import android.net.Uri;
+import android.os.Bundle;
+import android.widget.VideoView;
 
 public class PlayerActivity extends MainActivity {
     VideoView videoView;

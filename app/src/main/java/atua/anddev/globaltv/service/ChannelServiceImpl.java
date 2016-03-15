@@ -1,12 +1,14 @@
 package atua.anddev.globaltv.service;
 
-import android.content.*;
-import android.net.*;
-import android.util.*;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 
-import atua.anddev.globaltv.entity.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.*;
+import atua.anddev.globaltv.entity.Channel;
 
 public class ChannelServiceImpl implements ChannelService {
 

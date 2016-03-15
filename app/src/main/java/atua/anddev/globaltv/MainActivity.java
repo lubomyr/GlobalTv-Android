@@ -1,25 +1,44 @@
 package atua.anddev.globaltv;
 
-import android.app.*;
-import android.content.*;
-import android.content.res.*;
-import android.os.*;
-import android.text.*;
-import android.util.*;
-import android.view.*;
-import android.widget.*;
-import android.widget.AdapterView.*;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.os.Bundle;
+import android.text.Editable;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import atua.anddev.globaltv.service.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Scanner;
 
-import java.io.*;
-import java.net.*;
-import java.security.*;
-import java.util.*;
-
-import org.xmlpull.v1.*;
-
-public class MainActivity extends Activity implements Global {
+public class MainActivity extends Activity implements Services {
     public static String torrentKey;
     static String selectedCategory;
     static int selectedProvider;
@@ -32,6 +51,54 @@ public class MainActivity extends Activity implements Global {
     private Boolean playlistWithGroup;
     private String myPath;
     private Boolean needUpdate;
+
+    public static void saveUrl(final String filename, final String urlString)
+            throws MalformedURLException, IOException {
+        BufferedInputStream in = null;
+        FileOutputStream fout = null;
+        try {
+            in = new BufferedInputStream(new URL(urlString).openStream());
+            fout = new FileOutputStream(filename);
+
+            final byte data[] = new byte[1024];
+            int count;
+            while ((count = in.read(data, 0, 1024)) != -1) {
+                fout.write(data, 0, count);
+            }
+        } finally {
+            if (in != null) {
+                in.close();
+            }
+            if (fout != null) {
+                fout.close();
+            }
+        }
+    }
+
+    public static String getMd5OfFile(String filePath) {
+        String returnVal = "";
+        try {
+            InputStream input = new FileInputStream(filePath);
+            byte[] buffer = new byte[1024];
+            MessageDigest md5Hash = MessageDigest.getInstance("MD5");
+            int numRead = 0;
+            while (numRead != -1) {
+                numRead = input.read(buffer);
+                if (numRead > 0) {
+                    md5Hash.update(buffer, 0, numRead);
+                }
+            }
+            input.close();
+
+            byte[] md5Bytes = md5Hash.digest();
+            for (int i = 0; i < md5Bytes.length; i++) {
+                returnVal += Integer.toString((md5Bytes[i] & 0xff) + 0x100, 16).substring(1);
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        return returnVal.toUpperCase();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +124,6 @@ public class MainActivity extends Activity implements Global {
         }
         setupProviderView();
         showLocals();
-
     }
 
     @Override
@@ -147,7 +213,6 @@ public class MainActivity extends Activity implements Global {
             }
         });
     }
-
 
     private void setupProviderView() {
         Spinner spinnerView = (Spinner) findViewById(R.id.mainSpinner1);
@@ -245,7 +310,7 @@ public class MainActivity extends Activity implements Global {
         if (needUpdate) {
             downloadPlaylist(selectedProvider);
         }
-        readPlaylist(playlistService.getActivePlaylistById(selectedProvider).getFile(), playlistService.getActivePlaylistById(selectedProvider).getType());
+        readPlaylist(selectedProvider);
         try {
             if (favoriteService.sizeOfFavoriteList() == 0)
                 favoriteService.loadFavorites(MainActivity.this);
@@ -304,7 +369,9 @@ public class MainActivity extends Activity implements Global {
         }).start();
     }
 
-    public void readPlaylist(String fname, int type) {
+    public void readPlaylist(int num) {
+        String fname = playlistService.getActivePlaylistById(num).getFile();
+        int type = playlistService.getActivePlaylistById(num).getType();
         playlistWithGroup = false;
         String lineStr, chName = "", chCategory = "", chLink = "";
         String groupName = "", groupName2 = "";
@@ -384,29 +451,6 @@ public class MainActivity extends Activity implements Global {
         return output;
     }
 
-    public static void saveUrl(final String filename, final String urlString)
-            throws MalformedURLException, IOException {
-        BufferedInputStream in = null;
-        FileOutputStream fout = null;
-        try {
-            in = new BufferedInputStream(new URL(urlString).openStream());
-            fout = new FileOutputStream(filename);
-
-            final byte data[] = new byte[1024];
-            int count;
-            while ((count = in.read(data, 0, 1024)) != -1) {
-                fout.write(data, 0, count);
-            }
-        } finally {
-            if (in != null) {
-                in.close();
-            }
-            if (fout != null) {
-                fout.close();
-            }
-        }
-    }
-
     private void downloadAllPlaylist() {
         for (int i = 0; i < playlistService.sizeOfActivePlaylist(); i++) {
             if (!checkPlaylistFile(i) || needUpdate) {
@@ -483,30 +527,5 @@ public class MainActivity extends Activity implements Global {
             Log.i("GlobalTV", "Error: " + e.toString());
         }
         globalFavoriteActivity();
-    }
-
-    public static String getMd5OfFile(String filePath) {
-        String returnVal = "";
-        try {
-            InputStream input = new FileInputStream(filePath);
-            byte[] buffer = new byte[1024];
-            MessageDigest md5Hash = MessageDigest.getInstance("MD5");
-            int numRead = 0;
-            while (numRead != -1) {
-                numRead = input.read(buffer);
-                if (numRead > 0) {
-                    md5Hash.update(buffer, 0, numRead);
-                }
-            }
-            input.close();
-
-            byte[] md5Bytes = md5Hash.digest();
-            for (int i = 0; i < md5Bytes.length; i++) {
-                returnVal += Integer.toString((md5Bytes[i] & 0xff) + 0x100, 16).substring(1);
-            }
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
-        return returnVal.toUpperCase();
     }
 }

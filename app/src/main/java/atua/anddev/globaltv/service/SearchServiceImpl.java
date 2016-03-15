@@ -1,6 +1,6 @@
 package atua.anddev.globaltv.service;
 
-import atua.anddev.globaltv.entity.*;
+import atua.anddev.globaltv.entity.Search;
 
 public class SearchServiceImpl implements SearchService {
 

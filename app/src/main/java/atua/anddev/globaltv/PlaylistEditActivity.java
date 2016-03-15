@@ -1,21 +1,23 @@
 package atua.anddev.globaltv;
 
-import android.os.*;
-import android.text.*;
-import android.view.*;
-import android.widget.*;
-import android.widget.AdapterView.*;
+import android.os.Bundle;
+import android.text.Editable;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.*;
-
-import org.w3c.dom.*;
-
-import java.io.*;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class PlaylistEditActivity extends PlaylistManagerActivity {
     private int selectedType;
-    private Button addEditButton;
-    private Button deleteButton;
     private Editable name, url;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -34,9 +36,9 @@ public class PlaylistEditActivity extends PlaylistManagerActivity {
         textViewUrl.setText(getResources().getString(R.string.url));
         TextView textViewType = (TextView) findViewById(R.id.playlisteditTextView4);
         textViewType.setText(getResources().getString(R.string.type));
-        deleteButton = (Button) findViewById(R.id.playlisteditButton1);
+        Button deleteButton = (Button) findViewById(R.id.playlisteditButton1);
         deleteButton.setText(getResources().getString(R.string.delete));
-        addEditButton = (Button) findViewById(R.id.playlisteditButton2);
+        Button addEditButton = (Button) findViewById(R.id.playlisteditButton2);
         if (editAction.equals("addNew")) {
             addEditButton.setText(getResources().getString(R.string.add));
             deleteButton.setVisibility(View.GONE);

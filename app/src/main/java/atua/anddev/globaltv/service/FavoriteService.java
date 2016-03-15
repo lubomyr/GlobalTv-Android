@@ -1,36 +1,38 @@
 package atua.anddev.globaltv.service;
 
-import android.content.*;
+import android.content.Context;
 
-import atua.anddev.globaltv.entity.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.*;
-import java.io.*;
+import atua.anddev.globaltv.entity.Favorites;
 
 public interface FavoriteService {
     List<Favorites> favorites = new ArrayList<Favorites>();
-    ArrayList<String> favoriteList = new ArrayList<String>();
-    ArrayList<String> favoriteProvList = new ArrayList<String>();
+    List<String> favoriteList = new ArrayList<String>();
+    List<String> favoriteProvList = new ArrayList<String>();
 
-    public void addToFavoriteList(String name, String prov);
+    void addToFavoriteList(String name, String prov);
 
-    public Favorites getFavoriteById(int id);
+    Favorites getFavoriteById(int id);
 
-    public void clearAllFavorites();
+    void clearAllFavorites();
 
-    public int sizeOfFavoriteList();
+    int sizeOfFavoriteList();
 
-    public int indexNameForFavorite(String name);
+    int indexNameForFavorite(String name);
 
-    public boolean containsNameForFavorite(String name);
+    boolean containsNameForFavorite(String name);
 
-    public void deleteFromFavoritesById(int id);
+    void deleteFromFavoritesById(int id);
 
-    public List<String> getFavoriteListForSelProv();
+    List<String> getFavoriteListForSelProv();
 
-    public int indexOfFavoriteByNameAndProv(String name, String prov);
+    int indexOfFavoriteByNameAndProv(String name, String prov);
 
-    public void saveFavorites(Context context) throws FileNotFoundException, IOException;
+    void saveFavorites(Context context) throws FileNotFoundException, IOException;
 
-    public void loadFavorites(Context context) throws IOException;
+    void loadFavorites(Context context) throws IOException;
 }
