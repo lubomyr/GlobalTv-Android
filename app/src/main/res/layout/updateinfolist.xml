@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@android:style/Theme.Holo"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#151414"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/sortedPlaylistTextView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Updated by Date sorted List"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <ListView
+        android:id="@+id/sortedPlaylistListView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
+

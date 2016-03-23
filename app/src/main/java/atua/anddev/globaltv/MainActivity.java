@@ -49,7 +49,7 @@ public class MainActivity extends Activity implements Services {
     static ArrayAdapter provAdapter;
     Configuration conf;
     private Boolean playlistWithGroup;
-    private String myPath;
+    public static String myPath;
     private Boolean needUpdate;
 
     public static void saveUrl(final String filename, final String urlString)
@@ -136,8 +136,8 @@ public class MainActivity extends Activity implements Services {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            Toast.makeText(MainActivity.this, "Setting test", Toast.LENGTH_SHORT).show();
+        if (id == R.id.playlist_update_info) {
+            updateInfoListActivity();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -307,20 +307,23 @@ public class MainActivity extends Activity implements Services {
     }
 
     public void openPlaylist(View view) {
-        if (needUpdate) {
-            downloadPlaylist(selectedProvider);
-        }
-        readPlaylist(selectedProvider);
         try {
-            if (favoriteService.sizeOfFavoriteList() == 0)
-                favoriteService.loadFavorites(MainActivity.this);
-        } catch (IOException e) {
-            Log.i("GlobalTV", "Error: " + e);
+            if (needUpdate) {
+                downloadPlaylist(selectedProvider);
+            }
+        } finally {
+            readPlaylist(selectedProvider);
+            try {
+                if (favoriteService.sizeOfFavoriteList() == 0)
+                    favoriteService.loadFavorites(MainActivity.this);
+            } catch (IOException e) {
+                Log.i("GlobalTV", "Error: " + e);
+            }
+            if (playlistWithGroup)
+                catlistActivity();
+            else
+                playlistActivity();
         }
-        if (playlistWithGroup)
-            catlistActivity();
-        else
-            playlistActivity();
     }
 
     public void downloadButton(View view) {
@@ -527,5 +530,10 @@ public class MainActivity extends Activity implements Services {
             Log.i("GlobalTV", "Error: " + e.toString());
         }
         globalFavoriteActivity();
+    }
+
+    public void updateInfoListActivity() {
+        Intent intent = new Intent(this, UpdateInfoListActivity.class);
+        startActivity(intent);
     }
 }

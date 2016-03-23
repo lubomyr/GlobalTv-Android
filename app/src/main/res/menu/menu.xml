@@ -4,9 +4,9 @@
     tools:context="atua.anddev.globaltv.MainActivity" >
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/playlist_update_info"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/playlist_update_info"
         />
 
 </menu>

@@ -19,7 +19,7 @@
     <string name="favorites">Favorites</string>
     <string name="selectCategory">Select category</string>
     <string name="search">Search</string>
-    <string name="searching">Searching...</string>
+    <string name="searching">Searching…</string>
     <string name="channels"> channel(s)</string>
     <string name="request">Request</string>
     <string name="doyouwant">Do you want </string>
@@ -47,8 +47,8 @@
     <string name="pleasefillallfields">Please fill all fields</string>
     <string name="updateOutdatedPlaylists">Update Outdated Playlists</string>
     <string name="reset">Reset</string>
-    <string name="action_settings">Settings</string>
-    <string name="updating">Updating...</string>
+    <string name="playlist_update_info">Playlist update info</string>
+    <string name="updating">Updating…</string>
     <string name="plstmanwarn">Please use playlist manager for adding offering playlist</string>
     <string name="resetwarn">Do you really want to do reset (all app-data will be erased) ?</string>
     <string name="playlistexist">current playlist already exist in selected list</string>

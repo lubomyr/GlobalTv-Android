@@ -14,6 +14,8 @@ public interface PlaylistService {
     List<Playlist> offeredPlaylist = new ArrayList<Playlist>();
     List<String> activePlaylistName = new ArrayList<String>();
 
+    List<Playlist> getSortedByDatePlaylists();
+
     void addToActivePlaylist(String name, String url, int type, String md5, String update);
 
     void addToOfferedPlaylist(String name, String url, int type);
@@ -55,4 +57,6 @@ public interface PlaylistService {
     void saveData(Context context) throws FileNotFoundException, IOException;
 
     void setupProvider(String opt, Context context);
+
+    void setDateFromFile(int num);
 }
