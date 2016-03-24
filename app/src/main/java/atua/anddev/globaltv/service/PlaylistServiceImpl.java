@@ -8,11 +8,14 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -23,8 +26,26 @@ import atua.anddev.globaltv.entity.Playlist;
 public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
+    public void setDateFromFile(int id) {
+        File file = new File(MainActivity.myPath + "/" + getActivePlaylistById(id).getFile());
+        long fileDate = file.lastModified();
+        setUpdateDate(id, fileDate);
+    }
+
+    @Override
+    public List<Playlist> getSortedByDatePlaylists() {
+        List<Playlist> sortedList = new ArrayList<Playlist>();
+        sortedList.addAll(activePlaylist);
+        Collections.sort(sortedList, PlstDateComparator);
+        return sortedList;
+    }
+
+    @Override
     public void addNewActivePlaylist(Playlist plst) {
         String name = plst.getName();
+        File file = new File(MainActivity.myPath + "/" + plst.getFile());
+        long fileDate = file.lastModified();
+        plst.setUpdate(String.valueOf(fileDate));
         activePlaylist.add(plst);
         activePlaylistName.add(name);
     }
@@ -263,4 +284,20 @@ public class PlaylistServiceImpl implements PlaylistService {
             e.printStackTrace();
         }
     }
+
+    /*Comparator for sorting the list by Playlist date*/
+    public static Comparator<Playlist> PlstDateComparator = new Comparator<Playlist>() {
+
+        public int compare(Playlist s1, Playlist s2) {
+            String PlaylistDate1 = s1.getUpdate().toUpperCase();
+            String PlaylistDate2 = s2.getUpdate().toUpperCase();
+
+            //ascending order
+            //return PlaylistDate1.compareTo(PlaylistDate2);
+
+            //descending order
+            return PlaylistDate2.compareTo(PlaylistDate1);
+        }
+    };
+
 }
