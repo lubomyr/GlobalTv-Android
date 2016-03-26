@@ -54,13 +54,14 @@ public class GlobalSearchActivity extends MainActivity implements Services {
     private void prepare_globalSearch() {
         for (int i = 0; i < playlistService.sizeOfActivePlaylist(); i++) {
             progress.setProgress(i);
-            readPlaylist(i);
+            playlistService.readPlaylist(i);
 
             String chName;
             for (int j = 0; j < channelService.sizeOfChannelList(); j++) {
                 chName = channelService.getChannelById(j).getName().toLowerCase();
                 if (chName.contains(searchString.toLowerCase())) {
-                    searchService.addToSearchList(channelService.getChannelById(j).getName(), channelService.getChannelById(j).getUrl(), playlistService.getActivePlaylistById(i).getName());
+                    searchService.addToSearchList(channelService.getChannelById(j).getName(),
+                            channelService.getChannelById(j).getUrl(), playlistService.getActivePlaylistById(i).getName());
                 }
             }
         }
@@ -69,7 +70,8 @@ public class GlobalSearchActivity extends MainActivity implements Services {
 
     public void showSearchResults() {
         TextView textView = (TextView) findViewById(R.id.globalsearchTextView1);
-        textView.setText(getResources().getString(R.string.resultsfor) + " '" + searchString + "' - " + searchService.sizeOfSearchList() + " " + getResources().getString(R.string.channels));
+        textView.setText(getResources().getString(R.string.resultsfor) + " '" + searchString + "' - " +
+                searchService.sizeOfSearchList() + " " + getResources().getString(R.string.channels));
         GlobalAdapter adapter = new GlobalAdapter(this, searchService.searchNameList, searchService.searchProvList);
         ListView list = (ListView) findViewById(R.id.globalsearchListView1);
         list.setAdapter(adapter);
@@ -90,7 +92,8 @@ public class GlobalSearchActivity extends MainActivity implements Services {
                 Toast.makeText(GlobalSearchActivity.this, s, Toast.LENGTH_SHORT).show();
                 Boolean changesAllowed = true;
                 for (int i = 0; i < favoriteService.sizeOfFavoriteList(); i++) {
-                    if (searchService.getSearchListById(selectedItem).getName().equals(favoriteService.getFavoriteById(i).getName()) && searchService.getSearchListById(selectedItem).getProv().equals(favoriteService.getFavoriteById(i).getProv()))
+                    if (searchService.getSearchListById(selectedItem).getName().equals(favoriteService.getFavoriteById(i).getName())
+                            && searchService.getSearchListById(selectedItem).getProv().equals(favoriteService.getFavoriteById(i).getProv()))
                         changesAllowed = false;
                 }
                 if (changesAllowed) {
@@ -99,7 +102,9 @@ public class GlobalSearchActivity extends MainActivity implements Services {
                         public void run() {
                             AlertDialog.Builder builder = new AlertDialog.Builder(GlobalSearchActivity.this);
                             builder.setTitle(getResources().getString(R.string.request));
-                            builder.setMessage(getResources().getString(R.string.doyouwant) + " " + getResources().getString(R.string.add) + " '" + s + "' to " + getResources().getString(R.string.tofavorites));
+                            builder.setMessage(getResources().getString(R.string.doyouwant)
+                                    + " " + getResources().getString(R.string.add) + " '" + s + "' to "
+                                    + getResources().getString(R.string.tofavorites));
                             builder.setPositiveButton(getResources().getString(R.string.add), new DialogInterface.OnClickListener() {
 
                                 @Override

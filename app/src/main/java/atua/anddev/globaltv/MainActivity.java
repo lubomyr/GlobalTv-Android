@@ -36,20 +36,19 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Scanner;
 
 public class MainActivity extends Activity implements Services {
     public static String torrentKey;
+    public static String origNames[];
+    public static String translatedNames[];
+    public static ArrayAdapter provAdapter;
+    public static Boolean playlistWithGroup;
+    public static String myPath;
     static String selectedCategory;
     static int selectedProvider;
     static String lang;
     static String searchString;
-    static String origNames[];
-    static String translatedNames[];
-    static ArrayAdapter provAdapter;
     Configuration conf;
-    private Boolean playlistWithGroup;
-    public static String myPath;
     private Boolean needUpdate;
 
     public static void saveUrl(final String filename, final String urlString)
@@ -119,8 +118,9 @@ public class MainActivity extends Activity implements Services {
         }
         if (playlistService.sizeOfActivePlaylist() == 0) {
             Toast.makeText(MainActivity.this, getResources().getString(R.string.plstmanwarn), Toast.LENGTH_SHORT).show();
-            playlistService.addNewActivePlaylist(playlistService.getOfferedPlaylistById(0));
-            downloadPlaylist(0);
+            needUpdate = true;
+            //playlistService.addNewActivePlaylist(playlistService.getOfferedPlaylistById(0));
+            //downloadPlaylist(0, false);
         }
         setupProviderView();
         showLocals();
@@ -203,8 +203,10 @@ public class MainActivity extends Activity implements Services {
                 origNames = getResources().getStringArray(R.array.categories_list_orig);
                 translatedNames = getResources().getStringArray(R.array.categories_list_translated);
                 applyLocals();
-
-                checkPlaylistFile(selectedProvider);
+                try {
+                    checkPlaylistFile(selectedProvider);
+                } catch (Exception e) {
+                }
             }
 
             @Override
@@ -309,10 +311,10 @@ public class MainActivity extends Activity implements Services {
     public void openPlaylist(View view) {
         try {
             if (needUpdate) {
-                downloadPlaylist(selectedProvider);
+                downloadPlaylist(selectedProvider, true);
             }
         } finally {
-            readPlaylist(selectedProvider);
+            playlistService.readPlaylist(selectedProvider);
             try {
                 if (favoriteService.sizeOfFavoriteList() == 0)
                     favoriteService.loadFavorites(MainActivity.this);
@@ -327,118 +329,22 @@ public class MainActivity extends Activity implements Services {
     }
 
     public void downloadButton(View view) {
-        downloadPlaylist(selectedProvider);
+        downloadPlaylist(selectedProvider, false);
     }
 
     public void updateAll(View view) {
         downloadAllPlaylist();
     }
 
-    private void downloadPlaylist(final int num) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    String path = myPath + "/" + playlistService.getActivePlaylistById(num).getFile();
-                    saveUrl(path, playlistService.getActivePlaylistById(num).getUrl());
-
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            needUpdate = false;
-                            String oldMd5 = playlistService.getActivePlaylistById(num).getMd5();
-                            checkPlaylistFile(selectedProvider);
-                            String path = myPath + "/" + playlistService.getActivePlaylistById(num).getFile();
-                            String newMd5 = getMd5OfFile(path);
-                            if (!newMd5.equals(oldMd5)) {
-                                playlistService.setMd5(num, newMd5);
-                                playlistService.setUpdateDate(num, new Date().getTime());
-                                try {
-                                    playlistService.saveData(MainActivity.this);
-                                } catch (IOException e) {
-                                    Log.i("GlobalTV", "Error: " + e.toString());
-                                }
-                                Toast.makeText(MainActivity.this, getResources().getString(R.string.playlistupdated, playlistService.getActivePlaylistById(num).getName()), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                } catch (Exception e) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(MainActivity.this, getResources().getString(R.string.updatefailed, playlistService.getActivePlaylistById(num).getName()), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    Log.i("GlobalTV", "Error: " + e.toString());
-                }
+    private void downloadPlaylist(final int num, boolean waitforfinish) {
+        DownloadPlaylist dplst = new DownloadPlaylist(num);
+        Thread threadDp = new Thread(dplst);
+        threadDp.start();
+        if (waitforfinish) {
+            try {
+                threadDp.join();
+            } catch (InterruptedException e) {
             }
-        }).start();
-    }
-
-    public void readPlaylist(int num) {
-        String fname = playlistService.getActivePlaylistById(num).getFile();
-        int type = playlistService.getActivePlaylistById(num).getType();
-        playlistWithGroup = false;
-        String lineStr, chName = "", chCategory = "", chLink = "";
-        String groupName = "", groupName2 = "";
-        channelService.clearAllChannel();
-        try {
-            InputStream myfile = new FileInputStream(myPath + "/" + fname);
-            Scanner myInputFile = new Scanner(myfile, "UTF8").useDelimiter("[\n]");
-            while (myInputFile.hasNext()) {
-                lineStr = myInputFile.next();
-                if (lineStr.startsWith("acestream:") || lineStr.startsWith("http:") || lineStr.startsWith("https:")
-                        || lineStr.startsWith("rtmp:") || lineStr.startsWith("rtsp:") || lineStr.startsWith("mmsh:")
-                        || lineStr.startsWith("mms:") || lineStr.startsWith("rtmpt:")) {
-                    chLink = lineStr;
-                    if (chName.startsWith("ALLFON.TV")) {
-                        chName = chName.substring(10, chName.length());
-                    }
-                    if (chName.startsWith(" ")) {
-                        chName = chName.substring(1, chName.length());
-                    }
-                    if (chName.charAt(chName.length() - 1) == '\15') {
-                        chName = chName.substring(0, chName.length() - 1);
-                    }
-                    chCategory = translate(chCategory);
-                    channelService.addToChannelList(chName, chLink, chCategory);
-                    if (!chCategory.equals(""))
-                        playlistWithGroup = true;
-                    chName = "";
-                    chCategory = "";
-                    chLink = "";
-                    groupName = "";
-                    groupName2 = "";
-                }
-                if ((type == 1) && lineStr.startsWith("#EXTINF:-1,") && (lineStr.indexOf("(") == lineStr.lastIndexOf("("))) {
-                    chName = lineStr.substring(11, lineStr.indexOf("(") - 1);
-                    chCategory = lineStr.substring(lineStr.lastIndexOf("(") + 1, lineStr.lastIndexOf(")"));
-                    playlistWithGroup = true;
-                }
-                if ((type == 1) && lineStr.startsWith("#EXTINF:-1,") && (lineStr.indexOf("(") != lineStr.lastIndexOf("("))) {
-                    chName = lineStr.substring(11, lineStr.lastIndexOf("(") - 1);
-                    chCategory = lineStr.substring(lineStr.lastIndexOf("(") + 1, lineStr.lastIndexOf(")"));
-                    playlistWithGroup = true;
-                }
-                if (lineStr.startsWith("#EXTINF:") && (type != 1)) {
-                    chName = lineStr.substring(lineStr.lastIndexOf(",") + 1, lineStr.length());
-                }
-                if (lineStr.contains("group-title=") && lineStr.contains(",") && (lineStr.substring(lineStr.indexOf("group-title="), lineStr.indexOf("group-title=") + 12).equals("group-title="))) {
-                    groupName = lineStr.substring(lineStr.indexOf("group-title=") + 13, lineStr.indexOf('"', lineStr.indexOf("group-title=") + 13));
-                    playlistWithGroup = true;
-                }
-                if (lineStr.contains("#EXTGRP:") && (lineStr.substring(lineStr.indexOf("#EXTGRP:"), lineStr.indexOf("#EXTGRP:") + 8).equals("#EXTGRP:"))) {
-                    groupName2 = lineStr.substring(lineStr.indexOf("#EXTGRP:") + 8, lineStr.length());
-                    playlistWithGroup = true;
-                }
-                if (!groupName.equals("")) {
-                    chCategory = groupName;
-                } else if (!groupName2.equals("")) {
-                    groupName2 = groupName2.replace('\15', ' ');
-                    groupName2 = groupName2.replace(" ", "");
-                    chCategory = groupName2;
-                }
-            }
-            myInputFile.close();
-        } catch (Exception e) {
-            Log.i("GlobalTV", "Error: " + e.toString());
         }
     }
 
@@ -457,24 +363,9 @@ public class MainActivity extends Activity implements Services {
     private void downloadAllPlaylist() {
         for (int i = 0; i < playlistService.sizeOfActivePlaylist(); i++) {
             if (!checkPlaylistFile(i) || needUpdate) {
-                downloadPlaylist(i);
+                downloadPlaylist(i, false);
             }
         }
-    }
-
-    private String translate(String input) {
-        String output;
-        output = input;
-
-        if (origNames.length > 0) {
-            for (int i = 0; i < origNames.length; i++) {
-                if (origNames[i].equalsIgnoreCase(input)) {
-                    output = translatedNames[i];
-                    break;
-                }
-            }
-        }
-        return output;
     }
 
     public void globalSearch(View view) {
@@ -535,5 +426,49 @@ public class MainActivity extends Activity implements Services {
     public void updateInfoListActivity() {
         Intent intent = new Intent(this, UpdateInfoListActivity.class);
         startActivity(intent);
+    }
+
+    private class DownloadPlaylist implements Runnable {
+        private int num;
+
+        DownloadPlaylist(int num) {
+            this.num = num;
+        }
+
+        public void run() {
+            try {
+                String path = myPath + "/" + playlistService.getActivePlaylistById(num).getFile();
+                saveUrl(path, playlistService.getActivePlaylistById(num).getUrl());
+
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        needUpdate = false;
+                        String oldMd5 = playlistService.getActivePlaylistById(num).getMd5();
+                        checkPlaylistFile(selectedProvider);
+                        String path = myPath + "/" + playlistService.getActivePlaylistById(num).getFile();
+                        String newMd5 = getMd5OfFile(path);
+                        if (!newMd5.equals(oldMd5)) {
+                            playlistService.setMd5(num, newMd5);
+                            playlistService.setUpdateDate(num, new Date().getTime());
+                            try {
+                                playlistService.saveData(MainActivity.this);
+                            } catch (IOException e) {
+                                Log.i("GlobalTV", "Error: " + e.toString());
+                            }
+                            Toast.makeText(MainActivity.this, getResources().getString(R.string.playlistupdated,
+                                    playlistService.getActivePlaylistById(num).getName()), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(MainActivity.this, getResources().getString(R.string.updatefailed,
+                                playlistService.getActivePlaylistById(num).getName()), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                Log.i("GlobalTV", "Error: " + e.toString());
+            }
+        }
     }
 }

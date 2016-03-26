@@ -50,7 +50,9 @@ public class GlobalFavoriteActivity extends MainActivity implements Services {
                         public void run() {
                             AlertDialog.Builder builder = new AlertDialog.Builder(GlobalFavoriteActivity.this);
                             builder.setTitle(getResources().getString(R.string.request));
-                            builder.setMessage(getResources().getString(R.string.doyouwant) + " " + getResources().getString(R.string.remove) + " '" + s + "' " + getResources().getString(R.string.fromfavorites));
+                            builder.setMessage(getResources().getString(R.string.doyouwant) + " "
+                                    + getResources().getString(R.string.remove) + " '" + s + "' "
+                                    + getResources().getString(R.string.fromfavorites));
                             builder.setPositiveButton(getResources().getString(R.string.remove), new DialogInterface.OnClickListener() {
 
                                 @Override
@@ -89,7 +91,7 @@ public class GlobalFavoriteActivity extends MainActivity implements Services {
             Toast.makeText(GlobalFavoriteActivity.this, getResources().getString(R.string.playlistnotexist), Toast.LENGTH_SHORT).show();
             return;
         }
-        readPlaylist(numA);
+        playlistService.readPlaylist(numA);
         for (int j = 0; j < channelService.sizeOfChannelList(); j++) {
             if (channelService.getChannelById(j).getName().equals(favoriteService.getFavoriteById(itemNum).getName())) {
                 channelService.openURL(channelService.getChannelById(j).getUrl(), GlobalFavoriteActivity.this);

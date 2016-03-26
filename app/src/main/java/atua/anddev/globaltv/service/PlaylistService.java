@@ -59,4 +59,6 @@ public interface PlaylistService {
     void setupProvider(String opt, Context context);
 
     void setDateFromFile(int num);
+
+    void readPlaylist(int num);
 }
