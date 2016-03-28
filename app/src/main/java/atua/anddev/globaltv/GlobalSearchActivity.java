@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
+import atua.anddev.globaltv.entity.Channel;
+
 public class GlobalSearchActivity extends MainActivity implements Services {
     private ProgressDialog progress;
 
@@ -57,11 +59,11 @@ public class GlobalSearchActivity extends MainActivity implements Services {
             playlistService.readPlaylist(i);
 
             String chName;
-            for (int j = 0; j < channelService.sizeOfChannelList(); j++) {
-                chName = channelService.getChannelById(j).getName().toLowerCase();
+            for (Channel chn : channelService.channel) {
+                chName = chn.getName().toLowerCase();
                 if (chName.contains(searchString.toLowerCase())) {
-                    searchService.addToSearchList(channelService.getChannelById(j).getName(),
-                            channelService.getChannelById(j).getUrl(), playlistService.getActivePlaylistById(i).getName());
+                    searchService.addToSearchList(chn.getName(),
+                            chn.getUrl(), playlistService.getActivePlaylistById(i).getName());
                 }
             }
         }

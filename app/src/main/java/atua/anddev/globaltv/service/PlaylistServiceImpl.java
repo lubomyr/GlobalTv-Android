@@ -146,8 +146,8 @@ public class PlaylistServiceImpl implements PlaylistService, Services {
     @Override
     public List<String> getAllNamesOfActivePlaylist() {
         List<String> arr = new ArrayList<String>();
-        for (int i = 0; i < activePlaylist.size(); i++) {
-            arr.add(activePlaylist.get(i).getName());
+        for (Playlist plst : activePlaylist) {
+            arr.add(plst.getName());
         }
         return arr;
     }
@@ -155,8 +155,8 @@ public class PlaylistServiceImpl implements PlaylistService, Services {
     @Override
     public List<String> getAllNamesOfOfferedPlaylist() {
         List<String> arr = new ArrayList<String>();
-        for (int i = 0; i < offeredPlaylist.size(); i++) {
-            arr.add(offeredPlaylist.get(i).getName());
+        for (Playlist plst : offeredPlaylist) {
+            arr.add(plst.getName());
         }
         return arr;
     }
@@ -201,13 +201,22 @@ public class PlaylistServiceImpl implements PlaylistService, Services {
         offeredPlaylist.add(plst);
     }
 
+    public void addAllOfferedPlaylist() {
+        for (Playlist plst : offeredPlaylist) {
+            if (!activePlaylist.contains(plst)) {
+                activePlaylist.add(plst);
+                activePlaylistName.add(plst.getName());
+            }
+        }
+    }
+
     @Override
     public void saveData(Context context) throws FileNotFoundException, IOException {
         FileOutputStream fos;
         fos = context.getApplicationContext().openFileOutput("userdata.xml", Context.MODE_WORLD_WRITEABLE);
         XmlSerializer serializer = Xml.newSerializer();
         serializer.setOutput(fos, "UTF-8");
-        serializer.startDocument(null, Boolean.valueOf(true));
+        serializer.startDocument(null, true);
         serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
         serializer.startTag(null, "data");
 
@@ -215,8 +224,7 @@ public class PlaylistServiceImpl implements PlaylistService, Services {
         serializer.text(MainActivity.torrentKey);
         serializer.endTag(null, "torrentkey");
 
-        for (int j = 0; j < sizeOfActivePlaylist(); j++) {
-            Playlist plst = getActivePlaylistById(j);
+        for (Playlist plst : activePlaylist) {
             serializer.startTag(null, "provider");
 
             serializer.startTag(null, "name");
@@ -291,9 +299,6 @@ public class PlaylistServiceImpl implements PlaylistService, Services {
                                 if (opt.equals("user")) {
                                     addToActivePlaylist(name, url, Integer.parseInt(type), md5, update);
                                 }
-                                /*if (opt.equals("default")) {
-								 addToOfferedPlaylist(name, url, Integer.parseInt(type));
-								 }*/
                             }
                             break;
 
@@ -306,9 +311,7 @@ public class PlaylistServiceImpl implements PlaylistService, Services {
                     }
                     xpp.next();
                 }
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (XmlPullParserException | IOException e) {
                 e.printStackTrace();
             }
         }
@@ -456,10 +459,6 @@ public class PlaylistServiceImpl implements PlaylistService, Services {
                     Log.d(LOG_TAG, "name: " + name);
                     Log.d(LOG_TAG, "url: " + url);
                     Log.d(LOG_TAG, "type: " + type);
-                }
-                if (sizeOfActivePlaylist() == 0) {
-                    addNewActivePlaylist(getOfferedPlaylistById(0));
-                    MainActivity.provAdapter.notifyDataSetChanged();
                 }
 
             } catch (JSONException e) {

@@ -21,7 +21,7 @@ public class ChannelServiceImpl implements ChannelService {
             for (int j = 0; j <= arr.size() - 1; j++)
                 if (channel.get(i).getCategory().equalsIgnoreCase(arr.get(j)))
                     cat_exist = true;
-            if (cat_exist == false && !channel.get(i).getCategory().equals(""))
+            if (!cat_exist && !channel.get(i).getCategory().equals(""))
                 arr.add(channel.get(i).getCategory());
         }
         return arr;
@@ -55,9 +55,9 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     public void openChannel(String chName, Context context) {
-        for (int i = 0; i < sizeOfChannelList(); i++) {
-            if (chName.equals(getChannelById(i).getName())) {
-                openURL(getChannelById(i).getUrl(), context);
+        for (Channel chn : channel) {
+            if (chName.equals(chn.getName())) {
+                openURL(chn.getUrl(), context);
                 return;
             }
         }
@@ -75,7 +75,7 @@ public class ChannelServiceImpl implements ChannelService {
                     }
                     context.getApplicationContext().startActivity(browserIntent);
                 } catch (Exception e) {
-                    Log.i("SDL", "Error: " + e.toString());
+                    Log.i("GlobalTv", "Error: " + e.toString());
                 }
             }
         }).start();

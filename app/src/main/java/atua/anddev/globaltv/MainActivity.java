@@ -90,8 +90,8 @@ public class MainActivity extends Activity implements Services {
             input.close();
 
             byte[] md5Bytes = md5Hash.digest();
-            for (int i = 0; i < md5Bytes.length; i++) {
-                returnVal += Integer.toString((md5Bytes[i] & 0xff) + 0x100, 16).substring(1);
+            for (byte md5Byte : md5Bytes) {
+                returnVal += Integer.toString((md5Byte & 0xff) + 0x100, 16).substring(1);
             }
         } catch (Throwable t) {
             t.printStackTrace();
@@ -118,9 +118,8 @@ public class MainActivity extends Activity implements Services {
         }
         if (playlistService.sizeOfActivePlaylist() == 0) {
             Toast.makeText(MainActivity.this, getResources().getString(R.string.plstmanwarn), Toast.LENGTH_SHORT).show();
+            addPlaylistDialog();
             needUpdate = true;
-            //playlistService.addNewActivePlaylist(playlistService.getOfferedPlaylistById(0));
-            //downloadPlaylist(0, false);
         }
         setupProviderView();
         showLocals();
@@ -309,6 +308,10 @@ public class MainActivity extends Activity implements Services {
     }
 
     public void openPlaylist(View view) {
+        if (playlistService.sizeOfActivePlaylist() == 0) {
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.no_selected_playlist), Toast.LENGTH_SHORT).show();
+            return;
+        }
         try {
             if (needUpdate) {
                 downloadPlaylist(selectedProvider, true);
@@ -329,6 +332,10 @@ public class MainActivity extends Activity implements Services {
     }
 
     public void downloadButton(View view) {
+        if (playlistService.sizeOfActivePlaylist() == 0) {
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.no_selected_playlist), Toast.LENGTH_SHORT).show();
+            return;
+        }
         downloadPlaylist(selectedProvider, false);
     }
 
@@ -426,6 +433,33 @@ public class MainActivity extends Activity implements Services {
     public void updateInfoListActivity() {
         Intent intent = new Intent(this, UpdateInfoListActivity.class);
         startActivity(intent);
+    }
+
+    public void addPlaylistDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(getResources().getString(R.string.request));
+        builder.setMessage(getResources().getString(R.string.provider_list_is_empty));
+        builder.setPositiveButton(getResources().getString(R.string.playlist_add_all), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface p1, int p2) {
+                playlistService.addAllOfferedPlaylist();
+                provAdapter.notifyDataSetChanged();
+                try {
+                    playlistService.saveData(MainActivity.this);
+                } catch (IOException e) {
+                }
+            }
+        });
+        builder.setNegativeButton(getResources().getString(R.string.playlistsManagerButton), new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface p1, int p2) {
+                playlistManagerActivity();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.setOwnerActivity(MainActivity.this);
+        alert.show();
     }
 
     private class DownloadPlaylist implements Runnable {

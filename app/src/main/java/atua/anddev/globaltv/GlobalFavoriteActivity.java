@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
+import atua.anddev.globaltv.entity.Channel;
+
 public class GlobalFavoriteActivity extends MainActivity implements Services {
 
     public void onCreate(Bundle savedInstanceState) {
@@ -92,9 +94,9 @@ public class GlobalFavoriteActivity extends MainActivity implements Services {
             return;
         }
         playlistService.readPlaylist(numA);
-        for (int j = 0; j < channelService.sizeOfChannelList(); j++) {
-            if (channelService.getChannelById(j).getName().equals(favoriteService.getFavoriteById(itemNum).getName())) {
-                channelService.openURL(channelService.getChannelById(j).getUrl(), GlobalFavoriteActivity.this);
+        for (Channel chn : channelService.channel) {
+            if (chn.getName().equals(favoriteService.getFavoriteById(itemNum).getName())) {
+                channelService.openURL(chn.getUrl(), GlobalFavoriteActivity.this);
                 break;
             }
         }

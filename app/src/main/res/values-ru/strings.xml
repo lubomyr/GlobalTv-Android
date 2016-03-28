@@ -19,7 +19,7 @@
     <string name="favorites">Избранное</string>
     <string name="selectCategory">Выберите категорию</string>
     <string name="search">Поиск</string>
-    <string name="searching">Поиск...</string>
+    <string name="searching">Поиск…</string>
     <string name="channels"> каналов</string>
     <string name="request">Запрос</string>
     <string name="doyouwant">Вы хотите </string>
@@ -47,10 +47,13 @@
     <string name="pleasefillallfields">Заполните все поля</string>
     <string name="updateOutdatedPlaylists">Обн. устар. Плейлисты</string>
     <string name="reset">Сброс</string>
-    <string name="updating">Обновление...</string>
+    <string name="playlist_add_all">Добавить все плейлисты</string>
+    <string name="updating">Обновление…</string>
     <string name="plstmanwarn">Для добавления новых плейлистов используйте Плейлист Менеджер</string>
     <string name="resetwarn">Вы действительно хотите сделать сброс (все настройки приложения будут удалены) ?</string>
     <string name="playlistexist">Этот плейлист уже есть в избранном списке</string>
+    <string name="provider_list_is_empty">Список плейлистов пустой. Добавте хотябы один</string>
+    <string name="no_selected_playlist">Нет избранных плейлистов. Добавте хотябы один</string>
 
     <string-array name="categories_list_orig">
         <item>Europe</item>

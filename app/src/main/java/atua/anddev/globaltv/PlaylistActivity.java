@@ -20,6 +20,8 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import atua.anddev.globaltv.entity.Channel;
+
 public class PlaylistActivity extends Activity implements Services {
 
     public void onCreate(Bundle savedInstanceState) {
@@ -42,13 +44,13 @@ public class PlaylistActivity extends Activity implements Services {
     private void openCategory(final String catName) {
         final ArrayList<String> playlist = new ArrayList<String>();
         final ArrayList<String> playlistUrl = new ArrayList<String>();
-        for (int i = 0; i < channelService.sizeOfChannelList(); i++) {
+        for (Channel chn : channelService.channel) {
             if (catName.equals(getResources().getString(R.string.all))) {
-                playlist.add(channelService.getChannelById(i).getName());
-                playlistUrl.add(channelService.getChannelById(i).getUrl());
-            } else if (catName.equals(channelService.getChannelById(i).getCategory())) {
-                playlist.add(channelService.getChannelById(i).getName());
-                playlistUrl.add(channelService.getChannelById(i).getUrl());
+                playlist.add(chn.getName());
+                playlistUrl.add(chn.getUrl());
+            } else if (catName.equals(chn.getCategory())) {
+                playlist.add(chn.getName());
+                playlistUrl.add(chn.getUrl());
             }
         }
 

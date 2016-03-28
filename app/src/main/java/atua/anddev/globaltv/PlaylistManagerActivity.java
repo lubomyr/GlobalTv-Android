@@ -5,6 +5,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -36,6 +39,28 @@ public class PlaylistManagerActivity extends Activity implements Services {
         applyLocals();
         createProvlist();
         showProvlist();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.playlist, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.playlist_add_all) {
+            playlistService.addAllOfferedPlaylist();
+            try {
+                playlistService.saveData(PlaylistManagerActivity.this);
+                selectedAdapter.notifyDataSetChanged();
+                MainActivity.provAdapter.notifyDataSetChanged();
+            } catch (IOException e) {
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void applyLocals() {
@@ -210,6 +235,7 @@ public class PlaylistManagerActivity extends Activity implements Services {
             public void onClick(DialogInterface p1, int p2) {
                 playlistService.clearActivePlaylist();
                 selectedAdapter.notifyDataSetChanged();
+                MainActivity.provAdapter.notifyDataSetChanged();
                 try {
                     playlistService.saveData(PlaylistManagerActivity.this);
                 } catch (IOException e) {

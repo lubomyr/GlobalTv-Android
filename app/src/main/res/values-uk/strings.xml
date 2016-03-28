@@ -19,7 +19,7 @@
     <string name="favorites">Вибрані</string>
     <string name="selectCategory">Виберіть категорію</string>
     <string name="search">Пошук</string>
-    <string name="searching">Пошук...</string>
+    <string name="searching">Пошук…</string>
     <string name="channels"> каналів</string>
     <string name="request">Запит</string>
     <string name="doyouwant">Чи ви хочете </string>
@@ -47,10 +47,13 @@
     <string name="pleasefillallfields">Прошу заповнити всі поля</string>
     <string name="updateOutdatedPlaylists">Онов. заст. Плейлисти</string>
     <string name="reset">Скидання</string>
-    <string name="updating">Оновлення...</string>
+    <string name="playlist_add_all">Додати всі плейлисти</string>
+    <string name="updating">Оновлення…</string>
     <string name="plstmanwarn">Для додавання нових плейлистів використовуйте Плейлист Менеджер</string>
     <string name="resetwarn">Ви справді хочите зробити скидання (всі налаштування програми будуть видалені) ?</string>
     <string name="playlistexist">Цей плейлист вже є у вибраному списку</string>
+    <string name="provider_list_is_empty">Список плейлистів порожній. Додайте хочаб один</string>
+    <string name="no_selected_playlist">Немає обраних плейлистів. Додайте хочаб один</string>
 
     <string-array name="categories_list_orig">
         <item>Музыка</item>

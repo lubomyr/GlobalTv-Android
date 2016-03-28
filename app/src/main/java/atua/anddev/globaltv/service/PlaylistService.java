@@ -61,4 +61,6 @@ public interface PlaylistService {
     void setDateFromFile(int num);
 
     void readPlaylist(int num);
+
+    void addAllOfferedPlaylist();
 }

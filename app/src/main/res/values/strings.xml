@@ -48,10 +48,13 @@
     <string name="updateOutdatedPlaylists">Update Outdated Playlists</string>
     <string name="reset">Reset</string>
     <string name="playlist_update_info">Playlist update info</string>
+    <string name="playlist_add_all">Add all offered playlist</string>
     <string name="updating">Updating…</string>
     <string name="plstmanwarn">Please use playlist manager for adding offering playlist</string>
     <string name="resetwarn">Do you really want to do reset (all app-data will be erased) ?</string>
     <string name="playlistexist">current playlist already exist in selected list</string>
+    <string name="provider_list_is_empty">Playlists is empty. Please add at least one</string>
+    <string name="no_selected_playlist">No Selected Playlist. Please add at least one</string>
 
     <string-array name="categories_list_orig">
         <item>Музыка</item>

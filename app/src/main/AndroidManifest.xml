@@ -66,7 +66,7 @@
 
         <activity
             android:name=".UpdateInfoListActivity"
-            android:label="Update by Date sorted List"
+            android:label="Sorted by update date playlist"
             android:theme="@android:style/Theme.Holo" />
 
         <activity
