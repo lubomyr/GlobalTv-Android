@@ -34,6 +34,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -250,17 +251,20 @@ public class MainActivity extends Activity implements Services {
             File file = new File(myPath + "/" + fname);
             long fileDate = file.lastModified();
             long currDate = (new Date()).getTime();
-            long upDate, updateDate = 0;
+            long diffDate, updateDate = 0;
             try {
                 updateDate = Long.parseLong(updateDateStr);
-                upDate = currDate - updateDate;
+                diffDate = currDate - updateDate;
             } catch (Exception e) {
-                upDate = currDate - fileDate;
+                diffDate = currDate - fileDate;
                 updateDate = fileDate;
                 Log.i("GlobalTV", "Error: " + e.toString());
             }
             String tmpText;
-            switch (new Date(upDate).getDate()) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(diffDate);
+            int daysPassed = cal.get(Calendar.DATE);
+            switch (daysPassed) {
                 case 1:
                     tmpText = getResources().getString(R.string.updated) + " " + new Date(updateDate).toLocaleString();
                     needUpdate = false;
@@ -272,11 +276,11 @@ public class MainActivity extends Activity implements Services {
                 case 3:
                 case 4:
                 case 5:
-                    tmpText = getResources().getString(R.string.updated) + " " + (new Date(upDate).getDate() - 1) + " " + getResources().getString(R.string.daysago);
+                    tmpText = getResources().getString(R.string.updated) + " " + (daysPassed - 1) + " " + getResources().getString(R.string.daysago);
                     needUpdate = true;
                     break;
                 default:
-                    tmpText = getResources().getString(R.string.updated) + " " + (new Date(upDate).getDate() - 1) + " " + getResources().getString(R.string.fivedaysago);
+                    tmpText = getResources().getString(R.string.updated) + " " + (daysPassed - 1) + " " + getResources().getString(R.string.fivedaysago);
                     needUpdate = true;
                     break;
 

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -46,8 +47,10 @@ public class UpdateInfoListActivity extends Activity implements Services {
     private String getDiffDays(long inputDate) {
         String tmpText;
         long currDate = (new Date()).getTime();
-        long resDate = currDate - inputDate;
-        int daysPassed = new Date(resDate).getDate();
+        long diffDate = currDate - inputDate;
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(diffDate);
+        int daysPassed = cal.get(Calendar.DATE);
         switch (daysPassed) {
             case 1:
                 tmpText = getResources().getString(R.string.updated) + " " + new Date(inputDate).toLocaleString();
