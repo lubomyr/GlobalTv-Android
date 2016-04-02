@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import atua.anddev.globaltv.MainActivity;
 import atua.anddev.globaltv.Services;
 import atua.anddev.globaltv.entity.Favorites;
 
@@ -37,7 +38,8 @@ public class FavoriteServiceImpl implements FavoriteService, Services {
         List<String> arr = new ArrayList<String>();
         for (int i = 0; i < sizeOfFavoriteList(); i++) {
             for (int j = 0; j < channelService.sizeOfChannelList(); j++) {
-                if (getFavoriteById(i).getName().equals(channelService.getChannelById(j).getName()) && !arr.contains(getFavoriteById(i).getName())) {
+                if (getFavoriteById(i).getName().equals(channelService.getChannelById(j).getName()) && !arr.contains(getFavoriteById(i).getName())
+                        && getFavoriteById(i).getProv().equals(playlistService.getActivePlaylistById(MainActivity.selectedProvider).getName())) {
                     arr.add(getFavoriteById(i).getName());
                 }
             }

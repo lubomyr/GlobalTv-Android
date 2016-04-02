@@ -94,7 +94,7 @@ public class GlobalFavoriteActivity extends MainActivity implements Services {
             return;
         }
         playlistService.readPlaylist(numA);
-        for (Channel chn : channelService.channel) {
+        for (Channel chn : channelService.getAllChannels()) {
             if (chn.getName().equals(favoriteService.getFavoriteById(itemNum).getName())) {
                 channelService.openURL(chn.getUrl(), GlobalFavoriteActivity.this);
                 break;

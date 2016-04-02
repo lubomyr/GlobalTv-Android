@@ -34,7 +34,7 @@ public class UpdateInfoListActivity extends Activity implements Services {
                 longDate = Long.parseLong(plst.getUpdate());
                 daysPassed = getDiffDays(longDate);
             } catch (Exception e) {
-                daysPassed = e.toString();
+                daysPassed = getResources().getString(R.string.playlistnotexist);
             }
 
             date.add(daysPassed);
@@ -46,10 +46,10 @@ public class UpdateInfoListActivity extends Activity implements Services {
 
     private String getDiffDays(long inputDate) {
         String tmpText;
-        long currDate = (new Date()).getTime();
-        long diffDate = currDate - inputDate;
+        long currDate = new Date().getTime();
+        long resDate = currDate - inputDate;
         Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(diffDate);
+        cal.setTimeInMillis(resDate);
         int daysPassed = cal.get(Calendar.DATE);
         switch (daysPassed) {
             case 1:

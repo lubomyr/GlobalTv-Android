@@ -45,8 +45,8 @@ public class MainActivity extends Activity implements Services {
     public static ArrayAdapter provAdapter;
     public static Boolean playlistWithGroup;
     public static String myPath;
+    public static int selectedProvider;
     static String selectedCategory;
-    static int selectedProvider;
     static String lang;
     static String searchString;
     Configuration conf;
@@ -250,7 +250,7 @@ public class MainActivity extends Activity implements Services {
             String updateDateStr = playlistService.getActivePlaylistById(num).getUpdate();
             File file = new File(myPath + "/" + fname);
             long fileDate = file.lastModified();
-            long currDate = (new Date()).getTime();
+            long currDate = new Date().getTime();
             long diffDate, updateDate = 0;
             try {
                 updateDate = Long.parseLong(updateDateStr);
@@ -264,6 +264,7 @@ public class MainActivity extends Activity implements Services {
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(diffDate);
             int daysPassed = cal.get(Calendar.DATE);
+
             switch (daysPassed) {
                 case 1:
                     tmpText = getResources().getString(R.string.updated) + " " + new Date(updateDate).toLocaleString();
@@ -482,7 +483,6 @@ public class MainActivity extends Activity implements Services {
                     public void run() {
                         needUpdate = false;
                         String oldMd5 = playlistService.getActivePlaylistById(num).getMd5();
-                        checkPlaylistFile(selectedProvider);
                         String path = myPath + "/" + playlistService.getActivePlaylistById(num).getFile();
                         String newMd5 = getMd5OfFile(path);
                         if (!newMd5.equals(oldMd5)) {
@@ -493,6 +493,7 @@ public class MainActivity extends Activity implements Services {
                             } catch (IOException e) {
                                 Log.i("GlobalTV", "Error: " + e.toString());
                             }
+                            checkPlaylistFile(selectedProvider);
                             Toast.makeText(MainActivity.this, getResources().getString(R.string.playlistupdated,
                                     playlistService.getActivePlaylistById(num).getName()), Toast.LENGTH_SHORT).show();
                         }

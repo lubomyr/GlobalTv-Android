@@ -13,6 +13,11 @@ import atua.anddev.globaltv.entity.Channel;
 public class ChannelServiceImpl implements ChannelService {
 
     @Override
+    public List<Channel> getAllChannels() {
+        return channel;
+    }
+
+    @Override
     public List<String> getCategoriesList() {
         List<String> arr = new ArrayList<String>();
         boolean cat_exist = false;

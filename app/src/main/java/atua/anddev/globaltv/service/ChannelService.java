@@ -15,6 +15,8 @@ public interface ChannelService {
 
     Channel getChannelById(int id);
 
+    List<Channel> getAllChannels();
+
     void clearAllChannel();
 
     int sizeOfChannelList();
