@@ -14,7 +14,7 @@
 		android:textAppearance="?android:attr/textAppearanceSmall"
 		android:layout_width="wrap_content"
 		android:layout_gravity="center_horizontal"
-		android:layout_marginTop="10dp"
+		android:layout_marginTop="5dp"
 		android:id="@+id/playlisteditTextView1"/>
 
 	<EditText
@@ -30,7 +30,7 @@
 		android:textAppearance="?android:attr/textAppearanceSmall"
 		android:layout_width="wrap_content"
 		android:layout_gravity="center_horizontal"
-		android:layout_marginTop="10dp"
+		android:layout_marginTop="5dp"
 		android:id="@+id/playlisteditTextView2"/>
 
 	<EditText
@@ -46,15 +46,14 @@
 		android:textAppearance="?android:attr/textAppearanceSmall"
 		android:layout_width="wrap_content"
 		android:layout_gravity="center_horizontal"
-		android:layout_marginTop="10dp"
+		android:layout_marginTop="5dp"
 		android:id="@+id/playlisteditTextView4"/>
 
 	<Spinner
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content"
 		android:layout_gravity="center_horizontal"
-		android:id="@+id/playlisteditSpinner1"
-		android:layout_marginTop="10dp"/>
+		android:id="@+id/playlisteditSpinner1" />
 
 	<LinearLayout
 		android:layout_height="wrap_content"

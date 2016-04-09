@@ -10,7 +10,7 @@
     <string name="playlist">Playlist</string>
     <string name="pcs">pcs</string>
     <string name="autoUpdate">autoupdate</string>
-    <string name="every24h">every 24h</string>
+    <string name="every12h">every 12h</string>
     <string name="updated">updated </string>
     <string name="dayago"> day ago</string>
     <string name="daysago"> days ago</string>

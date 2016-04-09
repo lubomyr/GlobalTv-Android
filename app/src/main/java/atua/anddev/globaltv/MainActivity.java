@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends Activity implements Services {
     public static String torrentKey;
@@ -159,8 +160,8 @@ public class MainActivity extends Activity implements Services {
         playlistView.setText(getResources().getString(R.string.playlist));
         TextView autoupdateView = (TextView) findViewById(R.id.mainTextView3);
         autoupdateView.setText(getResources().getString(R.string.autoUpdate));
-        TextView every24hView = (TextView) findViewById(R.id.mainTextView4);
-        every24hView.setText(getResources().getString(R.string.every24h));
+        TextView every12hView = (TextView) findViewById(R.id.mainTextView4);
+        every12hView.setText(getResources().getString(R.string.every12h));
     }
 
     private void showLocals() {
@@ -264,25 +265,26 @@ public class MainActivity extends Activity implements Services {
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(diffDate);
             int daysPassed = cal.get(Calendar.DATE);
+            int hoursPassed = (int) TimeUnit.MILLISECONDS.toHours(diffDate);
+            if (hoursPassed > 12)
+                needUpdate = true;
+            else
+                needUpdate = false;
 
             switch (daysPassed) {
                 case 1:
                     tmpText = getResources().getString(R.string.updated) + " " + new Date(updateDate).toLocaleString();
-                    needUpdate = false;
                     break;
                 case 2:
                     tmpText = getResources().getString(R.string.updated) + " 1 " + getResources().getString(R.string.dayago);
-                    needUpdate = true;
                     break;
                 case 3:
                 case 4:
                 case 5:
                     tmpText = getResources().getString(R.string.updated) + " " + (daysPassed - 1) + " " + getResources().getString(R.string.daysago);
-                    needUpdate = true;
                     break;
                 default:
                     tmpText = getResources().getString(R.string.updated) + " " + (daysPassed - 1) + " " + getResources().getString(R.string.fivedaysago);
-                    needUpdate = true;
                     break;
 
             }

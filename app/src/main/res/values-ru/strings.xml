@@ -10,7 +10,7 @@
     <string name="playlist">Плейлист</string>
     <string name="pcs">шт.</string>
     <string name="autoUpdate">автообновление</string>
-    <string name="every24h">каждые 24ч</string>
+    <string name="every12h">каждые 12ч</string>
     <string name="updated">обновлено </string>
     <string name="dayago"> день назад</string>
     <string name="daysago"> дня назад</string>
