@@ -21,13 +21,13 @@ import android.widget.Toast;
 import java.io.IOException;
 
 public class PlaylistManagerActivity extends Activity implements Services {
-    protected static int editNum;
-    protected static String editAction;
-    protected static Boolean enable = true;
+    static int editNum;
+    static String editAction;
+    static Boolean enable = true;
+    static ArrayAdapter selectedAdapter;
     private ListView selectedlistView;
     private ListView offeredlistView;
     private TextView textView;
-    private ArrayAdapter selectedAdapter;
     private ArrayAdapter offeredAdapter;
 
     public void onCreate(Bundle savedInstanceState) {

@@ -1,5 +1,6 @@
 package atua.anddev.globaltv;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
@@ -16,15 +17,21 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class PlaylistEditActivity extends PlaylistManagerActivity {
+public class PlaylistEditActivity extends Activity implements Services {
     private int selectedType;
     private Editable name, url;
+    private String editAction;
+    private int editNum;
+    private boolean enable;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Set sub.xml as user interface layout
         setContentView(R.layout.playlistedit);
 
+        editAction = PlaylistManagerActivity.editAction;
+        editNum = PlaylistManagerActivity.editNum;
+        enable = PlaylistManagerActivity.enable;
         applyLocalsEdit();
         showEdit();
     }
@@ -95,7 +102,7 @@ public class PlaylistEditActivity extends PlaylistManagerActivity {
         url = editTextUrl.getText();
     }
 
-    public void addEdit(View view) {
+    public void addEdit(View view) throws IOException {
         Boolean success = false;
         if (editAction.equals("modify")) {
             if (name.toString().length() == 0 || url.toString().length() == 0) {
@@ -130,13 +137,18 @@ public class PlaylistEditActivity extends PlaylistManagerActivity {
                 playlistService.saveData(PlaylistEditActivity.this);
         } catch (IOException e) {
         }
-        if (success)
+        if (success) {
+            PlaylistManagerActivity.selectedAdapter.notifyDataSetChanged();
+            playlistService.saveData(PlaylistEditActivity.this);
             super.onBackPressed();
+        }
     }
 
-    public void deletePlaylist(View view) {
+    public void deletePlaylist(View view) throws IOException {
         if (enable) {
             playlistService.deleteActivePlaylistById(editNum);
+            PlaylistManagerActivity.selectedAdapter.notifyDataSetChanged();
+            playlistService.saveData(PlaylistEditActivity.this);
         }
         super.onBackPressed();
     }

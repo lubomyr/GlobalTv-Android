@@ -149,7 +149,7 @@ public class MainActivity extends Activity implements Services {
         Button openButton = (Button) findViewById(R.id.mainButton1);
         openButton.setText(getResources().getString(R.string.openPlaylistButton));
         Button globalSearchButton = (Button) findViewById(R.id.mainButton3);
-        globalSearchButton.setText(getResources().getString(R.string.globalSearchButton));
+        globalSearchButton.setText(getResources().getString(R.string.search));
         Button playlistManagerButton = (Button) findViewById(R.id.mainButton4);
         playlistManagerButton.setText(getResources().getString(R.string.playlistsManagerButton));
         Button globalFavoriteButton = (Button) findViewById(R.id.mainButton5);

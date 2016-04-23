@@ -203,7 +203,7 @@ public class PlaylistServiceImpl implements PlaylistService, Services {
 
     public void addAllOfferedPlaylist() {
         for (Playlist plst : offeredPlaylist) {
-            if (!activePlaylist.contains(plst)) {
+            if (!activePlaylistName.contains(plst.getName())) {
                 activePlaylist.add(plst);
                 activePlaylistName.add(plst.getName());
             }
@@ -335,6 +335,9 @@ public class PlaylistServiceImpl implements PlaylistService, Services {
                     chLink = lineStr;
                     if (chName.startsWith("ALLFON.TV")) {
                         chName = chName.substring(10, chName.length());
+                    }
+                    if (chName.startsWith("ALLFON.ORG")) {
+                        chName = chName.substring(11, chName.length());
                     }
                     if (chName.startsWith(" ")) {
                         chName = chName.substring(1, chName.length());
