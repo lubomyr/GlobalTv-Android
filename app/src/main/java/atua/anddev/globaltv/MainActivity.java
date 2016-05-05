@@ -264,7 +264,7 @@ public class MainActivity extends Activity implements Services {
             String tmpText;
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(diffDate);
-            int daysPassed = cal.get(Calendar.DATE);
+            int daysPassed = cal.get(Calendar.DAY_OF_YEAR);
             int hoursPassed = (int) TimeUnit.MILLISECONDS.toHours(diffDate);
             if (hoursPassed > 12)
                 needUpdate = true;

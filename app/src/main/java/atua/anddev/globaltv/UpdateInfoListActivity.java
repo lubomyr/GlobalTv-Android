@@ -50,7 +50,7 @@ public class UpdateInfoListActivity extends Activity implements Services {
         long resDate = currDate - inputDate;
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(resDate);
-        int daysPassed = cal.get(Calendar.DATE);
+        int daysPassed = cal.get(Calendar.DAY_OF_YEAR);
         switch (daysPassed) {
             case 1:
                 tmpText = getResources().getString(R.string.updated) + " " + new Date(inputDate).toLocaleString();
