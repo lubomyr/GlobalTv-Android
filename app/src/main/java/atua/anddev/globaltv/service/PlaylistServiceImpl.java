@@ -220,9 +220,9 @@ public class PlaylistServiceImpl implements PlaylistService, Services {
         serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
         serializer.startTag(null, "data");
 
-        serializer.startTag(null, "torrentkey");
-        serializer.text(MainActivity.torrentKey);
-        serializer.endTag(null, "torrentkey");
+//        serializer.startTag(null, "torrentkey");
+//        serializer.text(MainActivity.torrentKey);
+//        serializer.endTag(null, "torrentkey");
 
         for (Playlist plst : activePlaylist) {
             serializer.startTag(null, "provider");
