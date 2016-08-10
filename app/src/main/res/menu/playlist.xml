@@ -3,9 +3,8 @@
     tools:context="atua.anddev.globaltv.MainActivity">
 
     <item
-        android:id="@+id/playlist_update_info"
+        android:id="@+id/playlist_add_all"
         android:orderInCategory="100"
-        android:title="@string/playlist_update_info"
-        />
+        android:title="@string/playlist_add_all" />
 
 </menu>

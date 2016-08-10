@@ -132,6 +132,11 @@ public class PlaylistEditActivity extends Activity implements Services {
                     Toast.makeText(PlaylistEditActivity.this, getResources().getString(R.string.playlistexist), Toast.LENGTH_SHORT).show();
             }
         }
+        try {
+            if (success)
+                playlistService.saveData(PlaylistEditActivity.this);
+        } catch (IOException e) {
+        }
         if (success) {
             PlaylistManagerActivity.selectedAdapter.notifyDataSetChanged();
             playlistService.saveData(PlaylistEditActivity.this);

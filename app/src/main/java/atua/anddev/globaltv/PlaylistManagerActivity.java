@@ -1,7 +1,7 @@
 package atua.anddev.globaltv;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.TabActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,30 +15,58 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TabHost;
+import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
 
-public class PlaylistManagerActivity extends Activity implements Services {
+public class PlaylistManagerActivity extends TabActivity implements Services {
     static int editNum;
     static String editAction;
     static Boolean enable = true;
     static ArrayAdapter selectedAdapter;
-    private ListView selectedlistView;
-    private ListView offeredlistView;
-    private TextView textView;
+    final String TABS_TAG_1 = "Tag 1";
+    final String TABS_TAG_2 = "Tag 2";
+
     private ArrayAdapter offeredAdapter;
 
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         // Set sub.xml as user interface layout
         setContentView(R.layout.playlistmanager);
 
+        TabHost tabHost = getTabHost();
+        TabHost.TabSpec tabSpec;
+        tabSpec = tabHost.newTabSpec(TABS_TAG_1);
+        tabSpec.setContent(TabFactory);
+        tabSpec.setIndicator(getString(R.string.selected));
+        tabHost.addTab(tabSpec);
+        tabSpec = tabHost.newTabSpec(TABS_TAG_2);
+        tabSpec.setContent(TabFactory);
+        tabSpec.setIndicator(getString(R.string.offered));
+        tabHost.addTab(tabSpec);
+
         applyLocals();
-        createProvlist();
-        showProvlist();
+        String selTabTag = tabHost.getCurrentTabTag();
+        if (selTabTag == TABS_TAG_1)
+            showSelected();
+        else if (selTabTag == TABS_TAG_2)
+            showOffered();
+
+        tabHost.setOnTabChangedListener(new OnTabChangeListener() {
+
+            @Override
+            public void onTabChanged(String p1) {
+                if (p1 == TABS_TAG_1)
+                    showSelected();
+                else if (p1 == TABS_TAG_2)
+                    showOffered();
+            }
+        });
     }
 
     @Override
@@ -66,30 +94,36 @@ public class PlaylistManagerActivity extends Activity implements Services {
     private void applyLocals() {
         Button buttonAddnewPlaylist = (Button) findViewById(R.id.playlistManagerButton1);
         buttonAddnewPlaylist.setText(getResources().getString(R.string.addnewplaylist));
-        Button buttonSelected = (Button) findViewById(R.id.playlistmanagerButton2);
-        buttonSelected.setText(getResources().getString(R.string.selected));
-        Button buttonOffered = (Button) findViewById(R.id.playlistmanagerButton3);
-        buttonOffered.setText(getResources().getString(R.string.offered));
         Button buttonRestore = (Button) findViewById(R.id.playlistmanagerButton4);
         buttonRestore.setText(getResources().getString(R.string.reset));
     }
 
-    private void createProvlist() {
-        selectedlistView = (ListView) findViewById(R.id.playlistManagerListView1);
-        offeredlistView = (ListView) findViewById(R.id.playlistManagerListView2);
-        textView = (TextView) findViewById(R.id.playlistManagerTextView1);
-        if (enable) {
-            selectedlistView.setVisibility(View.VISIBLE);
-            offeredlistView.setVisibility(View.GONE);
-            textView.setText(getResources().getString(R.string.selected) + " - " + playlistService.sizeOfActivePlaylist() + " " + getResources().getString(R.string.pcs));
-        } else {
-            selectedlistView.setVisibility(View.GONE);
-            offeredlistView.setVisibility(View.VISIBLE);
-            textView.setText(getResources().getString(R.string.offered) + " - " + playlistService.sizeOfOfferedPlaylist() + " " + getResources().getString(R.string.pcs));
+    TabHost.TabContentFactory TabFactory = new TabHost.TabContentFactory() {
+
+        @Override
+        public View createTabContent(String tag) {
+            if (tag == TABS_TAG_1) {
+                return getLayoutInflater().inflate(R.layout.plman_selected, null);
+                //return getLayoutInflater().inflate(R.layout.tab, null);
+            } else if (tag == TABS_TAG_2) {
+                return getLayoutInflater().inflate(R.layout.plman_offered, null);
+            }
+            return null;
         }
+
+    };
+
+    public void addNewPlaylist(View view) {
+        editAction = "addNew";
+        playlistEditActivity();
     }
 
-    private void showProvlist() {
+    public void showSelected() {
+        ListView selectedlistView = (ListView) findViewById(R.id.playlistManagerListViewF1);
+        TextView textView = (TextView) findViewById(R.id.playlistManagerTextViewF1);
+        textView.setText(getResources().getString(R.string.selected) + " - " + playlistService.sizeOfActivePlaylist() + " " + getResources().getString(R.string.pcs));
+        enable = true;
+
         selectedAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, playlistService.activePlaylistName);
         selectedlistView.setAdapter(selectedAdapter);
         selectedlistView.setOnItemClickListener(new OnItemClickListener() {
@@ -142,6 +176,13 @@ public class PlaylistManagerActivity extends Activity implements Services {
                 return true;
             }
         });
+    }
+
+    public void showOffered() {
+        ListView offeredlistView = (ListView) findViewById(R.id.playlistManagerListViewF2);
+        TextView textView = (TextView) findViewById(R.id.playlistManagerTextViewF2);
+        textView.setText(getResources().getString(R.string.offered) + " - " + playlistService.sizeOfOfferedPlaylist() + " " + getResources().getString(R.string.pcs));
+        enable = false;
 
         offeredAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, playlistService.getAllNamesOfOfferedPlaylist());
         offeredlistView.setAdapter(offeredAdapter);
@@ -200,25 +241,6 @@ public class PlaylistManagerActivity extends Activity implements Services {
                 return true;
             }
         });
-    }
-
-    public void addNewPlaylist(View view) {
-        editAction = "addNew";
-        playlistEditActivity();
-    }
-
-    public void showSelected(View view) {
-        selectedlistView.setVisibility(View.VISIBLE);
-        offeredlistView.setVisibility(View.GONE);
-        textView.setText(getResources().getString(R.string.selected) + " - " + playlistService.sizeOfActivePlaylist() + " " + getResources().getString(R.string.pcs));
-        enable = true;
-    }
-
-    public void showOffered(View view) {
-        selectedlistView.setVisibility(View.GONE);
-        offeredlistView.setVisibility(View.VISIBLE);
-        textView.setText(getResources().getString(R.string.offered) + " - " + playlistService.sizeOfOfferedPlaylist() + " " + getResources().getString(R.string.pcs));
-        enable = false;
     }
 
     public void playlistEditActivity() {

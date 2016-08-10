@@ -27,56 +27,27 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal">
+    <TabHost
+        android:id="@android:id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/playlistmanagerButton2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="showSelected"
-            android:text="Selected" />
-
-        <Button
-            android:id="@+id/playlistmanagerButton3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="showOffered"
-            android:text="Offered" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/playlistManagerTextView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Info"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-
-        <ListView
-            android:id="@+id/playlistManagerListView1"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <ListView
-            android:id="@+id/playlistManagerListView2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></TabWidget>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" />
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></FrameLayout>
+        </LinearLayout>
+    </TabHost>
 
 </LinearLayout>
 
