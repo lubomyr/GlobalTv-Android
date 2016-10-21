@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import atua.anddev.globaltv.MainActivity;
-import atua.anddev.globaltv.Services;
+import atua.anddev.globaltv.GlobalServices;
 import atua.anddev.globaltv.entity.Favorites;
 
-public class FavoriteServiceImpl implements FavoriteService, Services {
+public class FavoriteServiceImpl implements FavoriteService, GlobalServices {
 
     @Override
     public int indexOfFavoriteByNameAndProv(String name, String prov) {

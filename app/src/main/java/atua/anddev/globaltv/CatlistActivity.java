@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class CatlistActivity extends Activity implements Services {
+public class CatlistActivity extends Activity implements GlobalServices {
     private ArrayList<String> categoryList = new ArrayList<String>();
 
     public void onCreate(Bundle savedInstanceState) {

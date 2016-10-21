@@ -31,10 +31,10 @@ import java.util.List;
 import java.util.Scanner;
 
 import atua.anddev.globaltv.MainActivity;
-import atua.anddev.globaltv.Services;
+import atua.anddev.globaltv.GlobalServices;
 import atua.anddev.globaltv.entity.Playlist;
 
-public class PlaylistServiceImpl implements PlaylistService, Services {
+public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
     public static String LOG_TAG = "GlobalTv";
     /*Comparator for sorting the list by Playlist date*/
     public static Comparator<Playlist> PlstDateComparator = new Comparator<Playlist>() {

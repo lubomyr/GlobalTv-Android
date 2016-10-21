@@ -16,7 +16,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.List;
 
-public class FavlistActivity extends Activity implements Services {
+public class FavlistActivity extends Activity implements GlobalServices {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -33,13 +33,14 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends Activity implements Services {
+public class MainActivity extends Activity implements GlobalServices {
     public static String torrentKey;
     public static String origNames[];
     public static String translatedNames[];
@@ -144,41 +145,42 @@ public class MainActivity extends Activity implements Services {
     }
 
     private void applyLocals() {
+        Resources res = getResources();
         Button updateButton = (Button) findViewById(R.id.mainButton2);
-        updateButton.setText(getResources().getString(R.string.updatePlaylistButton));
+        updateButton.setText(res.getString(R.string.updatePlaylistButton));
         Button openButton = (Button) findViewById(R.id.mainButton1);
-        openButton.setText(getResources().getString(R.string.openPlaylistButton));
+        openButton.setText(res.getString(R.string.openPlaylistButton));
         Button globalSearchButton = (Button) findViewById(R.id.mainButton3);
-        globalSearchButton.setText(getResources().getString(R.string.search));
+        globalSearchButton.setText(res.getString(R.string.search));
         Button playlistManagerButton = (Button) findViewById(R.id.mainButton4);
-        playlistManagerButton.setText(getResources().getString(R.string.playlistsManagerButton));
+        playlistManagerButton.setText(res.getString(R.string.playlistsManagerButton));
         Button globalFavoriteButton = (Button) findViewById(R.id.mainButton5);
-        globalFavoriteButton.setText(getResources().getString(R.string.favorites));
+        globalFavoriteButton.setText(res.getString(R.string.favorites));
         Button updateAllButton = (Button) findViewById(R.id.mainButton6);
-        updateAllButton.setText(getResources().getString(R.string.updateOutdatedPlaylists));
+        updateAllButton.setText(res.getString(R.string.updateOutdatedPlaylists));
         TextView playlistView = (TextView) findViewById(R.id.mainTextView2);
-        playlistView.setText(getResources().getString(R.string.playlist));
+        playlistView.setText(res.getString(R.string.playlist));
         TextView autoupdateView = (TextView) findViewById(R.id.mainTextView3);
-        autoupdateView.setText(getResources().getString(R.string.autoUpdate));
+        autoupdateView.setText(res.getString(R.string.autoUpdate));
         TextView every12hView = (TextView) findViewById(R.id.mainTextView4);
-        every12hView.setText(getResources().getString(R.string.every12h));
+        every12hView.setText(res.getString(R.string.every12h));
     }
 
     private void showLocals() {
-        ArrayList<String> localsList = new ArrayList<String>();
-        localsList.add("English");
-        localsList.add("Українська");
-        localsList.add("Русский");
+        List<String> localsList = Arrays.asList("English", "Українська", "Русский");
         Spinner spinnerView = (Spinner) findViewById(R.id.mainSpinner2);
         SpinnerAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, localsList);
         spinnerView.setAdapter(adapter);
+        int eng = 0;
+        int ukr = 1;
+        int rus = 2;
 
         if (lang.equals("eng"))
-            spinnerView.setSelection(0);
+            spinnerView.setSelection(eng);
         if (lang.equals("ukr"))
-            spinnerView.setSelection(1);
+            spinnerView.setSelection(ukr);
         if (lang.equals("rus"))
-            spinnerView.setSelection(2);
+            spinnerView.setSelection(rus);
 
         spinnerView.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -206,7 +208,7 @@ public class MainActivity extends Activity implements Services {
                 applyLocals();
                 try {
                     checkPlaylistFile(selectedProvider);
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
 
@@ -245,6 +247,7 @@ public class MainActivity extends Activity implements Services {
     }
 
     private boolean checkPlaylistFile(int num) {
+        Resources res = getResources();
         TextView textView = (TextView) findViewById(R.id.mainTextView1);
         String fname = playlistService.getActivePlaylistById(num).getFile();
         try {
@@ -273,18 +276,18 @@ public class MainActivity extends Activity implements Services {
 
             switch (daysPassed) {
                 case 1:
-                    tmpText = getResources().getString(R.string.updated) + " " + new Date(updateDate).toLocaleString();
+                    tmpText = res.getString(R.string.updated) + " " + new Date(updateDate).toLocaleString();
                     break;
                 case 2:
-                    tmpText = getResources().getString(R.string.updated) + " 1 " + getResources().getString(R.string.dayago);
+                    tmpText = res.getString(R.string.updated) + " 1 " + res.getString(R.string.dayago);
                     break;
                 case 3:
                 case 4:
                 case 5:
-                    tmpText = getResources().getString(R.string.updated) + " " + (daysPassed - 1) + " " + getResources().getString(R.string.daysago);
+                    tmpText = res.getString(R.string.updated) + " " + (daysPassed - 1) + " " + res.getString(R.string.daysago);
                     break;
                 default:
-                    tmpText = getResources().getString(R.string.updated) + " " + (daysPassed - 1) + " " + getResources().getString(R.string.fivedaysago);
+                    tmpText = res.getString(R.string.updated) + " " + (daysPassed - 1) + " " + res.getString(R.string.fivedaysago);
                     break;
 
             }
@@ -292,7 +295,7 @@ public class MainActivity extends Activity implements Services {
             textView.setText(tmpText);
             InputStream myfile = new FileInputStream(myPath + "/" + fname);
         } catch (FileNotFoundException e) {
-            textView.setText(getResources().getString(R.string.playlistnotexist));
+            textView.setText(res.getString(R.string.playlistnotexist));
             needUpdate = true;
             return false;
         }
@@ -443,21 +446,22 @@ public class MainActivity extends Activity implements Services {
     }
 
     public void addPlaylistDialog() {
+        Resources res = getResources();
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle(getResources().getString(R.string.request));
-        builder.setMessage(getResources().getString(R.string.provider_list_is_empty));
-        builder.setPositiveButton(getResources().getString(R.string.playlist_add_all), new DialogInterface.OnClickListener() {
+        builder.setTitle(res.getString(R.string.request));
+        builder.setMessage(res.getString(R.string.provider_list_is_empty));
+        builder.setPositiveButton(res.getString(R.string.playlist_add_all), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface p1, int p2) {
                 playlistService.addAllOfferedPlaylist();
                 provAdapter.notifyDataSetChanged();
                 try {
                     playlistService.saveData(MainActivity.this);
-                } catch (IOException e) {
+                } catch (IOException ignored) {
                 }
             }
         });
-        builder.setNegativeButton(getResources().getString(R.string.playlistsManagerButton), new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(res.getString(R.string.playlistsManagerButton), new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface p1, int p2) {

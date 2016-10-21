@@ -9,7 +9,7 @@ import atua.anddev.globaltv.service.PlaylistServiceImpl;
 import atua.anddev.globaltv.service.SearchService;
 import atua.anddev.globaltv.service.SearchServiceImpl;
 
-public interface Services {
+public interface GlobalServices {
     PlaylistService playlistService = new PlaylistServiceImpl();
     ChannelService channelService = new ChannelServiceImpl();
     FavoriteService favoriteService = new FavoriteServiceImpl();

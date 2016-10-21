@@ -2,6 +2,7 @@ package atua.anddev.globaltv;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,7 +16,7 @@ import java.io.IOException;
 
 import atua.anddev.globaltv.entity.Channel;
 
-public class GlobalFavoriteActivity extends MainActivity implements Services {
+public class GlobalFavoriteActivity extends MainActivity implements GlobalServices {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,24 +51,25 @@ public class GlobalFavoriteActivity extends MainActivity implements Services {
                     // Remove from favourite list dialog
                     runOnUiThread(new Runnable() {
                         public void run() {
+                            Resources res = getResources();
                             AlertDialog.Builder builder = new AlertDialog.Builder(GlobalFavoriteActivity.this);
-                            builder.setTitle(getResources().getString(R.string.request));
-                            builder.setMessage(getResources().getString(R.string.doyouwant) + " "
-                                    + getResources().getString(R.string.remove) + " '" + s + "' "
-                                    + getResources().getString(R.string.fromfavorites));
-                            builder.setPositiveButton(getResources().getString(R.string.remove), new DialogInterface.OnClickListener() {
+                            builder.setTitle(res.getString(R.string.request));
+                            builder.setMessage(res.getString(R.string.doyouwant) + " "
+                                    + res.getString(R.string.remove) + " '" + s + "' "
+                                    + res.getString(R.string.fromfavorites));
+                            builder.setPositiveButton(res.getString(R.string.remove), new DialogInterface.OnClickListener() {
 
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
                                     favoriteService.deleteFromFavoritesById(selectedItem);
                                     try {
                                         favoriteService.saveFavorites(GlobalFavoriteActivity.this);
-                                    } catch (IOException e) {
+                                    } catch (IOException ignored) {
                                     }
                                     adapter.notifyDataSetChanged();
                                 }
                             });
-                            builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                            builder.setNegativeButton(res.getString(R.string.cancel), new DialogInterface.OnClickListener() {
 
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {

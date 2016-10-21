@@ -11,7 +11,7 @@ import java.util.List;
 
 import atua.anddev.globaltv.entity.Playlist;
 
-public class UpdateInfoListActivity extends Activity implements Services {
+public class UpdateInfoListActivity extends Activity implements GlobalServices {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

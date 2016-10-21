@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
-public class PlaylistManagerActivity extends TabActivity implements Services {
+public class PlaylistManagerActivity extends TabActivity implements GlobalServices {
     static int editNum;
     static String editAction;
     static Boolean enable = true;
