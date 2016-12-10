@@ -169,7 +169,8 @@ public class MainActivity extends Activity implements GlobalServices {
     private void showLocals() {
         List<String> localsList = Arrays.asList("English", "Українська", "Русский");
         Spinner spinnerView = (Spinner) findViewById(R.id.mainSpinner2);
-        SpinnerAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, localsList);
+        SpinnerAdapter adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_expandable_list_item_1, localsList);
         spinnerView.setAdapter(adapter);
         int eng = 0;
         int ukr = 1;
@@ -221,7 +222,8 @@ public class MainActivity extends Activity implements GlobalServices {
 
     private void setupProviderView() {
         Spinner spinnerView = (Spinner) findViewById(R.id.mainSpinner1);
-        provAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, playlistService.activePlaylistName);
+        provAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1,
+                playlistService.activePlaylistName);
 
         spinnerView.setAdapter(provAdapter);
         spinnerView.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -319,7 +321,8 @@ public class MainActivity extends Activity implements GlobalServices {
 
     public void openPlaylist(View view) {
         if (playlistService.sizeOfActivePlaylist() == 0) {
-            Toast.makeText(MainActivity.this, getResources().getString(R.string.no_selected_playlist), Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.no_selected_playlist),
+                    Toast.LENGTH_SHORT).show();
             return;
         }
         try {
@@ -343,7 +346,8 @@ public class MainActivity extends Activity implements GlobalServices {
 
     public void downloadButton(View view) {
         if (playlistService.sizeOfActivePlaylist() == 0) {
-            Toast.makeText(MainActivity.this, getResources().getString(R.string.no_selected_playlist), Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.no_selected_playlist),
+                    Toast.LENGTH_SHORT).show();
             return;
         }
         downloadPlaylist(selectedProvider, false);
@@ -360,7 +364,7 @@ public class MainActivity extends Activity implements GlobalServices {
         if (waitforfinish) {
             try {
                 threadDp.join();
-            } catch (InterruptedException e) {
+            } catch (InterruptedException ignored) {
             }
         }
     }
@@ -500,7 +504,8 @@ public class MainActivity extends Activity implements GlobalServices {
                                 Log.i("GlobalTV", "Error: " + e.toString());
                             }
                             checkPlaylistFile(selectedProvider);
-                            Toast.makeText(MainActivity.this, getResources().getString(R.string.playlistupdated,
+                            Toast.makeText(MainActivity.this,
+                                    getResources().getString(R.string.playlistupdated,
                                     playlistService.getActivePlaylistById(num).getName()), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -508,7 +513,8 @@ public class MainActivity extends Activity implements GlobalServices {
             } catch (Exception e) {
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(MainActivity.this, getResources().getString(R.string.updatefailed,
+                        Toast.makeText(MainActivity.this,
+                                getResources().getString(R.string.updatefailed,
                                 playlistService.getActivePlaylistById(num).getName()), Toast.LENGTH_SHORT).show();
                     }
                 });

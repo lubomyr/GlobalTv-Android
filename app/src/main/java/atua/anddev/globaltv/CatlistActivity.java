@@ -18,9 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CatlistActivity extends Activity implements GlobalServices {
-    private ArrayList<String> categoryList = new ArrayList<String>();
+    private List<String> categoryList = new ArrayList<String>();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
