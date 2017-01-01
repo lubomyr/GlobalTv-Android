@@ -39,6 +39,10 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import atua.anddev.globaltv.runnables.SaveGuideRunnable;
+
+import static atua.anddev.globaltv.service.GuideService.guideProvList;
+
 public class MainActivity extends Activity implements Services {
     public static String torrentKey;
     public static String origNames[];
@@ -52,6 +56,69 @@ public class MainActivity extends Activity implements Services {
     static String searchString;
     Configuration conf;
     private Boolean needUpdate;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+
+        myPath = this.getApplicationContext().getFilesDir().toString();
+        //myPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Android/data/"+context.getPackageName()+"/files";
+        if (lang == null)
+            lang = Locale.getDefault().getISO3Language();
+
+        conf = getResources().getConfiguration();
+
+        if (guideProvList.size() == 0)
+            guideService.setupGuideProvList();
+
+        Thread checkGuideUpdateThread = new Thread(checkGuideForUpdate);
+        checkGuideUpdateThread.start();
+
+        if (playlistService.sizeOfOfferedPlaylist() == 0) {
+            playlistService.setupProvider("default", MainActivity.this);
+            if (checkFile("userdata.xml"))
+                playlistService.setupProvider("user", MainActivity.this);
+        }
+        if (playlistService.sizeOfActivePlaylist() == 0) {
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.plstmanwarn), Toast.LENGTH_SHORT).show();
+            addPlaylistDialog();
+            needUpdate = true;
+        }
+        setupProviderView();
+        showLocals();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.playlist_update_info) {
+            updateInfoListActivity();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    Runnable checkGuideForUpdate = new Runnable() {
+
+        @Override
+        public void run() {
+            if (guideService.checkForUpdate(getApplicationContext()))
+                updateGuide();
+
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(MainActivity.this, "guide loaded", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    };
 
     public static void saveUrl(final String filename, final String urlString)
             throws MalformedURLException, IOException {
@@ -99,48 +166,6 @@ public class MainActivity extends Activity implements Services {
             t.printStackTrace();
         }
         return returnVal.toUpperCase();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-
-        myPath = this.getApplicationContext().getFilesDir().toString();
-        //myPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Android/data/"+context.getPackageName()+"/files";
-        if (lang == null)
-            lang = Locale.getDefault().getISO3Language();
-
-        conf = getResources().getConfiguration();
-
-        if (playlistService.sizeOfOfferedPlaylist() == 0) {
-            playlistService.setupProvider("default", MainActivity.this);
-            if (checkFile("userdata.xml"))
-                playlistService.setupProvider("user", MainActivity.this);
-        }
-        if (playlistService.sizeOfActivePlaylist() == 0) {
-            Toast.makeText(MainActivity.this, getResources().getString(R.string.plstmanwarn), Toast.LENGTH_SHORT).show();
-            addPlaylistDialog();
-            needUpdate = true;
-        }
-        setupProviderView();
-        showLocals();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.playlist_update_info) {
-            updateInfoListActivity();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void applyLocals() {
@@ -467,6 +492,12 @@ public class MainActivity extends Activity implements Services {
         AlertDialog alert = builder.create();
         alert.setOwnerActivity(MainActivity.this);
         alert.show();
+    }
+
+    private void updateGuide() {
+        SaveGuideRunnable saveGuideRunnable = new SaveGuideRunnable(this);
+        Thread thread = new Thread(saveGuideRunnable);
+        thread.start();
     }
 
     private class DownloadPlaylist implements Runnable {
