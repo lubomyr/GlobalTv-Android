@@ -145,6 +145,13 @@ public class GuideServiceImpl implements GuideService {
         return getProgramDescbyId(id);
     }
 
+    @Override
+    public int getProgramPos(String chName) {
+        currentTime = Calendar.getInstance();
+        String id = getIdByChannelName(chName);
+        return getProgramPositionbyId(id);
+    }
+
     private boolean checkGuideDates() {
         boolean result = false;
         List<String> dateList = new ArrayList<String>();
@@ -221,6 +228,31 @@ public class GuideServiceImpl implements GuideService {
                 }
                 if (currentTime.after(startDate) && currentTime.before(endDate)) {
                     result = programme.getDesc();
+                }
+            }
+        }
+        return result;
+    }
+
+    private int getProgramPositionbyId(String id) {
+        int result = -1;
+        int n = 0;
+        for (Programme programme : programmeList) {
+            if (programme.getChannel().equals(id)) {
+                n++;
+                String startDateStr = programme.getStart();
+                String endDateStr = programme.getStop();
+                Calendar startDate = Calendar.getInstance();
+                Calendar endDate = Calendar.getInstance();
+                try {
+                    startDate.setTime(sdf.parse(startDateStr));
+                    endDate.setTime(sdf.parse(endDateStr));
+                } catch (ParseException e) {
+                    System.out.println(endDateStr);
+                    e.printStackTrace();
+                }
+                if (currentTime.after(startDate) && currentTime.before(endDate)) {
+                    result = n;
                 }
             }
         }

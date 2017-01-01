@@ -29,7 +29,7 @@
             android:theme="@android:style/Theme.Holo" />
 
         <activity
-            android:name=".PlaylistActivity"
+            android:name=".ChannellistActivity"
             android:label="Playlist"
             android:theme="@android:style/Theme.Holo" />
 
@@ -66,6 +66,11 @@
         <activity
             android:name=".UpdateInfoListActivity"
             android:label="Sorted by update date playlists"
+            android:theme="@android:style/Theme.Holo" />
+
+        <activity
+            android:name=".GuideActivity"
+            android:label="Program Guide"
             android:theme="@android:style/Theme.Holo" />
 
         <activity

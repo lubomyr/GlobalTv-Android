@@ -27,4 +27,6 @@ public interface GuideService {
     void setupGuideProvList();
 
     String getTotalTimePeriod();
+
+    public int getProgramPos(String chName);
 }
