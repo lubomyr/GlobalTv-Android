@@ -66,8 +66,8 @@ public class CatlistActivity extends Activity implements GlobalServices {
     }
 
     public void playlistActivity(String selCat) {
-        MainActivity.selectedCategory = selCat;
         Intent intent = new Intent(this, ChannellistActivity.class);
+        intent.putExtra("category", selCat);
         startActivity(intent);
     }
 
@@ -76,8 +76,9 @@ public class CatlistActivity extends Activity implements GlobalServices {
         startActivity(intent);
     }
 
-    public void searchlistActivity() {
+    public void searchlistActivity(String searchString) {
         Intent intent = new Intent(this, SearchlistActivity.class);
+        intent.putExtra("search", searchString);
         startActivity(intent);
     }
 
@@ -95,8 +96,8 @@ public class CatlistActivity extends Activity implements GlobalServices {
                 .setPositiveButton(getResources().getString(R.string.search), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Editable value = input.getText();
-                        MainActivity.searchString = value.toString();
-                        searchlistActivity();
+                        String searchString = value.toString();
+                        searchlistActivity(searchString);
                     }
                 }).setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {

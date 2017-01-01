@@ -3,6 +3,7 @@ package atua.anddev.globaltv;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,16 +19,24 @@ import atua.anddev.globaltv.entity.Channel;
 
 public class GlobalSearchActivity extends MainActivity implements GlobalServices {
     private ProgressDialog progress;
+    private String searchString;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Set sub.xml as user interface layout
         setContentView(R.layout.globalsearch);
+
+        getData();
         if (searchService.sizeOfSearchList() == 0)
             runProgressBar();
         else
             showSearchResults();
+    }
+
+    private void getData() {
+        Intent intent = getIntent();
+        searchString = intent.getStringExtra("search");
     }
 
     private void runProgressBar() {

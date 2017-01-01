@@ -51,10 +51,8 @@ public class MainActivity extends Activity implements GlobalServices {
     public static Boolean playlistWithGroup;
     public static String myPath;
     public static int selectedProvider;
-    static String selectedCategory;
-    static String lang;
-    static String searchString;
-    Configuration conf;
+    private String lang;
+    private Configuration conf;
     private Boolean needUpdate;
 
     @Override
@@ -213,15 +211,15 @@ public class MainActivity extends Activity implements GlobalServices {
                 String s = (String) p1.getItemAtPosition(p3);
                 switch (s) {
                     case "English":
-                        MainActivity.lang = "eng";
+                        lang = "eng";
                         conf.locale = new Locale("en");
                         break;
                     case "Українська":
-                        MainActivity.lang = "ukr";
+                        lang = "ukr";
                         conf.locale = new Locale("uk");
                         break;
                     case "Русский":
-                        MainActivity.lang = "rus";
+                        lang = "rus";
                         conf.locale = new Locale("ru");
                         break;
                 }
@@ -262,11 +260,6 @@ public class MainActivity extends Activity implements GlobalServices {
                 // nothing to do
             }
         });
-    }
-
-    public void catlistActivity() {
-        Intent intent = new Intent(this, CatlistActivity.class);
-        startActivity(intent);
     }
 
     private boolean checkPlaylistFile(int num) {
@@ -333,9 +326,15 @@ public class MainActivity extends Activity implements GlobalServices {
         return true;
     }
 
-    public void playlistActivity() {
-        selectedCategory = getResources().getString(R.string.all);
+    public void catlistActivity() {
+        Intent intent = new Intent(this, CatlistActivity.class);
+        startActivity(intent);
+    }
+
+    public void channellistActivity() {
+        String selectedCategory = getResources().getString(R.string.all);
         Intent intent = new Intent(this, ChannellistActivity.class);
+        intent.putExtra("category", selectedCategory);
         startActivity(intent);
     }
 
@@ -359,7 +358,7 @@ public class MainActivity extends Activity implements GlobalServices {
             if (playlistWithGroup)
                 catlistActivity();
             else
-                playlistActivity();
+                channellistActivity();
         }
     }
 
@@ -418,8 +417,8 @@ public class MainActivity extends Activity implements GlobalServices {
                 .setPositiveButton(getResources().getString(R.string.search), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Editable value = input.getText();
-                        searchString = value.toString();
-                        globalSearchActivity();
+                        String searchString = value.toString();
+                        globalSearchActivity(searchString);
                     }
                 }).setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
@@ -432,8 +431,9 @@ public class MainActivity extends Activity implements GlobalServices {
         playlistManagerActivity();
     }
 
-    public void globalSearchActivity() {
+    public void globalSearchActivity(String searchString) {
         Intent intent = new Intent(this, GlobalSearchActivity.class);
+        intent.putExtra("search", searchString);
         startActivity(intent);
     }
 

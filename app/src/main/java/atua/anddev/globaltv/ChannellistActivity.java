@@ -30,7 +30,12 @@ public class ChannellistActivity extends Activity implements GlobalServices, Cha
         setContentView(R.layout.playlist);
 
         applyLocals();
-        openCategory(MainActivity.selectedCategory);
+        openCategory(getCategory());
+    }
+
+    private String getCategory() {
+        Intent intent = getIntent();
+        return intent.getStringExtra("category");
     }
 
     private void applyLocals() {
@@ -64,8 +69,9 @@ public class ChannellistActivity extends Activity implements GlobalServices, Cha
         startActivity(intent);
     }
 
-    public void searchlistActivity() {
+    public void searchlistActivity(String searchString) {
         Intent intent = new Intent(this, SearchlistActivity.class);
+        intent.putExtra("search", searchString);
         startActivity(intent);
     }
 
@@ -83,8 +89,8 @@ public class ChannellistActivity extends Activity implements GlobalServices, Cha
                 .setPositiveButton(getResources().getString(R.string.search), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Editable value = input.getText();
-                        MainActivity.searchString = value.toString();
-                        searchlistActivity();
+                        String searchString = value.toString();
+                        searchlistActivity(searchString);
                     }
                 }).setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {

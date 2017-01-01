@@ -3,6 +3,7 @@ package atua.anddev.globaltv;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,14 +18,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class SearchlistActivity extends Activity implements GlobalServices {
+    private String searchString;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Set sub.xml as user interface layout
         setContentView(R.layout.searchlist);
+        getData();
         showSearchResults();
 
+    }
+
+    private void getData() {
+        Intent intent = getIntent();
+        searchString = intent.getStringExtra("search");
     }
 
     public void showSearchResults() {
@@ -33,14 +41,14 @@ public class SearchlistActivity extends Activity implements GlobalServices {
         String chName;
         for (int i = 0; i < channelService.sizeOfChannelList(); i++) {
             chName = channelService.getChannelById(i).getName().toLowerCase();
-            if (chName.contains(MainActivity.searchString.toLowerCase())) {
+            if (chName.contains(searchString.toLowerCase())) {
                 playlist.add(channelService.getChannelById(i).getName());
                 playlistUrl.add(channelService.getChannelById(i).getUrl());
             }
         }
 
         TextView textView = (TextView) findViewById(R.id.searchlistTextView1);
-        textView.setText(getResources().getString(R.string.resultsfor) + " '" + MainActivity.searchString + "' - " + playlist.size() + " " + getResources().getString(R.string.channels));
+        textView.setText(getResources().getString(R.string.resultsfor) + " '" + searchString + "' - " + playlist.size() + " " + getResources().getString(R.string.channels));
 
         ListView listView = (ListView) findViewById(R.id.searchlistListView1);
         final ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, playlist);
