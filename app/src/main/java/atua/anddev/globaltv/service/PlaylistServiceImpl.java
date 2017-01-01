@@ -320,7 +320,6 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
     public void readPlaylist(int num) {
         String fname = getActivePlaylistById(num).getFile();
         int type = getActivePlaylistById(num).getType();
-        MainActivity.playlistWithGroup = false;
         String lineStr, chName = "", chCategory = "", chLink = "";
         String groupName = "", groupName2 = "";
         channelService.clearAllChannel();
@@ -347,8 +346,6 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
                     }
                     chCategory = translate(chCategory);
                     channelService.addToChannelList(chName, chLink, chCategory);
-                    if (!chCategory.equals(""))
-                        MainActivity.playlistWithGroup = true;
                     chName = "";
                     chCategory = "";
                     chLink = "";
@@ -358,23 +355,19 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
                 if ((type == 1) && lineStr.startsWith("#EXTINF:-1,") && (lineStr.indexOf("(") == lineStr.lastIndexOf("("))) {
                     chName = lineStr.substring(11, lineStr.indexOf("(") - 1);
                     chCategory = lineStr.substring(lineStr.lastIndexOf("(") + 1, lineStr.lastIndexOf(")"));
-                    MainActivity.playlistWithGroup = true;
                 }
                 if ((type == 1) && lineStr.startsWith("#EXTINF:-1,") && (lineStr.indexOf("(") != lineStr.lastIndexOf("("))) {
                     chName = lineStr.substring(11, lineStr.lastIndexOf("(") - 1);
                     chCategory = lineStr.substring(lineStr.lastIndexOf("(") + 1, lineStr.lastIndexOf(")"));
-                    MainActivity.playlistWithGroup = true;
                 }
                 if (lineStr.startsWith("#EXTINF:") && (type != 1)) {
                     chName = lineStr.substring(lineStr.lastIndexOf(",") + 1, lineStr.length());
                 }
                 if (lineStr.contains("group-title=") && lineStr.contains(",") && (lineStr.substring(lineStr.indexOf("group-title="), lineStr.indexOf("group-title=") + 12).equals("group-title="))) {
                     groupName = lineStr.substring(lineStr.indexOf("group-title=") + 13, lineStr.indexOf('"', lineStr.indexOf("group-title=") + 13));
-                    MainActivity.playlistWithGroup = true;
                 }
                 if (lineStr.contains("#EXTGRP:") && (lineStr.substring(lineStr.indexOf("#EXTGRP:"), lineStr.indexOf("#EXTGRP:") + 8).equals("#EXTGRP:"))) {
                     groupName2 = lineStr.substring(lineStr.indexOf("#EXTGRP:") + 8, lineStr.length());
-                    MainActivity.playlistWithGroup = true;
                 }
                 if (!groupName.equals("")) {
                     chCategory = groupName;

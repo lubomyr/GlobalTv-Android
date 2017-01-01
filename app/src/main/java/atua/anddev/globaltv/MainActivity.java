@@ -48,7 +48,6 @@ public class MainActivity extends Activity implements GlobalServices {
     public static String origNames[];
     public static String translatedNames[];
     public static ArrayAdapter provAdapter;
-    public static Boolean playlistWithGroup;
     public static String myPath;
     public static int selectedProvider;
     private String lang;
@@ -355,7 +354,7 @@ public class MainActivity extends Activity implements GlobalServices {
             } catch (IOException e) {
                 Log.i("GlobalTV", "Error: " + e);
             }
-            if (playlistWithGroup)
+            if (channelService.getCategoriesList().size() > 0)
                 catlistActivity();
             else
                 channellistActivity();
