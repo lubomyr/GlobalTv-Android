@@ -22,6 +22,8 @@ import atua.anddev.globaltv.entity.Channel;
 
 public class ChannellistActivity extends Activity implements GlobalServices, ChannelHolderAdapter.OnItemClickListener {
     private ChannelHolderAdapter mAdapter;
+    private String mSelectedCategory;
+    private int mSelectedProvider;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,13 +31,15 @@ public class ChannellistActivity extends Activity implements GlobalServices, Cha
         // Set sub.xml as user interface layout
         setContentView(R.layout.playlist);
 
+        getData();
         applyLocals();
-        openCategory(getCategory());
+        openCategory(mSelectedCategory);
     }
 
-    private String getCategory() {
+    private void getData() {
         Intent intent = getIntent();
-        return intent.getStringExtra("category");
+        mSelectedCategory = intent.getStringExtra("category");
+        mSelectedProvider = intent.getIntExtra("provider", -1);
     }
 
     private void applyLocals() {
@@ -56,7 +60,8 @@ public class ChannellistActivity extends Activity implements GlobalServices, Cha
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-        mAdapter = new ChannelHolderAdapter(this, R.layout.item_channellist, channelList);
+        mAdapter = new ChannelHolderAdapter(this, R.layout.item_channellist, channelList,
+                mSelectedProvider);
         mAdapter.setOnItemClickListener(ChannellistActivity.this);
         recyclerView.setAdapter(mAdapter);
 
@@ -66,12 +71,14 @@ public class ChannellistActivity extends Activity implements GlobalServices, Cha
 
     public void favlistActivity() {
         Intent intent = new Intent(this, FavlistActivity.class);
+        intent.putExtra("provider", mSelectedProvider);
         startActivity(intent);
     }
 
     public void searchlistActivity(String searchString) {
         Intent intent = new Intent(this, SearchlistActivity.class);
         intent.putExtra("search", searchString);
+        intent.putExtra("provider", mSelectedProvider);
         startActivity(intent);
     }
 
@@ -121,8 +128,8 @@ public class ChannellistActivity extends Activity implements GlobalServices, Cha
     }
 
     private void changeFavorite(Channel item) {
-        if (favoriteService.indexOfFavoriteByNameAndProv(item.getName(), playlistService.getActivePlaylistById(MainActivity.selectedProvider).getName()) == -1)
-            favoriteService.addToFavoriteList(item.getName(), playlistService.getActivePlaylistById(MainActivity.selectedProvider).getName());
+        if (favoriteService.indexOfFavoriteByNameAndProv(item.getName(), playlistService.getActivePlaylistById(mSelectedProvider).getName()) == -1)
+            favoriteService.addToFavoriteList(item.getName(), playlistService.getActivePlaylistById(mSelectedProvider).getName());
         else
             favoriteService.deleteFromFavoritesById(favoriteService.indexNameForFavorite(item.getName()));
         try {

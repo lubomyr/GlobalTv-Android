@@ -19,12 +19,14 @@ import java.util.ArrayList;
 
 public class SearchlistActivity extends Activity implements GlobalServices {
     private String searchString;
+    private int mSelectedProvider;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Set sub.xml as user interface layout
         setContentView(R.layout.searchlist);
+
         getData();
         showSearchResults();
 
@@ -33,6 +35,7 @@ public class SearchlistActivity extends Activity implements GlobalServices {
     private void getData() {
         Intent intent = getIntent();
         searchString = intent.getStringExtra("search");
+        mSelectedProvider = intent.getIntExtra("provider", -1);
     }
 
     public void showSearchResults() {
@@ -78,7 +81,7 @@ public class SearchlistActivity extends Activity implements GlobalServices {
 
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
-                                    favoriteService.addToFavoriteList(s, playlistService.getActivePlaylistById(MainActivity.selectedProvider).getName());
+                                    favoriteService.addToFavoriteList(s, playlistService.getActivePlaylistById(mSelectedProvider).getName());
                                     try {
                                         favoriteService.saveFavorites(SearchlistActivity.this);
                                     } catch (IOException e) {

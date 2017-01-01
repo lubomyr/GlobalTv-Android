@@ -23,12 +23,14 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
     private int resources;
     private List<Channel> items;
     private OnItemClickListener  mOnItemClickListener;
+    private int selectedProvider;
     private String selectedChannelId="";
 
-    public ChannelHolderAdapter(Context context, int resources, List<Channel> items) {
+    public ChannelHolderAdapter(Context context, int resources, List<Channel> items, int provider) {
         this.context = context;
         this.items = items;
         this.resources = resources;
+        this.selectedProvider = provider;
     }
 
     @Override
@@ -80,7 +82,7 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
 
     private boolean isChannelFavorite(Channel item) {
         boolean result;
-        int index = favoriteService.getFavoriteListForSelProv().indexOf(item.getName());
+        int index = favoriteService.getFavoriteListForProv(selectedProvider).indexOf(item.getName());
         result = index != -1;
         return result;
     }

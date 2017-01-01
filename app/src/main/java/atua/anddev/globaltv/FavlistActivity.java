@@ -3,6 +3,7 @@ package atua.anddev.globaltv;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class FavlistActivity extends Activity implements GlobalServices {
+    private int mSelectedProvider;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,11 +26,17 @@ public class FavlistActivity extends Activity implements GlobalServices {
         // Set sub.xml as user interface layout
         setContentView(R.layout.favlist);
 
+        getData();
         showFavlist();
     }
 
+    private void getData() {
+        Intent intent = getIntent();
+        mSelectedProvider = intent.getIntExtra("provider", -1);
+    }
+
     public void showFavlist() {
-        final List<String> playlist = favoriteService.getFavoriteListForSelProv();
+        final List<String> playlist = favoriteService.getFavoriteListForProv(mSelectedProvider);
         TextView textview = (TextView) findViewById(R.id.favlistTextView1);
         textview.setText(getResources().getString(R.string.favorites));
         ListView listView = (ListView) findViewById(R.id.favlistListView1);
@@ -60,7 +68,7 @@ public class FavlistActivity extends Activity implements GlobalServices {
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
                                     playlist.remove(s);
-                                    String provName = playlistService.getActivePlaylistById(MainActivity.selectedProvider).getName();
+                                    String provName = playlistService.getActivePlaylistById(mSelectedProvider).getName();
                                     int index = favoriteService.indexOfFavoriteByNameAndProv(s, provName);
                                     if (index != -1)
                                         favoriteService.deleteFromFavoritesById(index);

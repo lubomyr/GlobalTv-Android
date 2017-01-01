@@ -46,7 +46,7 @@ import static atua.anddev.globaltv.service.GuideService.guideProvList;
 public class MainActivity extends Activity implements GlobalServices {
     public static String torrentKey;
     public static String myPath;
-    public static int selectedProvider;
+    private int selectedProvider;
     private ArrayAdapter provAdapter;
     private String lang;
     private Configuration conf;
@@ -339,6 +339,7 @@ public class MainActivity extends Activity implements GlobalServices {
 
     public void catlistActivity() {
         Intent intent = new Intent(this, CatlistActivity.class);
+        intent.putExtra("provider", selectedProvider);
         startActivity(intent);
     }
 
@@ -346,6 +347,7 @@ public class MainActivity extends Activity implements GlobalServices {
         String selectedCategory = getString(R.string.all);
         Intent intent = new Intent(this, ChannellistActivity.class);
         intent.putExtra("category", selectedCategory);
+        intent.putExtra("provider", selectedProvider);
         startActivity(intent);
     }
 

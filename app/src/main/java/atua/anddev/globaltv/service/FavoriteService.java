@@ -28,7 +28,7 @@ public interface FavoriteService {
 
     void deleteFromFavoritesById(int id);
 
-    List<String> getFavoriteListForSelProv();
+    List<String> getFavoriteListForProv(int provider);
 
     int indexOfFavoriteByNameAndProv(String name, String prov);
 

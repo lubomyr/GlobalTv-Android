@@ -23,9 +23,9 @@ import android.widget.Toast;
 import java.io.IOException;
 
 public class PlaylistManagerActivity extends TabActivity implements GlobalServices {
-    static int editNum;
-    static String editAction;
-    static Boolean enable = true;
+    private int editNum;
+    private String editAction;
+    private Boolean enable = true;
     private ArrayAdapter selectedAdapter;
     final String TABS_TAG_1 = "Tag 1";
     final String TABS_TAG_2 = "Tag 2";
@@ -255,6 +255,9 @@ public class PlaylistManagerActivity extends TabActivity implements GlobalServic
 
     public void playlistEditActivity() {
         Intent intent = new Intent(this, PlaylistEditActivity.class);
+        intent.putExtra("num", editNum);
+        intent.putExtra("action", editAction);
+        intent.putExtra("enable", enable);
         startActivity(intent);
     }
 

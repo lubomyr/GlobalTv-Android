@@ -1,6 +1,7 @@
 package atua.anddev.globaltv;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
@@ -29,33 +30,34 @@ public class PlaylistEditActivity extends Activity implements GlobalServices {
         // Set sub.xml as user interface layout
         setContentView(R.layout.playlistedit);
 
-        editAction = PlaylistManagerActivity.editAction;
-        editNum = PlaylistManagerActivity.editNum;
-        enable = PlaylistManagerActivity.enable;
+        Intent intent = getIntent();
+        editAction = intent.getStringExtra("action");
+        editNum = intent.getIntExtra("num", -1);
+        enable = intent.getBooleanExtra("enable", false);
         applyLocalsEdit();
         showEdit();
     }
 
     public void applyLocalsEdit() {
         TextView textViewName = (TextView) findViewById(R.id.playlisteditTextView1);
-        textViewName.setText(getResources().getString(R.string.name));
+        textViewName.setText(getString(R.string.name));
         TextView textViewUrl = (TextView) findViewById(R.id.playlisteditTextView2);
-        textViewUrl.setText(getResources().getString(R.string.url));
+        textViewUrl.setText(getString(R.string.url));
         TextView textViewType = (TextView) findViewById(R.id.playlisteditTextView4);
-        textViewType.setText(getResources().getString(R.string.type));
+        textViewType.setText(getString(R.string.type));
         Button deleteButton = (Button) findViewById(R.id.playlisteditButton1);
-        deleteButton.setText(getResources().getString(R.string.delete));
+        deleteButton.setText(getString(R.string.delete));
         Button addEditButton = (Button) findViewById(R.id.playlisteditButton2);
         if (editAction.equals("addNew")) {
-            addEditButton.setText(getResources().getString(R.string.add));
+            addEditButton.setText(getString(R.string.add));
             deleteButton.setVisibility(View.GONE);
         }
         if (editAction.equals("modify")) {
             if (enable) {
-                addEditButton.setText(getResources().getString(R.string.modify));
+                addEditButton.setText(getString(R.string.modify));
                 deleteButton.setVisibility(View.VISIBLE);
             } else {
-                addEditButton.setText(getResources().getString(R.string.add));
+                addEditButton.setText(getString(R.string.add));
                 deleteButton.setVisibility(View.GONE);
             }
         }
@@ -64,10 +66,11 @@ public class PlaylistEditActivity extends Activity implements GlobalServices {
 
     public void showEdit() {
         ArrayList<String> typeList = new ArrayList<String>();
-        typeList.add(getResources().getString(R.string.standardplaylist));
-        typeList.add(getResources().getString(R.string.torrenttvplaylist));
+        typeList.add(getString(R.string.standardplaylist));
+        typeList.add(getString(R.string.torrenttvplaylist));
         Spinner spinnerView = (Spinner) findViewById(R.id.playlisteditSpinner1);
-        SpinnerAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, typeList);
+        SpinnerAdapter adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_expandable_list_item_1, typeList);
         spinnerView.setAdapter(adapter);
 
         EditText editTextName = (EditText) findViewById(R.id.playlisteditEditText1);
@@ -106,17 +109,21 @@ public class PlaylistEditActivity extends Activity implements GlobalServices {
         Boolean success = false;
         if (editAction.equals("modify")) {
             if (name.toString().length() == 0 || url.toString().length() == 0) {
-                Toast.makeText(PlaylistEditActivity.this, getResources().getString(R.string.pleasefillallfields), Toast.LENGTH_SHORT).show();
+                Toast.makeText(PlaylistEditActivity.this, getString(R.string.pleasefillallfields),
+                        Toast.LENGTH_SHORT).show();
             } else {
                 success = true;
                 if (enable) {
-                    playlistService.setActivePlaylistById(editNum, name.toString(), url.toString(), selectedType);
+                    playlistService.setActivePlaylistById(editNum, name.toString(), url.toString(),
+                            selectedType);
                 } else {
                     // check if playlist already exist in selected playlist
                     if (playlistService.indexNameForActivePlaylist(name.toString()) == -1)
-                        playlistService.addToActivePlaylist(name.toString(), url.toString(), selectedType, "", "");
+                        playlistService.addToActivePlaylist(name.toString(), url.toString(),
+                                selectedType, "", "");
                     else
-                        Toast.makeText(PlaylistEditActivity.this, getResources().getString(R.string.playlistexist), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PlaylistEditActivity.this, getString(R.string.playlistexist),
+                                Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -128,7 +135,8 @@ public class PlaylistEditActivity extends Activity implements GlobalServices {
                 success = true;
                 // check if playlist already exist in selected playlist
                 if (playlistService.indexNameForActivePlaylist(name.toString()) == -1)
-                    playlistService.addToActivePlaylist(name.toString(), url.toString(), selectedType, "", "");
+                    playlistService.addToActivePlaylist(name.toString(), url.toString(),
+                            selectedType, "", "");
                 else
                     Toast.makeText(PlaylistEditActivity.this,
                             getString(R.string.playlistexist), Toast.LENGTH_SHORT).show();

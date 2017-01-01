@@ -22,6 +22,7 @@ import java.util.List;
 
 public class CatlistActivity extends Activity implements GlobalServices {
     private List<String> categoryList = new ArrayList<String>();
+    private int mSelectedProvider;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,9 +30,15 @@ public class CatlistActivity extends Activity implements GlobalServices {
         // Set sub.xml as user interface layout
         setContentView(R.layout.catlist);
 
+        getData();
         applyLocals();
         createCatlist();
         showCatlist();
+    }
+
+    private void getData() {
+        Intent intent = getIntent();
+        mSelectedProvider = intent.getIntExtra("provider", -1);
     }
 
     private void applyLocals() {
@@ -59,26 +66,29 @@ public class CatlistActivity extends Activity implements GlobalServices {
                 String s = (String) p1.getItemAtPosition(p3);
                 Toast.makeText(CatlistActivity.this, s, Toast.LENGTH_SHORT).show();
                 // Open category playlist
-                playlistActivity(s);
+                channellistActivity(s);
             }
 
         });
     }
 
-    public void playlistActivity(String selCat) {
+    public void channellistActivity(String selCat) {
         Intent intent = new Intent(this, ChannellistActivity.class);
         intent.putExtra("category", selCat);
+        intent.putExtra("provider", mSelectedProvider);
         startActivity(intent);
     }
 
     public void favlistActivity() {
         Intent intent = new Intent(this, FavlistActivity.class);
+        intent.putExtra("provider", mSelectedProvider);
         startActivity(intent);
     }
 
     public void searchlistActivity(String searchString) {
         Intent intent = new Intent(this, SearchlistActivity.class);
         intent.putExtra("search", searchString);
+        intent.putExtra("provider", mSelectedProvider);
         startActivity(intent);
     }
 
