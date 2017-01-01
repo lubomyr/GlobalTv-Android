@@ -9,7 +9,7 @@ import atua.anddev.globaltv.entity.GuideProv;
 
 import static atua.anddev.globaltv.MainActivity.myPath;
 import static atua.anddev.globaltv.MainActivity.saveUrl;
-import static atua.anddev.globaltv.Services.guideService;
+import static atua.anddev.globaltv.GlobalServices.guideService;
 import static atua.anddev.globaltv.service.GuideService.guideProvList;
 
 public class SaveGuideRunnable implements Runnable{

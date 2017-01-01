@@ -67,7 +67,7 @@ public class CatlistActivity extends Activity implements GlobalServices {
 
     public void playlistActivity(String selCat) {
         MainActivity.selectedCategory = selCat;
-        Intent intent = new Intent(this, PlaylistActivity.class);
+        Intent intent = new Intent(this, ChannellistActivity.class);
         startActivity(intent);
     }
 

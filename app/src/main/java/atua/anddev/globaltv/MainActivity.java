@@ -43,7 +43,7 @@ import atua.anddev.globaltv.runnables.SaveGuideRunnable;
 
 import static atua.anddev.globaltv.service.GuideService.guideProvList;
 
-public class MainActivity extends Activity implements Services {
+public class MainActivity extends Activity implements GlobalServices {
     public static String torrentKey;
     public static String origNames[];
     public static String translatedNames[];
@@ -335,7 +335,7 @@ public class MainActivity extends Activity implements Services {
 
     public void playlistActivity() {
         selectedCategory = getResources().getString(R.string.all);
-        Intent intent = new Intent(this, PlaylistActivity.class);
+        Intent intent = new Intent(this, ChannellistActivity.class);
         startActivity(intent);
     }
 
