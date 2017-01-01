@@ -76,7 +76,9 @@ public class ChannelServiceImpl implements ChannelService {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(chURL));
                     browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     if (chURL.startsWith("http")) {
-                        String url = chURL.substring(0, chURL.length() - 1);
+                        String url = chURL;
+                        if (chURL.endsWith("\r"))
+                            url = chURL.substring(0, chURL.length() - 1);
                         browserIntent.setDataAndType(Uri.parse(url), "video/*");
                     }
                     context.startActivity(browserIntent);
