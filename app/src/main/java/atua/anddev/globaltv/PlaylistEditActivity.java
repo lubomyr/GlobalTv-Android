@@ -17,7 +17,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class PlaylistEditActivity extends Activity implements Services {
+public class PlaylistEditActivity extends Activity implements GlobalServices {
     private int selectedType;
     private Editable name, url;
     private String editAction;

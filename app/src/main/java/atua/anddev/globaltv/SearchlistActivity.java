@@ -16,7 +16,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class SearchlistActivity extends Activity implements Services {
+public class SearchlistActivity extends Activity implements GlobalServices {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

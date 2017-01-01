@@ -16,7 +16,7 @@ import java.io.IOException;
 
 import atua.anddev.globaltv.entity.Channel;
 
-public class GlobalSearchActivity extends MainActivity implements Services {
+public class GlobalSearchActivity extends MainActivity implements GlobalServices {
     private ProgressDialog progress;
 
     public void onCreate(Bundle savedInstanceState) {

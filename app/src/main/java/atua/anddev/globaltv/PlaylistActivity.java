@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 
 import atua.anddev.globaltv.entity.Channel;
 
-public class PlaylistActivity extends Activity implements Services {
+public class PlaylistActivity extends Activity implements GlobalServices {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,10 +36,11 @@ public class PlaylistActivity extends Activity implements Services {
     }
 
     private void applyLocals() {
+        Resources res = getResources();
         Button buttonFavorite = (Button) findViewById(R.id.playlistButton1);
-        buttonFavorite.setText(getResources().getString(R.string.favorites));
+        buttonFavorite.setText(res.getString(R.string.favorites));
         Button buttonSearch = (Button) findViewById(R.id.playlistButton2);
-        buttonSearch.setText(getResources().getString(R.string.search));
+        buttonSearch.setText(res.getString(R.string.search));
     }
 
     private void openCategory(final String catName) {
@@ -78,21 +80,24 @@ public class PlaylistActivity extends Activity implements Services {
                     // Add to favourite list dialog
                     runOnUiThread(new Runnable() {
                         public void run() {
+                            Resources res = getResources();
                             AlertDialog.Builder builder = new AlertDialog.Builder(PlaylistActivity.this);
                             builder.setTitle(getResources().getString(R.string.request));
-                            builder.setMessage(getResources().getString(R.string.doyouwant) + " " + getResources().getString(R.string.add) + " '" + s + "' " + getResources().getString(R.string.tofavorites));
-                            builder.setPositiveButton(getResources().getString(R.string.add), new DialogInterface.OnClickListener() {
+                            builder.setMessage(res.getString(R.string.doyouwant) + " "
+                                    + res.getString(R.string.add) + " '" + s + "' "
+                                    + res.getString(R.string.tofavorites));
+                            builder.setPositiveButton(res.getString(R.string.add), new DialogInterface.OnClickListener() {
 
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
                                     favoriteService.addToFavoriteList(s, playlistService.getActivePlaylistById(MainActivity.selectedProvider).getName());
                                     try {
                                         favoriteService.saveFavorites(PlaylistActivity.this);
-                                    } catch (IOException e) {
+                                    } catch (IOException ignored) {
                                     }
                                 }
                             });
-                            builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                            builder.setNegativeButton(res.getString(R.string.cancel), new DialogInterface.OnClickListener() {
 
                                 @Override
                                 public void onClick(DialogInterface p1, int p2) {
@@ -108,9 +113,12 @@ public class PlaylistActivity extends Activity implements Services {
                     // Remove from favourite list dialog
                     runOnUiThread(new Runnable() {
                         public void run() {
+                            Resources res = getResources();
                             AlertDialog.Builder builder = new AlertDialog.Builder(PlaylistActivity.this);
-                            builder.setTitle(getResources().getString(R.string.request));
-                            builder.setMessage(getResources().getString(R.string.doyouwant) + " " + getResources().getString(R.string.remove) + " '" + s + "' " + getResources().getString(R.string.fromfavorites));
+                            builder.setTitle(res.getString(R.string.request));
+                            builder.setMessage(res.getString(R.string.doyouwant)
+                                    + " " + res.getString(R.string.remove) + " '" + s + "' "
+                                    + res.getString(R.string.fromfavorites));
                             builder.setPositiveButton(getResources().getString(R.string.remove), new DialogInterface.OnClickListener() {
 
                                 @Override
@@ -157,19 +165,20 @@ public class PlaylistActivity extends Activity implements Services {
     }
 
     public void searchDialog(View view) {
+        Resources res = getResources();
         final EditText input = new EditText(this);
         input.setSingleLine();
         new AlertDialog.Builder(PlaylistActivity.this)
-                .setTitle(getResources().getString(R.string.request))
-                .setMessage(getResources().getString(R.string.pleaseentertext))
+                .setTitle(res.getString(R.string.request))
+                .setMessage(res.getString(R.string.pleaseentertext))
                 .setView(input)
-                .setPositiveButton(getResources().getString(R.string.search), new DialogInterface.OnClickListener() {
+                .setPositiveButton(res.getString(R.string.search), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Editable value = input.getText();
                         MainActivity.searchString = value.toString();
                         searchlistActivity();
                     }
-                }).setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                }).setNegativeButton(res.getString(R.string.cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // Do nothing.
             }
