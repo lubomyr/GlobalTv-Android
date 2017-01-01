@@ -26,7 +26,7 @@ public class PlaylistManagerActivity extends TabActivity implements GlobalServic
     static int editNum;
     static String editAction;
     static Boolean enable = true;
-    static ArrayAdapter selectedAdapter;
+    private ArrayAdapter selectedAdapter;
     final String TABS_TAG_1 = "Tag 1";
     final String TABS_TAG_2 = "Tag 2";
 
@@ -39,34 +39,15 @@ public class PlaylistManagerActivity extends TabActivity implements GlobalServic
         // Set sub.xml as user interface layout
         setContentView(R.layout.playlistmanager);
 
-        TabHost tabHost = getTabHost();
-        TabHost.TabSpec tabSpec;
-        tabSpec = tabHost.newTabSpec(TABS_TAG_1);
-        tabSpec.setContent(TabFactory);
-        tabSpec.setIndicator(getString(R.string.selected));
-        tabHost.addTab(tabSpec);
-        tabSpec = tabHost.newTabSpec(TABS_TAG_2);
-        tabSpec.setContent(TabFactory);
-        tabSpec.setIndicator(getString(R.string.offered));
-        tabHost.addTab(tabSpec);
-
         applyLocals();
-        String selTabTag = tabHost.getCurrentTabTag();
-        if (selTabTag == TABS_TAG_1)
-            showSelected();
-        else if (selTabTag == TABS_TAG_2)
-            showOffered();
+        setupTabs();
+    }
 
-        tabHost.setOnTabChangedListener(new OnTabChangeListener() {
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-            @Override
-            public void onTabChanged(String p1) {
-                if (p1 == TABS_TAG_1)
-                    showSelected();
-                else if (p1 == TABS_TAG_2)
-                    showOffered();
-            }
-        });
+        selectedAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -84,11 +65,40 @@ public class PlaylistManagerActivity extends TabActivity implements GlobalServic
             try {
                 playlistService.saveData(PlaylistManagerActivity.this);
                 selectedAdapter.notifyDataSetChanged();
-                MainActivity.provAdapter.notifyDataSetChanged();
             } catch (IOException e) {
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setupTabs() {
+        TabHost tabHost = getTabHost();
+        TabHost.TabSpec tabSpec;
+        tabSpec = tabHost.newTabSpec(TABS_TAG_1);
+        tabSpec.setContent(TabFactory);
+        tabSpec.setIndicator(getString(R.string.selected));
+        tabHost.addTab(tabSpec);
+        tabSpec = tabHost.newTabSpec(TABS_TAG_2);
+        tabSpec.setContent(TabFactory);
+        tabSpec.setIndicator(getString(R.string.offered));
+        tabHost.addTab(tabSpec);
+
+        String selTabTag = tabHost.getCurrentTabTag();
+        if (selTabTag == TABS_TAG_1)
+            showSelected();
+        else if (selTabTag == TABS_TAG_2)
+            showOffered();
+
+        tabHost.setOnTabChangedListener(new OnTabChangeListener() {
+
+            @Override
+            public void onTabChanged(String p1) {
+                if (p1 == TABS_TAG_1)
+                    showSelected();
+                else if (p1 == TABS_TAG_2)
+                    showOffered();
+            }
+        });
     }
 
     private void applyLocals() {
@@ -124,7 +134,8 @@ public class PlaylistManagerActivity extends TabActivity implements GlobalServic
         textView.setText(getResources().getString(R.string.selected) + " - " + playlistService.sizeOfActivePlaylist() + " " + getResources().getString(R.string.pcs));
         enable = true;
 
-        selectedAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, playlistService.activePlaylistName);
+        selectedAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1,
+                playlistService.activePlaylistName);
         selectedlistView.setAdapter(selectedAdapter);
         selectedlistView.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -146,15 +157,13 @@ public class PlaylistManagerActivity extends TabActivity implements GlobalServic
                 runOnUiThread(new Runnable() {
                     public void run() {
                         AlertDialog.Builder builder = new AlertDialog.Builder(PlaylistManagerActivity.this);
-                        builder.setTitle(getResources().getString(R.string.request));
-                        builder.setMessage(getResources().getString(R.string.doyouwant) + " " + getResources().getString(R.string.remove) + " '" + s + "'");
-                        builder.setPositiveButton(getResources().getString(R.string.remove), new DialogInterface.OnClickListener() {
+                        builder.setTitle(getString(R.string.request));
+                        builder.setMessage(getString(R.string.doyouwant) + " " + getString(R.string.remove) + " '" + s + "'");
+                        builder.setPositiveButton(getString(R.string.remove), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface p1, int p2) {
                                 playlistService.deleteActivePlaylistById(editNum);
                                 selectedAdapter.notifyDataSetChanged();
-                                MainActivity.provAdapter.notifyDataSetChanged();
-
                                 try {
                                     playlistService.saveData(PlaylistManagerActivity.this);
                                 } catch (IOException e) {
@@ -184,7 +193,8 @@ public class PlaylistManagerActivity extends TabActivity implements GlobalServic
         textView.setText(getResources().getString(R.string.offered) + " - " + playlistService.sizeOfOfferedPlaylist() + " " + getResources().getString(R.string.pcs));
         enable = false;
 
-        offeredAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, playlistService.getAllNamesOfOfferedPlaylist());
+        offeredAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1,
+                playlistService.getAllNamesOfOfferedPlaylist());
         offeredlistView.setAdapter(offeredAdapter);
         offeredlistView.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -206,9 +216,9 @@ public class PlaylistManagerActivity extends TabActivity implements GlobalServic
                 runOnUiThread(new Runnable() {
                     public void run() {
                         AlertDialog.Builder builder = new AlertDialog.Builder(PlaylistManagerActivity.this);
-                        builder.setTitle(getResources().getString(R.string.request));
-                        builder.setMessage(getResources().getString(R.string.doyouwant) + " " + getResources().getString(R.string.add) + " '" + s + "'");
-                        builder.setPositiveButton(getResources().getString(R.string.add), new DialogInterface.OnClickListener() {
+                        builder.setTitle(getString(R.string.request));
+                        builder.setMessage(getString(R.string.doyouwant) + " " + getString(R.string.add) + " '" + s + "'");
+                        builder.setPositiveButton(getString(R.string.add), new DialogInterface.OnClickListener() {
 
                             @Override
                             public void onClick(DialogInterface p1, int p2) {
@@ -216,13 +226,13 @@ public class PlaylistManagerActivity extends TabActivity implements GlobalServic
                                 if (playlistService.indexNameForActivePlaylist(playlistService.getOfferedPlaylistById(editNum).getName()) == -1) {
                                     playlistService.addNewActivePlaylist(playlistService.getOfferedPlaylistById(editNum));
                                     offeredAdapter.notifyDataSetChanged();
-                                    MainActivity.provAdapter.notifyDataSetChanged();
                                     try {
                                         playlistService.saveData(PlaylistManagerActivity.this);
                                     } catch (IOException e) {
                                     }
                                 } else {
-                                    Toast.makeText(PlaylistManagerActivity.this, getResources().getString(R.string.playlistexist), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(PlaylistManagerActivity.this, getString(R.string.playlistexist),
+                                            Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -250,21 +260,20 @@ public class PlaylistManagerActivity extends TabActivity implements GlobalServic
 
     public void restoreDefault(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(PlaylistManagerActivity.this);
-        builder.setTitle(getResources().getString(R.string.request));
-        builder.setMessage(getResources().getString(R.string.resetwarn));
-        builder.setPositiveButton(getResources().getString(R.string.reset), new DialogInterface.OnClickListener() {
+        builder.setTitle(getString(R.string.request));
+        builder.setMessage(getString(R.string.resetwarn));
+        builder.setPositiveButton(getString(R.string.reset), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface p1, int p2) {
                 playlistService.clearActivePlaylist();
                 selectedAdapter.notifyDataSetChanged();
-                MainActivity.provAdapter.notifyDataSetChanged();
                 try {
                     playlistService.saveData(PlaylistManagerActivity.this);
                 } catch (IOException e) {
                 }
             }
         });
-        builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface p1, int p2) {

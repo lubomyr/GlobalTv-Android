@@ -122,23 +122,24 @@ public class PlaylistEditActivity extends Activity implements GlobalServices {
         }
         if (editAction.equals("add")) {
             if (name.toString().length() == 0 || url.toString().length() == 0) {
-                Toast.makeText(PlaylistEditActivity.this, getResources().getString(R.string.pleasefillallfields), Toast.LENGTH_SHORT).show();
+                Toast.makeText(PlaylistEditActivity.this,
+                        getString(R.string.pleasefillallfields), Toast.LENGTH_SHORT).show();
             } else {
                 success = true;
                 // check if playlist already exist in selected playlist
                 if (playlistService.indexNameForActivePlaylist(name.toString()) == -1)
                     playlistService.addToActivePlaylist(name.toString(), url.toString(), selectedType, "", "");
                 else
-                    Toast.makeText(PlaylistEditActivity.this, getResources().getString(R.string.playlistexist), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PlaylistEditActivity.this,
+                            getString(R.string.playlistexist), Toast.LENGTH_SHORT).show();
             }
         }
         try {
             if (success)
                 playlistService.saveData(PlaylistEditActivity.this);
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
         if (success) {
-            PlaylistManagerActivity.selectedAdapter.notifyDataSetChanged();
             playlistService.saveData(PlaylistEditActivity.this);
             super.onBackPressed();
         }
@@ -147,7 +148,6 @@ public class PlaylistEditActivity extends Activity implements GlobalServices {
     public void deletePlaylist(View view) throws IOException {
         if (enable) {
             playlistService.deleteActivePlaylistById(editNum);
-            PlaylistManagerActivity.selectedAdapter.notifyDataSetChanged();
             playlistService.saveData(PlaylistEditActivity.this);
         }
         super.onBackPressed();

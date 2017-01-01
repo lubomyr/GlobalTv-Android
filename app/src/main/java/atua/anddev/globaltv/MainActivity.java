@@ -45,9 +45,9 @@ import static atua.anddev.globaltv.service.GuideService.guideProvList;
 
 public class MainActivity extends Activity implements GlobalServices {
     public static String torrentKey;
-    public static ArrayAdapter provAdapter;
     public static String myPath;
     public static int selectedProvider;
+    private ArrayAdapter provAdapter;
     private String lang;
     private Configuration conf;
     private Boolean needUpdate;
@@ -83,6 +83,13 @@ public class MainActivity extends Activity implements GlobalServices {
         }
         setupProviderView();
         showLocals();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        provAdapter.notifyDataSetChanged();
     }
 
     @Override
