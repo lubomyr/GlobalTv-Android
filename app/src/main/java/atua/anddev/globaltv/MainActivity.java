@@ -45,8 +45,6 @@ import static atua.anddev.globaltv.service.GuideService.guideProvList;
 
 public class MainActivity extends Activity implements GlobalServices {
     public static String torrentKey;
-    public static String origNames[];
-    public static String translatedNames[];
     public static ArrayAdapter provAdapter;
     public static String myPath;
     public static int selectedProvider;
@@ -223,8 +221,8 @@ public class MainActivity extends Activity implements GlobalServices {
                         break;
                 }
                 new Resources(getAssets(), getResources().getDisplayMetrics(), conf);
-                origNames = getResources().getStringArray(R.array.categories_list_orig);
-                translatedNames = getResources().getStringArray(R.array.categories_list_translated);
+                Global.origNames = getResources().getStringArray(R.array.categories_list_orig);
+                Global.translatedNames = getResources().getStringArray(R.array.categories_list_translated);
                 applyLocals();
                 try {
                     checkPlaylistFile(selectedProvider);

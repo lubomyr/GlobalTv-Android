@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import atua.anddev.globaltv.Global;
 import atua.anddev.globaltv.MainActivity;
 import atua.anddev.globaltv.GlobalServices;
 import atua.anddev.globaltv.entity.Playlist;
@@ -387,10 +388,10 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
         String output;
         output = input;
 
-        if (MainActivity.origNames.length > 0) {
-            for (int i = 0; i < MainActivity.origNames.length; i++) {
-                if (MainActivity.origNames[i].equalsIgnoreCase(input)) {
-                    output = MainActivity.translatedNames[i];
+        if (Global.origNames.length > 0) {
+            for (int i = 0; i < Global.origNames.length; i++) {
+                if (Global.origNames[i].equalsIgnoreCase(input)) {
+                    output = Global.translatedNames[i];
                     break;
                 }
             }
