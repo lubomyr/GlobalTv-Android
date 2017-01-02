@@ -1,6 +1,6 @@
 package atua.anddev.globaltv.adapters;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -19,15 +19,15 @@ import static atua.anddev.globaltv.GlobalServices.favoriteService;
 import static atua.anddev.globaltv.GlobalServices.guideService;
 
 public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdapter.ViewHolder> {
-    private Context context;
+    private Activity activity;
     private int resources;
     private List<Channel> items;
     private OnItemClickListener  mOnItemClickListener;
     private int selectedProvider;
     private String selectedChannelId="";
 
-    public ChannelHolderAdapter(Context context, int resources, List<Channel> items, int provider) {
-        this.context = context;
+    public ChannelHolderAdapter(Activity activity, int resources, List<Channel> items, int provider) {
+        this.activity = activity;
         this.items = items;
         this.resources = resources;
         this.selectedProvider = provider;
@@ -41,15 +41,25 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
     }
 
     @Override
-    public void onBindViewHolder(ChannelHolderAdapter.ViewHolder holder, int position) {
-        Channel item = items.get(position);
+    public void onBindViewHolder(final ChannelHolderAdapter.ViewHolder holder, int position) {
+        final Channel item = items.get(position);
         holder.setItem(item);
         holder.chNameView.setText(item.getName());
-        if (Global.guideLoaded) {
-            String title = guideService.getProgramTitle(item.getName());
-            title = (title != null) ? title : "";
-            holder.titleView.setText(Html.fromHtml(title));
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (Global.guideLoaded) {
+                    String title = guideService.getProgramTitle(item.getName());
+                    title = (title != null) ? title : "";
+                    final String finalTitle = title;
+                    activity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            holder.titleView.setText(Html.fromHtml(finalTitle));
+                        }
+                    });
+                }
+            }
+        }).start();
         if (selectedChannelId.equals(item.getUrl())) {
             holder.playView.setImageResource(R.drawable.play_active);
         } else {
