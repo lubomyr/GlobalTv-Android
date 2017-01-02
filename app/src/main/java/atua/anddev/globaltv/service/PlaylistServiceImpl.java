@@ -54,7 +54,7 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
 
     @Override
     public void setDateFromFile(int id) {
-        File file = new File(MainActivity.myPath + "/" + getActivePlaylistById(id).getFile());
+        File file = new File(Global.myPath + "/" + getActivePlaylistById(id).getFile());
         long fileDate = file.lastModified();
         setUpdateDate(id, fileDate);
     }
@@ -70,7 +70,7 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
     @Override
     public void addNewActivePlaylist(Playlist plst) {
         String name = plst.getName();
-        File file = new File(MainActivity.myPath + "/" + plst.getFile());
+        File file = new File(Global.myPath + "/" + plst.getFile());
         long fileDate = file.lastModified();
         plst.setUpdate(String.valueOf(fileDate));
         activePlaylist.add(plst);
@@ -222,7 +222,7 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
         serializer.startTag(null, "data");
 
 //        serializer.startTag(null, "torrentkey");
-//        serializer.text(MainActivity.torrentKey);
+//        serializer.text(Global.torrentKey);
 //        serializer.endTag(null, "torrentkey");
 
         for (Playlist plst : activePlaylist) {
@@ -295,7 +295,7 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
                             if (endTag.equals("update"))
                                 update = text;
                             if (endTag.equals("torrentkey"))
-                                MainActivity.torrentKey = text;
+                                Global.torrentKey = text;
                             if (endTag.equals("provider")) {
                                 if (opt.equals("user")) {
                                     addToActivePlaylist(name, url, Integer.parseInt(type), md5, update);
@@ -325,7 +325,7 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
         String groupName = "", groupName2 = "";
         channelService.clearAllChannel();
         try {
-            InputStream myfile = new FileInputStream(MainActivity.myPath + "/" + fname);
+            InputStream myfile = new FileInputStream(Global.myPath + "/" + fname);
             Scanner myInputFile = new Scanner(myfile, "UTF8").useDelimiter("[\n]");
             while (myInputFile.hasNext()) {
                 lineStr = myInputFile.next();

@@ -44,22 +44,25 @@ import atua.anddev.globaltv.runnables.SaveGuideRunnable;
 import static atua.anddev.globaltv.service.GuideService.guideProvList;
 
 public class MainActivity extends Activity implements GlobalServices {
-    public static String torrentKey;
-    public static String myPath;
     private int selectedProvider;
+    private int selectedGuideProv = 2;
     private ArrayAdapter provAdapter;
     private String lang;
     private Configuration conf;
     private Boolean needUpdate;
+    private String myPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        myPath = this.getApplicationContext().getFilesDir().toString();
+        Global.myPath = this.getApplicationContext().getFilesDir().toString();
         //myPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/data/" +
         // context.getPackageName()+"/files";
+        myPath = Global.myPath;
+
+
         if (lang == null)
             lang = Locale.getDefault().getISO3Language();
 
@@ -112,7 +115,7 @@ public class MainActivity extends Activity implements GlobalServices {
 
         @Override
         public void run() {
-            if (guideService.checkForUpdate(getApplicationContext()))
+            if (guideService.checkForUpdate(getApplicationContext(), selectedGuideProv))
                 updateGuide();
 
             runOnUiThread(new Runnable() {
@@ -408,7 +411,7 @@ public class MainActivity extends Activity implements GlobalServices {
         String endStr;
         if (str.startsWith(startStr) && str.contains("/cdn/")) {
             endStr = str.substring(str.indexOf("/cdn/"), str.length());
-            output = startStr + torrentKey + endStr;
+            output = startStr + Global.torrentKey + endStr;
         }
         return output;
     }
@@ -513,7 +516,7 @@ public class MainActivity extends Activity implements GlobalServices {
     }
 
     private void updateGuide() {
-        SaveGuideRunnable saveGuideRunnable = new SaveGuideRunnable(this);
+        SaveGuideRunnable saveGuideRunnable = new SaveGuideRunnable(this, selectedGuideProv);
         Thread thread = new Thread(saveGuideRunnable);
         thread.start();
     }

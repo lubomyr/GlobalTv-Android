@@ -14,9 +14,9 @@ public interface GuideService {
     List<ChannelGuide> channelGuideList = new ArrayList<ChannelGuide>();
     List<Programme> programmeList = new ArrayList<Programme>();
 
-    boolean checkForUpdate(Context context);
+    boolean checkForUpdate(Context context, int selectedGuideProv);
 
-    void parseGuide(Context context);
+    void parseGuide(Context context, int selectedGuideProv);
 
     String getProgramTitle(String chName);
 

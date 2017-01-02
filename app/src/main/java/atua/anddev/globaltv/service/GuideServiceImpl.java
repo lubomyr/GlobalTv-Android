@@ -8,7 +8,6 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import atua.anddev.globaltv.Global;
-import atua.anddev.globaltv.MainActivity;
 import atua.anddev.globaltv.entity.ChannelGuide;
 import atua.anddev.globaltv.entity.GuideProv;
 import atua.anddev.globaltv.entity.Programme;
@@ -26,30 +25,30 @@ import java.util.zip.GZIPInputStream;
 
 public class GuideServiceImpl implements GuideService {
     private static final DateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss Z");
-    private String myPath = MainActivity.myPath;
+    private String myPath = Global.myPath;
     private Calendar currentTime;
 
-    public boolean checkForUpdate(Context context) {
+    public boolean checkForUpdate(Context context, int selectedGuideProv) {
         boolean result = false;
-        if (!isGuideExist()) {
+        if (!isGuideExist(selectedGuideProv)) {
             result = true;
         } else {
             currentTime = Calendar.getInstance();
-            parseGuide(context);
+            parseGuide(context, selectedGuideProv);
             result = checkGuideDates();
         }
         return result;
     }
 
-    private boolean isGuideExist() {
+    private boolean isGuideExist(int selectedGuideProv) {
         boolean result;
-        GuideProv guideProv = guideProvList.get(Global.selectedGuideProv);
+        GuideProv guideProv = guideProvList.get(selectedGuideProv);
         File file = new File(myPath + "/" +guideProv.getFile());
         result = file.exists();
         return result;
     }
 
-    public void parseGuide(Context context) {
+    public void parseGuide(Context context, int selectedGuideProv) {
         Log.d("globaltv", "parsing program guide...");
         String dispName = null, id = null, start = null, stop = null, channel = null;
         String endTag, text = null, title = null, desc = null, category = null;
@@ -61,7 +60,7 @@ public class GuideServiceImpl implements GuideService {
             XmlPullParserFactory xppf = XmlPullParserFactory.newInstance();
             xppf.setNamespaceAware(true);
             xpp = xppf.newPullParser();
-            GuideProv guideProv = guideProvList.get(Global.selectedGuideProv);
+            GuideProv guideProv = guideProvList.get(selectedGuideProv);
             FileInputStream fis = context.getApplicationContext().openFileInput(guideProv.getFile());
             GZIPInputStream gzipIs = new GZIPInputStream(fis);
             xpp.setInput(gzipIs, null);
