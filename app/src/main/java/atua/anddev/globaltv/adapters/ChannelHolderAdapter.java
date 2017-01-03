@@ -24,7 +24,7 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
     private List<Channel> items;
     private OnItemClickListener  mOnItemClickListener;
     private int selectedProvider;
-    private String selectedChannelId="";
+    private Channel selectedItem;
 
     public ChannelHolderAdapter(Activity activity, int resources, List<Channel> items, int provider) {
         this.activity = activity;
@@ -60,7 +60,7 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
                 }
             }
         }).start();
-        if (selectedChannelId.equals(item.getUrl())) {
+        if (selectedItem == item) {
             holder.playView.setImageResource(R.drawable.play_active);
         } else {
             holder.playView.setImageResource(R.drawable.play_inactive);
@@ -86,8 +86,8 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
         mOnItemClickListener = onItemClickListener;
     }
 
-    public void setSelected(String str) {
-        this.selectedChannelId = str;
+    public void setSelected(Channel item) {
+        this.selectedItem = item;
     }
 
     private boolean isChannelFavorite(Channel item) {

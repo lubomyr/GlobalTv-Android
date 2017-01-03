@@ -116,14 +116,14 @@ public class ChannellistActivity extends Activity implements GlobalServices, Cha
                 guideActivity(item.getName());
                 break;
             default:
-                setTick(item.getUrl());
+                setTick(item);
                 channelService.openURL(item.getUrl(), ChannellistActivity.this);
                 break;
         }
     }
 
-    private void setTick(String strPos) {
-        mAdapter.setSelected(strPos);
+    private void setTick(Channel channel) {
+        mAdapter.setSelected(channel);
         mAdapter.notifyDataSetChanged();
     }
 
