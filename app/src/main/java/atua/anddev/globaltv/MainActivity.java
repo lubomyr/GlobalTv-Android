@@ -427,7 +427,6 @@ public class MainActivity extends Activity implements GlobalServices {
     }
 
     public void globalSearch(View view) {
-        searchService.clearSearchList();
         final EditText input = new EditText(this);
         input.setSingleLine();
         new AlertDialog.Builder(MainActivity.this)
