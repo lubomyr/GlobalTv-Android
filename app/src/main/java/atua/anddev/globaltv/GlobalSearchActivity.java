@@ -8,8 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import atua.anddev.globaltv.adapters.ChannelHolderAdapter;
 import atua.anddev.globaltv.entity.Channel;
@@ -18,7 +16,6 @@ public class GlobalSearchActivity extends MainActivity implements GlobalServices
     private ProgressDialog progress;
     private String searchString;
     private ChannelHolderAdapter mAdapter;
-    private List<Channel> searchList;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,9 +23,8 @@ public class GlobalSearchActivity extends MainActivity implements GlobalServices
         // Set sub.xml as user interface layout
         setContentView(R.layout.globalsearch);
 
-        searchList = new ArrayList<Channel>();
         getData();
-        if (searchList.size() == 0)
+        if (searchService.sizeOfSearchList() == 0)
             runProgressBar();
         else
             showSearchResults();
@@ -88,7 +84,7 @@ public class GlobalSearchActivity extends MainActivity implements GlobalServices
                 chName = chn.getName().toLowerCase();
                 if (chName.contains(searchString.toLowerCase())) {
                     chn.setProvider(playlistService.getActivePlaylistById(i).getName());
-                    searchList.add(chn);
+                    searchService.addToSearchList(chn);
                 }
             }
         }
@@ -98,11 +94,11 @@ public class GlobalSearchActivity extends MainActivity implements GlobalServices
     public void showSearchResults() {
         TextView textView = (TextView) findViewById(R.id.globalsearchTextView1);
         textView.setText(getResources().getString(R.string.resultsfor) + " '" + searchString + "' - " +
-                searchList.size() + " " + getResources().getString(R.string.channels));
+                searchService.sizeOfSearchList() + " " + getResources().getString(R.string.channels));
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-        mAdapter = new ChannelHolderAdapter(this, R.layout.item_channellist, searchList, true);
+        mAdapter = new ChannelHolderAdapter(this, R.layout.item_channellist, searchService.getSearchList(), true);
         mAdapter.setOnItemClickListener(GlobalSearchActivity.this);
         recyclerView.setAdapter(mAdapter);
     }
