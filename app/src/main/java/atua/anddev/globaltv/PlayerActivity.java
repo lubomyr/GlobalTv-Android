@@ -1,10 +1,11 @@
 package atua.anddev.globaltv;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.VideoView;
 
-public class PlayerActivity extends MainActivity {
+public class PlayerActivity extends Activity {
     VideoView videoView;
     String selectedUrl;
 
