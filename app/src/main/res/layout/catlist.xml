@@ -7,28 +7,6 @@
 	android:orientation="vertical"
 	android:background="#151414">
 
-	<LinearLayout
-		android:layout_height="wrap_content"
-		android:layout_width="wrap_content"
-		android:orientation="horizontal"
-		android:layout_gravity="center_horizontal">
-
-		<Button
-			android:layout_height="wrap_content"
-			android:text="Favorites"
-			android:layout_width="wrap_content"
-			android:id="@+id/catlistButton1"
-			android:onClick="catFavButton"/>
-
-		<Button
-			android:layout_height="wrap_content"
-			android:text="Search"
-			android:layout_width="100dp"
-			android:id="@+id/catlistButton2"
-			android:onClick="catSearchDialog"/>
-
-	</LinearLayout>
-	
 	<TextView
 		android:layout_height="wrap_content"
 		android:text="Select Category"

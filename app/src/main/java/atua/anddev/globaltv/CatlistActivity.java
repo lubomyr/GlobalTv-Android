@@ -1,17 +1,12 @@
 package atua.anddev.globaltv;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,7 +26,6 @@ public class CatlistActivity extends Activity implements GlobalServices {
         setContentView(R.layout.catlist);
 
         getData();
-        applyLocals();
         createCatlist();
         showCatlist();
     }
@@ -39,13 +33,6 @@ public class CatlistActivity extends Activity implements GlobalServices {
     private void getData() {
         Intent intent = getIntent();
         mSelectedProvider = intent.getIntExtra("provider", -1);
-    }
-
-    private void applyLocals() {
-        Button buttonFavorite = (Button) findViewById(R.id.catlistButton1);
-        buttonFavorite.setText(getResources().getString(R.string.favorites));
-        Button buttonSearch = (Button) findViewById(R.id.catlistButton2);
-        buttonSearch.setText(getResources().getString(R.string.search));
     }
 
     private void createCatlist() {
@@ -77,43 +64,6 @@ public class CatlistActivity extends Activity implements GlobalServices {
         intent.putExtra("category", selCat);
         intent.putExtra("provider", mSelectedProvider);
         startActivity(intent);
-    }
-
-    public void favlistActivity() {
-        Intent intent = new Intent(this, FavlistActivity.class);
-        intent.putExtra("provider", mSelectedProvider);
-        startActivity(intent);
-    }
-
-    public void searchlistActivity(String searchString) {
-        Intent intent = new Intent(this, SearchlistActivity.class);
-        intent.putExtra("search", searchString);
-        intent.putExtra("provider", mSelectedProvider);
-        startActivity(intent);
-    }
-
-    public void catFavButton(View view) {
-        favlistActivity();
-    }
-
-    public void catSearchDialog(View view) {
-        final EditText input = new EditText(this);
-        input.setSingleLine();
-        new AlertDialog.Builder(CatlistActivity.this)
-                .setTitle(getResources().getString(R.string.request))
-                .setMessage(getResources().getString(R.string.pleaseentertext))
-                .setView(input)
-                .setPositiveButton(getResources().getString(R.string.search), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Editable value = input.getText();
-                        String searchString = value.toString();
-                        searchlistActivity(searchString);
-                    }
-                }).setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Do nothing.
-            }
-        }).show();
     }
 
 }

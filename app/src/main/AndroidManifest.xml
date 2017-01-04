@@ -34,16 +34,6 @@
             android:theme="@style/ChannelListTheme" />
 
         <activity
-            android:name=".FavlistActivity"
-            android:label="Favorites"
-            android:theme="@android:style/Theme.Holo" />
-
-        <activity
-            android:name=".SearchlistActivity"
-            android:label="Search"
-            android:theme="@android:style/Theme.Holo" />
-
-        <activity
             android:name=".GlobalSearchActivity"
             android:label="Global Search"
             android:theme="@android:style/Theme.Holo" />
