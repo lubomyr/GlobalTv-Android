@@ -13,6 +13,7 @@ import java.util.List;
 
 import atua.anddev.globaltv.adapters.ChannelHolderAdapter;
 import atua.anddev.globaltv.entity.Channel;
+import atua.anddev.globaltv.entity.Favorites;
 
 public class GlobalFavoriteActivity extends MainActivity implements GlobalServices, ChannelHolderAdapter.OnItemClickListener {
     private List<Channel> favoriteList;
@@ -50,9 +51,9 @@ public class GlobalFavoriteActivity extends MainActivity implements GlobalServic
         textview.setText(getResources().getString(R.string.favorites));
 
         if (favoriteList.size() == 0) {
-            for (int i = 0; i < favoriteService.favoriteList.size(); i++) {
-                Channel channel = new Channel(favoriteService.favoriteList.get(i), "", "");
-                channel.setProvider(favoriteService.favoriteProvList.get(i));
+            for (Favorites favorite : favoriteService.getFavoriteList()) {
+                Channel channel = new Channel(favorite.getName(), "", "");
+                channel.setProvider(favorite.getProv());
                 favoriteList.add(channel);
             }
         }
@@ -87,15 +88,15 @@ public class GlobalFavoriteActivity extends MainActivity implements GlobalServic
 
     private void changeFavorite(Channel item) {
         Boolean changesAllowed = true;
-        for (int i = 0; i < favoriteService.sizeOfFavoriteList(); i++) {
-            if (item.getName().equals(favoriteService.getFavoriteById(i).getName())
-                    && item.getProvider().equals(favoriteService.getFavoriteById(i).getProv()))
+        for (Favorites fav : favoriteService.getFavoriteList()) {
+            if (item.getName().equals(fav.getName())
+                    && item.getProvider().equals(fav.getProv()))
                 changesAllowed = false;
         }
         if (changesAllowed)
             favoriteService.addToFavoriteList(item.getName(), item.getProvider());
         else
-            favoriteService.deleteFromFavoritesById(favoriteService.indexNameForFavorite(item.getName()));
+            favoriteService.deleteFromFavoritesByNameAndProv(item.getName(), item.getProvider());
         try {
             favoriteService.saveFavorites(GlobalFavoriteActivity.this);
         } catch (IOException ignored) {

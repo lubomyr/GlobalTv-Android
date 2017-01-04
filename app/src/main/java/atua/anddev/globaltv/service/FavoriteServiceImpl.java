@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import atua.anddev.globaltv.MainActivity;
 import atua.anddev.globaltv.GlobalServices;
+import atua.anddev.globaltv.entity.Channel;
 import atua.anddev.globaltv.entity.Favorites;
 
 public class FavoriteServiceImpl implements FavoriteService, GlobalServices {
@@ -36,11 +36,11 @@ public class FavoriteServiceImpl implements FavoriteService, GlobalServices {
     @Override
     public List<String> getFavoriteListForProv(int provider) {
         List<String> arr = new ArrayList<String>();
-        for (int i = 0; i < sizeOfFavoriteList(); i++) {
-            for (int j = 0; j < channelService.sizeOfChannelList(); j++) {
-                if (getFavoriteById(i).getName().equals(channelService.getChannelById(j).getName()) && !arr.contains(getFavoriteById(i).getName())
-                        && getFavoriteById(i).getProv().equals(playlistService.getActivePlaylistById(provider).getName())) {
-                    arr.add(getFavoriteById(i).getName());
+        for (Favorites fav : favorites) {
+            for (Channel chn : channelService.getAllChannels()) {
+                if (fav.getName().equals(chn.getName()) && !arr.contains(fav.getName())
+                        && fav.getProv().equals(playlistService.getActivePlaylistById(provider).getName())) {
+                    arr.add(fav.getName());
                 }
             }
         }
@@ -48,22 +48,37 @@ public class FavoriteServiceImpl implements FavoriteService, GlobalServices {
     }
 
     @Override
+    public List<Favorites> getFavoriteList() {
+        return favorites;
+    }
+
+    @Override
     public boolean containsNameForFavorite(String name) {
-        return favoriteList.contains(name);
+        boolean result = false;
+        for (Favorites favorite : favorites) {
+            if (name.equals(favorite.getName()))
+                result = true;
+        }
+        return result;
     }
 
     @Override
     public void deleteFromFavoritesById(int id) {
         favorites.remove(id);
-        favoriteList.remove(id);
-        favoriteProvList.remove(id);
+    }
+
+    @Override
+    public void deleteFromFavoritesByNameAndProv(String name, String prov) {
+        for (int i = 0; i < sizeOfFavoriteList(); i++) {
+            if (name.equals(getFavoriteById(i).getName()) && prov.equals(getFavoriteById(i).getProv())) {
+                favorites.remove(i);
+            }
+        }
     }
 
     @Override
     public void addToFavoriteList(String name, String prov) {
         favorites.add(new Favorites(name, prov));
-        favoriteList.add(name);
-        favoriteProvList.add(prov);
     }
 
     @Override
@@ -74,8 +89,6 @@ public class FavoriteServiceImpl implements FavoriteService, GlobalServices {
     @Override
     public void clearAllFavorites() {
         favorites.clear();
-        favoriteList.clear();
-        favoriteProvList.clear();
     }
 
     @Override
@@ -85,7 +98,12 @@ public class FavoriteServiceImpl implements FavoriteService, GlobalServices {
 
     @Override
     public int indexNameForFavorite(String name) {
-        return favoriteList.indexOf(name);
+        int result = -1;
+        for (int i = 0; i < favorites.size(); i++) {
+            if (name.equals(favorites.get(i).getName()))
+                result = i;
+        }
+        return result;
     }
 
     @Override

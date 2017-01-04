@@ -84,7 +84,7 @@ public class GlobalSearchActivity extends MainActivity implements GlobalServices
             playlistService.readPlaylist(i);
 
             String chName;
-            for (Channel chn : channelService.channel) {
+            for (Channel chn : channelService.getAllChannels()) {
                 chName = chn.getName().toLowerCase();
                 if (chName.contains(searchString.toLowerCase())) {
                     chn.setProvider(playlistService.getActivePlaylistById(i).getName());

@@ -170,7 +170,7 @@ public class PlaylistManagerActivity extends TabActivity implements GlobalServic
                                 }
                             }
                         });
-                        builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
 
                             @Override
                             public void onClick(DialogInterface p1, int p2) {
@@ -190,7 +190,8 @@ public class PlaylistManagerActivity extends TabActivity implements GlobalServic
     public void showOffered() {
         ListView offeredlistView = (ListView) findViewById(R.id.playlistManagerListViewF2);
         TextView textView = (TextView) findViewById(R.id.playlistManagerTextViewF2);
-        textView.setText(getResources().getString(R.string.offered) + " - " + playlistService.sizeOfOfferedPlaylist() + " " + getResources().getString(R.string.pcs));
+        textView.setText(getString(R.string.offered) + " - " + playlistService.sizeOfOfferedPlaylist() +
+                " " + getString(R.string.pcs));
         enable = false;
 
         offeredAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1,

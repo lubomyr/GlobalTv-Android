@@ -11,8 +11,6 @@ import atua.anddev.globaltv.entity.Favorites;
 
 public interface FavoriteService {
     List<Favorites> favorites = new ArrayList<Favorites>();
-    List<String> favoriteList = new ArrayList<String>();
-    List<String> favoriteProvList = new ArrayList<String>();
 
     void addToFavoriteList(String name, String prov);
 
@@ -28,7 +26,11 @@ public interface FavoriteService {
 
     void deleteFromFavoritesById(int id);
 
+    void deleteFromFavoritesByNameAndProv(String name, String prov);
+
     List<String> getFavoriteListForProv(int provider);
+
+    List<Favorites> getFavoriteList();
 
     int indexOfFavoriteByNameAndProv(String name, String prov);
 
