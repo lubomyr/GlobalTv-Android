@@ -31,7 +31,7 @@
         <activity
             android:name=".ChannellistActivity"
             android:label="Playlist"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+            android:theme="@style/ChannelListTheme" />
 
         <activity
             android:name=".FavlistActivity"

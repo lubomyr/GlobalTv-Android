@@ -1,9 +1,7 @@
 package atua.anddev.globaltv;
 
-import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -11,10 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.text.Editable;
 import android.view.Menu;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -29,19 +24,117 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
     private ChannelHolderAdapter mAdapter;
     private String mSelectedCategory;
     private int mSelectedProvider;
-    private int showFavorite = 0;
-    private List<Channel> channelList = new ArrayList<Channel>();
+    private boolean mFavorite;
+    private boolean mSearch;
+    private String mSearchString;
+    private List<Channel> channelList;
+    private List<Channel> favoriteList;
+    private List<Channel> searchList;
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Set sub.xml as user interface layout
         setContentView(R.layout.playlist);
 
+        channelList = new ArrayList<Channel>();
+        favoriteList = new ArrayList<Channel>();
+        searchList = new ArrayList<Channel>();
+
         getData();
         setupActionBar();
-        applyLocals();
         openCategory(mSelectedCategory);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.action_favorites:
+                mFavorite = !mFavorite;
+                if (mFavorite) {
+                    item.setIcon(R.drawable.favorite_inactive);
+                    showFavoriteList();
+                } else {
+                    item.setIcon(R.drawable.favorite_active);
+                    if (mSearch)
+                        searchChannel(mSearchString);
+                    else {
+                        mAdapter.setItems(channelList);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+        return true;
+    }
+
+    @Override
+    public void onItemClick(Channel item, int viewId) {
+        switch (viewId) {
+            case R.id.favoriteIcon:
+                changeFavorite(item);
+                break;
+            case R.id.title:
+                guideActivity(item.getName());
+                break;
+            default:
+                setTick(item);
+                channelService.openURL(item.getUrl(), ChannellistActivity.this);
+                break;
+        }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        SearchManager searchManager = (SearchManager) this.getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setOnQueryTextListener(this);
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                mSearch = false;
+                if (mFavorite)
+                    showFavoriteList();
+                else
+                    mAdapter.setItems(channelList);
+                mAdapter.notifyDataSetChanged();
+                return false;
+            }
+        });
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(this.getComponentName()));
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        mSearch = true;
+        mSearchString = query;
+        searchChannel(query);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (newText.isEmpty())
+            return false;
+        if (newText.length() > 2) {
+            mSearch = true;
+            mSearchString = newText;
+            searchChannel(newText);
+            return true;
+        }
+        return false;
     }
 
     private void getData() {
@@ -52,10 +145,9 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
 
     private void setupActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-    }
-
-    private void applyLocals() {
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     private void openCategory(final String catName) {
@@ -75,61 +167,12 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
         mAdapter.setOnItemClickListener(ChannellistActivity.this);
         recyclerView.setAdapter(mAdapter);
 
+        setInfo(catName, channelList.size());
+    }
+
+    private void setInfo(String catName, int size) {
         TextView textView = (TextView) findViewById(R.id.playlistTextView1);
-        textView.setText(catName + " - " + channelList.size() + " " + getResources().getString(R.string.channels));
-    }
-
-    public void favlistActivity() {
-        Intent intent = new Intent(this, FavlistActivity.class);
-        intent.putExtra("provider", mSelectedProvider);
-        startActivity(intent);
-    }
-
-    public void searchlistActivity(String searchString) {
-        Intent intent = new Intent(this, SearchlistActivity.class);
-        intent.putExtra("search", searchString);
-        intent.putExtra("provider", mSelectedProvider);
-        startActivity(intent);
-    }
-
-    public void favButton(View view) {
-        favlistActivity();
-    }
-
-    public void searchDialog(View view) {
-        final EditText input = new EditText(this);
-        input.setSingleLine();
-        new AlertDialog.Builder(ChannellistActivity.this)
-                .setTitle(getResources().getString(R.string.request))
-                .setMessage(getResources().getString(R.string.pleaseentertext))
-                .setView(input)
-                .setPositiveButton(getResources().getString(R.string.search), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Editable value = input.getText();
-                        String searchString = value.toString();
-                        searchlistActivity(searchString);
-                    }
-                }).setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Do nothing.
-            }
-        }).show();
-    }
-
-    @Override
-    public void onItemClick(Channel item, int viewId) {
-        switch (viewId) {
-            case R.id.favoriteIcon:
-                changeFavorite(item);
-                break;
-            case R.id.title:
-                guideActivity(item.getName());
-                break;
-            default:
-                setTick(item);
-                channelService.openURL(item.getUrl(), ChannellistActivity.this);
-                break;
-        }
+        textView.setText(catName + " - " + size + " " + getResources().getString(R.string.channels));
     }
 
     private void setTick(Channel channel) {
@@ -155,71 +198,10 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
         startActivity(intent);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(android.view.MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-            case R.id.action_favorites:
-                showFavorite++;
-                if (showFavorite == 1)
-                    showFavoriteList();
-                else {
-                    mAdapter.setItems(channelList);
-                    mAdapter.notifyDataSetChanged();
-                }
-                if (showFavorite == 2)
-                    showFavorite = 0;
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.search_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        SearchManager searchManager = (SearchManager) this.getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setOnQueryTextListener(this);
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                mAdapter.setItems(channelList);
-                mAdapter.notifyDataSetChanged();
-                return false;
-            }
-        });
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(this.getComponentName()));
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        if (newText.isEmpty())
-            return false;
-        if (newText.length() > 2) {
-            final String s = newText.trim().toUpperCase();
-            searchChannel(s);
-            return true;
-        }
-        return false;
-    }
-
     private void searchChannel(String str) {
-        List<Channel> searchList = new ArrayList<Channel>();
-        for (Channel chn : channelList) {
+        searchList.clear();
+        List<Channel> list = mFavorite ? favoriteList : channelList;
+        for (Channel chn : list) {
             if (chn.getName().toLowerCase().contains(str.toLowerCase()))
                 searchList.add(chn);
         }
@@ -228,9 +210,10 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
     }
 
     private void showFavoriteList() {
-        List<Channel> favoriteList = new ArrayList<Channel>();
+        favoriteList.clear();
+        List<Channel> list = mSearch ? searchList : channelList;
         for (int i = 0; i < favoriteService.sizeOfFavoriteList(); i++) {
-            for (Channel chn : channelList) {
+            for (Channel chn : list) {
                 if (favoriteService.getFavoriteById(i).getName().equals(chn.getName()) && !favoriteList.contains(favoriteService.getFavoriteById(i).getName())
                         && favoriteService.getFavoriteById(i).getProv().equals(playlistService.getActivePlaylistById(mSelectedProvider).getName())) {
                     favoriteList.add(chn);

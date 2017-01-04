@@ -2,4 +2,12 @@
 <resources>
     <style name="AppTheme" parent="@android:style/Theme.Holo.Light">
 	</style>
+
+    <style name="ChannelListTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:textColor">@android:color/white</item>
+
+        <!--  It should be true otherwise action mode will not overlay toolbar -->
+        <item name="windowActionModeOverlay">true</item>
+    </style>
 </resources>
