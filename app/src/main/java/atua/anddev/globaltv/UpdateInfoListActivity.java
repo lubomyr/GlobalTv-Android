@@ -34,7 +34,7 @@ public class UpdateInfoListActivity extends Activity implements GlobalServices {
                 longDate = Long.parseLong(plst.getUpdate());
                 daysPassed = getDiffDays(longDate);
             } catch (Exception e) {
-                daysPassed = getResources().getString(R.string.playlistnotexist);
+                daysPassed = getString(R.string.playlistnotexist);
             }
 
             date.add(daysPassed);
@@ -53,18 +53,18 @@ public class UpdateInfoListActivity extends Activity implements GlobalServices {
         int daysPassed = cal.get(Calendar.DAY_OF_YEAR);
         switch (daysPassed) {
             case 1:
-                tmpText = getResources().getString(R.string.updated) + " " + new Date(inputDate).toLocaleString();
+                tmpText = getString(R.string.updated) + " " + new Date(inputDate).toLocaleString();
                 break;
             case 2:
-                tmpText = getResources().getString(R.string.updated) + " 1 " + getResources().getString(R.string.dayago);
+                tmpText = getString(R.string.updated) + " 1 " + getString(R.string.dayago);
                 break;
             case 3:
             case 4:
             case 5:
-                tmpText = getResources().getString(R.string.updated) + " " + (daysPassed - 1) + " " + getResources().getString(R.string.daysago);
+                tmpText = getString(R.string.updated) + " " + (daysPassed - 1) + " " + getString(R.string.daysago);
                 break;
             default:
-                tmpText = getResources().getString(R.string.updated) + " " + (daysPassed - 1) + " " + getResources().getString(R.string.fivedaysago);
+                tmpText = getString(R.string.updated) + " " + (daysPassed - 1) + " " + getString(R.string.fivedaysago);
                 break;
         }
         return tmpText;
