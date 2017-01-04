@@ -1,5 +1,6 @@
 package atua.anddev.globaltv;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +14,7 @@ import atua.anddev.globaltv.adapters.ChannelHolderAdapter;
 import atua.anddev.globaltv.entity.Channel;
 import atua.anddev.globaltv.entity.Favorites;
 
-public class GlobalSearchActivity extends MainActivity implements GlobalServices, ChannelHolderAdapter.OnItemClickListener {
+public class GlobalSearchActivity extends Activity implements GlobalServices, ChannelHolderAdapter.OnItemClickListener {
     private ProgressDialog progress;
     private String searchString;
     private ChannelHolderAdapter mAdapter;

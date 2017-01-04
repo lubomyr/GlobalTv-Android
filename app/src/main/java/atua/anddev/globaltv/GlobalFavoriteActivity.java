@@ -1,5 +1,6 @@
 package atua.anddev.globaltv;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,7 +16,7 @@ import atua.anddev.globaltv.adapters.ChannelHolderAdapter;
 import atua.anddev.globaltv.entity.Channel;
 import atua.anddev.globaltv.entity.Favorites;
 
-public class GlobalFavoriteActivity extends MainActivity implements GlobalServices, ChannelHolderAdapter.OnItemClickListener {
+public class GlobalFavoriteActivity extends Activity implements GlobalServices, ChannelHolderAdapter.OnItemClickListener {
     private List<Channel> favoriteList;
     private ChannelHolderAdapter mAdapter;
 
