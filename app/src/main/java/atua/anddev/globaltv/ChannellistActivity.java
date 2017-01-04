@@ -37,7 +37,7 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
         super.onCreate(savedInstanceState);
 
         // Set sub.xml as user interface layout
-        setContentView(R.layout.playlist);
+        setContentView(R.layout.channellist);
 
         channelList = new ArrayList<Channel>();
         favoriteList = new ArrayList<Channel>();
