@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import atua.anddev.globaltv.adapters.ChannelHolderAdapter;
 import atua.anddev.globaltv.entity.Channel;
+import atua.anddev.globaltv.entity.Favorites;
 
 public class GlobalSearchActivity extends MainActivity implements GlobalServices, ChannelHolderAdapter.OnItemClickListener {
     private ProgressDialog progress;
@@ -110,9 +111,9 @@ public class GlobalSearchActivity extends MainActivity implements GlobalServices
 
     private void changeFavorite(Channel item) {
         Boolean changesAllowed = true;
-        for (int i = 0; i < favoriteService.sizeOfFavoriteList(); i++) {
-            if (item.getName().equals(favoriteService.getFavoriteById(i).getName())
-                    && item.getProvider().equals(favoriteService.getFavoriteById(i).getProv()))
+        for (Favorites fav : favoriteService.getFavoriteList()) {
+            if (item.getName().equals(fav.getName())
+                    && item.getProvider().equals(fav.getProv()))
                 changesAllowed = false;
         }
         if (changesAllowed)

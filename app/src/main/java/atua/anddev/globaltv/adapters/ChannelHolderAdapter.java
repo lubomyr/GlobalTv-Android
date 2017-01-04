@@ -14,6 +14,7 @@ import java.util.List;
 import atua.anddev.globaltv.Global;
 import atua.anddev.globaltv.R;
 import atua.anddev.globaltv.entity.Channel;
+import atua.anddev.globaltv.entity.Favorites;
 
 import static atua.anddev.globaltv.GlobalServices.favoriteService;
 import static atua.anddev.globaltv.GlobalServices.guideService;
@@ -94,9 +95,9 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
 
     private boolean isChannelFavorite(Channel item) {
         Boolean result = false;
-        for (int i = 0; i < favoriteService.sizeOfFavoriteList(); i++) {
-            if (item.getName().equals(favoriteService.getFavoriteById(i).getName())
-                    && item.getProvider().equals(favoriteService.getFavoriteById(i).getProv()))
+        for (Favorites fav : favoriteService.getFavoriteList()) {
+            if (item.getName().equals(fav.getName())
+                    && item.getProvider().equals(fav.getProv()))
                 result = true;
         }
         return result;
