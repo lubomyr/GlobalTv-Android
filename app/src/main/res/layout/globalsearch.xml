@@ -15,10 +15,13 @@
 		android:id="@+id/globalsearchTextView1"
 		android:layout_gravity="center_horizontal"/>
 
-	<ListView
-		android:layout_height="match_parent"
+	<android.support.v7.widget.RecyclerView
+		android:id="@+id/recycler_view"
 		android:layout_width="match_parent"
-		android:id="@+id/globalsearchListView1"/>
-
+		android:layout_height="match_parent"
+		android:layout_marginLeft="15dp"
+		android:layout_marginRight="15dp"
+		android:scrollbars="vertical"/>
+	
 </LinearLayout>
 

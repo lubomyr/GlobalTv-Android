@@ -23,14 +23,14 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
     private int resources;
     private List<Channel> items;
     private OnItemClickListener  mOnItemClickListener;
-    private int selectedProvider;
     private Channel selectedItem;
+	private boolean showProvName;
 
-    public ChannelHolderAdapter(Activity activity, int resources, List<Channel> items, int provider) {
+    public ChannelHolderAdapter(Activity activity, int resources, List<Channel> items, boolean showProvName) {
         this.activity = activity;
         this.items = items;
         this.resources = resources;
-        this.selectedProvider = provider;
+		this.showProvName = showProvName;
     }
 
     @Override
@@ -45,6 +45,8 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
         final Channel item = items.get(position);
         holder.setItem(item);
         holder.chNameView.setText(item.getName());
+		holder.provNameView.setText(item.getProvider());
+		holder.provNameView.setVisibility(showProvName ? View.VISIBLE : View.GONE);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -91,9 +93,12 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
     }
 
     private boolean isChannelFavorite(Channel item) {
-        boolean result;
-        int index = favoriteService.getFavoriteListForProv(selectedProvider).indexOf(item.getName());
-        result = index != -1;
+        Boolean result = false;
+		for (int i = 0; i < favoriteService.sizeOfFavoriteList(); i++) {
+			if (item.getName().equals(favoriteService.getFavoriteById(i).getName())
+				&& item.getProvider().equals(favoriteService.getFavoriteById(i).getProv()))
+				result = true;
+		}
         return result;
     }
 
@@ -105,6 +110,7 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
         ChannelHolderAdapter.OnItemClickListener mOnItemClickListener;
         Channel item;
         TextView chNameView;
+		TextView provNameView;
         TextView titleView;
         ImageView playView;
         ImageView favoriteView;
@@ -114,6 +120,7 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
             mOnItemClickListener = onItemClickListener;
             view.findViewById(R.id.clickItem).setOnClickListener(ViewHolder.this);
             chNameView = (TextView) view.findViewById(R.id.heading);
+			provNameView = (TextView) view.findViewById(R.id.provName);
             titleView  = (TextView) view.findViewById(R.id.title);
             playView = (ImageView) view.findViewById(R.id.tickIcon);
             favoriteView = (ImageView) view.findViewById(R.id.favoriteIcon);
