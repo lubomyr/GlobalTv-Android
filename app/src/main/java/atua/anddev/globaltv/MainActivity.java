@@ -71,10 +71,10 @@ public class MainActivity extends Activity implements GlobalServices {
         if (guideProvList.size() == 0)
             guideService.setupGuideProvList();
 
-		if (!Global.guideLoaded) {
-        Thread checkGuideUpdateThread = new Thread(checkGuideForUpdate);
-        checkGuideUpdateThread.start();
-		}
+        if (!Global.guideLoaded) {
+            Thread checkGuideUpdateThread = new Thread(checkGuideForUpdate);
+            checkGuideUpdateThread.start();
+        }
 
         if (playlistService.sizeOfOfferedPlaylist() == 0) {
             playlistService.setupProvider("default", MainActivity.this);

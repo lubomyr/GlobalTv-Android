@@ -22,15 +22,15 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
     private Activity activity;
     private int resources;
     private List<Channel> items;
-    private OnItemClickListener  mOnItemClickListener;
+    private OnItemClickListener mOnItemClickListener;
     private Channel selectedItem;
-	private boolean showProvName;
+    private boolean showProvName;
 
     public ChannelHolderAdapter(Activity activity, int resources, List<Channel> items, boolean showProvName) {
         this.activity = activity;
         this.items = items;
         this.resources = resources;
-		this.showProvName = showProvName;
+        this.showProvName = showProvName;
     }
 
     @Override
@@ -45,8 +45,8 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
         final Channel item = items.get(position);
         holder.setItem(item);
         holder.chNameView.setText(item.getName());
-		holder.provNameView.setText(item.getProvider());
-		holder.provNameView.setVisibility(showProvName ? View.VISIBLE : View.GONE);
+        holder.provNameView.setText(item.getProvider());
+        holder.provNameView.setVisibility(showProvName ? View.VISIBLE : View.GONE);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -84,7 +84,7 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
         return items != null ? items.size() : 0;
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
     }
 
@@ -94,15 +94,15 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
 
     private boolean isChannelFavorite(Channel item) {
         Boolean result = false;
-		for (int i = 0; i < favoriteService.sizeOfFavoriteList(); i++) {
-			if (item.getName().equals(favoriteService.getFavoriteById(i).getName())
-				&& item.getProvider().equals(favoriteService.getFavoriteById(i).getProv()))
-				result = true;
-		}
+        for (int i = 0; i < favoriteService.sizeOfFavoriteList(); i++) {
+            if (item.getName().equals(favoriteService.getFavoriteById(i).getName())
+                    && item.getProvider().equals(favoriteService.getFavoriteById(i).getProv()))
+                result = true;
+        }
         return result;
     }
 
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         void onItemClick(Channel item, int viewId);
     }
 
@@ -110,7 +110,7 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
         ChannelHolderAdapter.OnItemClickListener mOnItemClickListener;
         Channel item;
         TextView chNameView;
-		TextView provNameView;
+        TextView provNameView;
         TextView titleView;
         ImageView playView;
         ImageView favoriteView;
@@ -120,8 +120,8 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
             mOnItemClickListener = onItemClickListener;
             view.findViewById(R.id.clickItem).setOnClickListener(ViewHolder.this);
             chNameView = (TextView) view.findViewById(R.id.heading);
-			provNameView = (TextView) view.findViewById(R.id.provName);
-            titleView  = (TextView) view.findViewById(R.id.title);
+            provNameView = (TextView) view.findViewById(R.id.provName);
+            titleView = (TextView) view.findViewById(R.id.title);
             playView = (ImageView) view.findViewById(R.id.tickIcon);
             favoriteView = (ImageView) view.findViewById(R.id.favoriteIcon);
             playView.setOnClickListener(ViewHolder.this);
@@ -131,12 +131,12 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
 
         @Override
         public void onClick(View v) {
-            if(mOnItemClickListener != null) {
+            if (mOnItemClickListener != null) {
                 mOnItemClickListener.onItemClick(item, v.getId());
             }
         }
 
-        public void setItem(Channel item){
+        public void setItem(Channel item) {
             this.item = item;
         }
     }

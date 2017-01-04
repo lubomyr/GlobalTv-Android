@@ -18,7 +18,6 @@ import java.util.List;
 
 import atua.anddev.globaltv.adapters.ChannelHolderAdapter;
 import atua.anddev.globaltv.entity.Channel;
-import java.nio.channels.spi.*;
 
 public class ChannellistActivity extends AppCompatActivity implements GlobalServices,
         ChannelHolderAdapter.OnItemClickListener, SearchView.OnQueryTextListener {
@@ -154,7 +153,7 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
     private void openCategory(final String catName) {
         if (channelList.size() == 0) {
             for (Channel chn : channelService.getAllChannels()) {
-				chn.setProvider(playlistService.getActivePlaylistById(mSelectedProvider).getName());
+                chn.setProvider(playlistService.getActivePlaylistById(mSelectedProvider).getName());
                 if (catName.equals(getResources().getString(R.string.all)))
                     channelList.add(chn);
                 else if (catName.equals(chn.getCategory()))
