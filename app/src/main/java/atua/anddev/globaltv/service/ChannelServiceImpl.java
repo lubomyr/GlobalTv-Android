@@ -34,7 +34,12 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     public int indexNameForChannel(String name) {
-        return channelName.indexOf(name);
+        int result = -1;
+        for (int i = 0; i < channel.size(); i++) {
+            if (name.equals(channel.get(i).getName()))
+                result = i;
+        }
+        return result;
     }
 
     @Override
@@ -45,13 +50,11 @@ public class ChannelServiceImpl implements ChannelService {
     @Override
     public void addToChannelList(String name, String url, String category) {
         channel.add(new Channel(name, url, category));
-        channelName.add(name);
     }
 
     @Override
     public void clearAllChannel() {
         channel.clear();
-        channelName.clear();
     }
 
     @Override
