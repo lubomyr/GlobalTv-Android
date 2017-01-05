@@ -24,7 +24,7 @@
         <activity
             android:name=".CatlistActivity"
             android:label="@string/category_list"
-            android:theme="@android:style/Theme.Holo" />
+            android:theme="@style/ChannelListTheme" />
 
         <activity
             android:name=".ChannellistActivity"

@@ -1,8 +1,9 @@
 package atua.anddev.globaltv;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -15,7 +16,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CatlistActivity extends Activity implements GlobalServices {
+public class CatlistActivity extends AppCompatActivity implements GlobalServices {
     private List<String> categoryList = new ArrayList<String>();
     private int mSelectedProvider;
 
@@ -26,13 +27,31 @@ public class CatlistActivity extends Activity implements GlobalServices {
         setContentView(R.layout.catlist);
 
         getData();
+        setupActionBar();
         createCatlist();
         showCatlist();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void getData() {
         Intent intent = getIntent();
         mSelectedProvider = intent.getIntExtra("provider", -1);
+    }
+
+    private void setupActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     private void createCatlist() {

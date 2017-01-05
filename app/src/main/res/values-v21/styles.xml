@@ -10,4 +10,9 @@
         <!--  It should be true otherwise action mode will not overlay toolbar -->
         <item name="windowActionModeOverlay">true</item>
     </style>
+
+    <style name="ListViews" parent="@android:style/Widget.ListView">
+        <item name="android:divider">#7b7777</item>
+        <item name="android:dividerHeight">1px</item>
+    </style>
 </resources>

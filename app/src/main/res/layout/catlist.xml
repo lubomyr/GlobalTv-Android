@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_height="match_parent"
-	android:layout_width="match_parent"
-	style="@android:style/Theme.Holo"
-	android:orientation="vertical"
-	android:background="#151414">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#151414"
+    android:orientation="vertical">
 
-	<TextView
-		android:layout_height="wrap_content"
-		android:text="Select Category"
-		android:textAppearance="?android:attr/textAppearanceSmall"
-		android:layout_width="wrap_content"
-		android:id="@+id/catlistTextView1"
-		android:layout_gravity="center_horizontal"/>
+    <TextView
+        android:id="@+id/catlistTextView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/selectCategory"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
-	<ListView
-		android:layout_height="match_parent"
-		android:layout_width="match_parent"
-		android:id="@+id/catlistListView1"/>
+    <ListView
+        android:id="@+id/catlistListView1"
+        style="@style/ListViews"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
 
