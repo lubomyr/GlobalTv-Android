@@ -88,16 +88,8 @@ public class GlobalFavoriteActivity extends Activity implements GlobalServices, 
     }
 
     private void changeFavorite(Channel item) {
-        Boolean changesAllowed = true;
-        for (Favorites fav : favoriteService.getFavoriteList()) {
-            if (item.getName().equals(fav.getName())
-                    && item.getProvider().equals(fav.getProv()))
-                changesAllowed = false;
-        }
-        if (changesAllowed)
-            favoriteService.addToFavoriteList(item.getName(), item.getProvider());
-        else
-            favoriteService.deleteFromFavoritesByNameAndProv(item.getName(), item.getProvider());
+        favoriteService.deleteFromFavoritesByNameAndProv(item.getName(), item.getProvider());
+        favoriteList.remove(item);
         try {
             favoriteService.saveFavorites(GlobalFavoriteActivity.this);
         } catch (IOException ignored) {
