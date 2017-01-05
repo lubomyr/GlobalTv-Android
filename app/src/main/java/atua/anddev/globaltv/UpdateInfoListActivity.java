@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.ListView;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -53,7 +54,8 @@ public class UpdateInfoListActivity extends Activity implements GlobalServices {
         int daysPassed = cal.get(Calendar.DAY_OF_YEAR);
         switch (daysPassed) {
             case 1:
-                tmpText = getString(R.string.updated) + " " + new Date(inputDate).toLocaleString();
+                DateFormat format = DateFormat.getDateTimeInstance();
+                tmpText = getString(R.string.updated) + " " + format.format(new Date(inputDate));
                 break;
             case 2:
                 tmpText = getString(R.string.updated) + " 1 " + getString(R.string.dayago);

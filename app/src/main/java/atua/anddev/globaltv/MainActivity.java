@@ -33,6 +33,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -303,22 +304,19 @@ public class MainActivity extends Activity implements GlobalServices {
 
             switch (daysPassed) {
                 case 1:
-                    tmpText = getString(R.string.updated) + " " +
-                            new Date(updateDate).toLocaleString();
+                    DateFormat format = DateFormat.getDateTimeInstance();
+                    tmpText = getString(R.string.updated) + " " + format.format(new Date(updateDate));
                     break;
                 case 2:
-                    tmpText = getString(R.string.updated) + " 1 " +
-                            getString(R.string.dayago);
+                    tmpText = getString(R.string.updated) + " 1 " + getString(R.string.dayago);
                     break;
                 case 3:
                 case 4:
                 case 5:
-                    tmpText = getString(R.string.updated) + " " +
-                            (daysPassed - 1) + " " + getString(R.string.daysago);
+                    tmpText = getString(R.string.updated) + " " + (daysPassed - 1) + " " + getString(R.string.daysago);
                     break;
                 default:
-                    tmpText = getString(R.string.updated) + " " +
-                            (daysPassed - 1) + " " + getString(R.string.fivedaysago);
+                    tmpText = getString(R.string.updated) + " " + (daysPassed - 1) + " " + getString(R.string.fivedaysago);
                     break;
 
             }
