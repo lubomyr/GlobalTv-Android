@@ -6,7 +6,7 @@
     <string name="updatePlaylistButton">Update Playlist</string>
     <string name="openPlaylistButton">Open Playlist</string>
     <string name="globalSearchButton">Global Search</string>
-    <string name="playlistsManagerButton">Playlists Manager</string>
+    <string name="playlistsManager">Playlists Manager</string>
     <string name="playlist">Playlist</string>
     <string name="pcs">pcs</string>
     <string name="autoUpdate">autoupdate</string>
@@ -55,6 +55,8 @@
     <string name="playlistexist">current playlist already exist in selected list</string>
     <string name="provider_list_is_empty">Playlists is empty. Please add at least one</string>
     <string name="no_selected_playlist">No Selected Playlist. Please add at least one</string>
+    <string name="channel_list">Channel List</string>
+    <string name="category_list">Category List</string>
 
     <string-array name="categories_list_orig">
         <item>Музыка</item>

@@ -34,7 +34,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="5dp"
                 android:gravity="right"
-                android:textColor="#88888833"
+                android:textColor="#88e1c46f"
                 android:textSize="11.0sp"
                 android:visibility="gone" />
 

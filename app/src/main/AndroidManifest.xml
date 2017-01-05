@@ -23,22 +23,22 @@
 
         <activity
             android:name=".CatlistActivity"
-            android:label="Categories list"
+            android:label="@string/category_list"
             android:theme="@android:style/Theme.Holo" />
 
         <activity
             android:name=".ChannellistActivity"
-            android:label="Playlist"
+            android:label="@string/channel_list"
             android:theme="@style/ChannelListTheme" />
 
         <activity
             android:name=".GlobalSearchActivity"
-            android:label="Global Search"
+            android:label="@string/search"
             android:theme="@android:style/Theme.Holo" />
 
         <activity
             android:name=".PlaylistManagerActivity"
-            android:label="Playlist Manager"
+            android:label="@string/playlistsManager"
             android:theme="@android:style/Theme.Holo" />
 
         <activity
@@ -48,7 +48,7 @@
 
         <activity
             android:name=".GlobalFavoriteActivity"
-            android:label="Global Favorite"
+            android:label="@string/favorites"
             android:theme="@android:style/Theme.Holo" />
 
         <activity

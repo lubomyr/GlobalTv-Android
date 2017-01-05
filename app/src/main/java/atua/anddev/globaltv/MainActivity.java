@@ -184,7 +184,7 @@ public class MainActivity extends Activity implements GlobalServices {
         Button globalSearchButton = (Button) findViewById(R.id.mainButton3);
         globalSearchButton.setText(getString(R.string.search));
         Button playlistManagerButton = (Button) findViewById(R.id.mainButton4);
-        playlistManagerButton.setText(getString(R.string.playlistsManagerButton));
+        playlistManagerButton.setText(getString(R.string.playlistsManager));
         Button globalFavoriteButton = (Button) findViewById(R.id.mainButton5);
         globalFavoriteButton.setText(getString(R.string.favorites));
         Button updateAllButton = (Button) findViewById(R.id.mainButton6);
@@ -504,7 +504,7 @@ public class MainActivity extends Activity implements GlobalServices {
                 }
             }
         });
-        builder.setNegativeButton(getString(R.string.playlistsManagerButton),
+        builder.setNegativeButton(getString(R.string.playlistsManager),
                 new DialogInterface.OnClickListener() {
 
                     @Override

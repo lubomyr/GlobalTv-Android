@@ -6,7 +6,7 @@
     <string name="updatePlaylistButton">Обновить Плейлист</string>
     <string name="openPlaylistButton">Открыть Плейлист</string>
     <string name="globalSearchButton">Глобальный Поиск</string>
-    <string name="playlistsManagerButton">Управление Плейлистами</string>
+    <string name="playlistsManager">Управление Плейлистами</string>
     <string name="playlist">Плейлист</string>
     <string name="pcs">шт.</string>
     <string name="autoUpdate">автообновление</string>
@@ -54,6 +54,8 @@
     <string name="playlistexist">Этот плейлист уже есть в избранном списке</string>
     <string name="provider_list_is_empty">Список плейлистов пустой. Добавте хотябы один</string>
     <string name="no_selected_playlist">Нет избранных плейлистов. Добавте хотябы один</string>
+    <string name="channel_list">Список Каналов</string>
+    <string name="category_list">Список Категорий</string>
 
     <string-array name="categories_list_orig">
         <item>Europe</item>
