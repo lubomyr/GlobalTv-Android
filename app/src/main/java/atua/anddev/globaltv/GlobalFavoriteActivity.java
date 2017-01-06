@@ -67,9 +67,6 @@ public class GlobalFavoriteActivity extends AppCompatActivity implements GlobalS
     }
 
     public void showFavorites() {
-        TextView textview = (TextView) findViewById(R.id.globalfavoriteTextView1);
-        textview.setText(getString(R.string.favorites));
-
         if (favoriteList.size() == 0) {
             for (Favorites favorite : favoriteService.getFavoriteList()) {
                 Channel channel = new Channel(favorite.getName(), "", "");
@@ -83,6 +80,13 @@ public class GlobalFavoriteActivity extends AppCompatActivity implements GlobalS
         mAdapter = new ChannelHolderAdapter(this, R.layout.item_channellist, favoriteList, true);
         mAdapter.setOnItemClickListener(GlobalFavoriteActivity.this);
         recyclerView.setAdapter(mAdapter);
+        updateInfo();
+    }
+
+    private void updateInfo() {
+        TextView textview = (TextView) findViewById(R.id.globalfavoriteTextView1);
+        textview.setText(getResources().getString(R.string.favorites) + " - " +
+                mAdapter.getItemCount() + " " + getString(R.string.channels));
     }
 
     private void openFavorite(Channel item) {
