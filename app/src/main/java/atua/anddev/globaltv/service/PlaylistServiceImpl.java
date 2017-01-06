@@ -31,14 +31,12 @@ import java.util.List;
 import java.util.Scanner;
 
 import atua.anddev.globaltv.Global;
-import atua.anddev.globaltv.MainActivity;
 import atua.anddev.globaltv.GlobalServices;
 import atua.anddev.globaltv.entity.Playlist;
 
 public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
-    public static String LOG_TAG = "GlobalTv";
     /*Comparator for sorting the list by Playlist date*/
-    public static Comparator<Playlist> PlstDateComparator = new Comparator<Playlist>() {
+    private static Comparator<Playlist> PlstDateComparator = new Comparator<Playlist>() {
 
         public int compare(Playlist s1, Playlist s2) {
             String PlaylistDate1 = s1.getUpdate().toUpperCase();
@@ -51,13 +49,6 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
             return PlaylistDate2.compareTo(PlaylistDate1);
         }
     };
-
-    @Override
-    public void setDateFromFile(int id) {
-        File file = new File(Global.myPath + "/" + getActivePlaylistById(id).getFile());
-        long fileDate = file.lastModified();
-        setUpdateDate(id, fileDate);
-    }
 
     @Override
     public List<Playlist> getSortedByDatePlaylists() {
@@ -120,11 +111,6 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
     }
 
     @Override
-    public void clearOfferedPlaylist() {
-        offeredPlaylist.clear();
-    }
-
-    @Override
     public int sizeOfActivePlaylist() {
         return activePlaylist.size();
     }
@@ -132,25 +118,6 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
     @Override
     public int sizeOfOfferedPlaylist() {
         return offeredPlaylist.size();
-    }
-
-    @Override
-    public List<Playlist> getAllActivePlaylist() {
-        return activePlaylist;
-    }
-
-    @Override
-    public List<Playlist> getAllOfferedPlaylist() {
-        return offeredPlaylist;
-    }
-
-    @Override
-    public List<String> getAllNamesOfActivePlaylist() {
-        List<String> arr = new ArrayList<String>();
-        for (Playlist plst : activePlaylist) {
-            arr.add(plst.getName());
-        }
-        return arr;
     }
 
     @Override
@@ -167,18 +134,7 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
         return activePlaylistName.indexOf(name);
     }
 
-    @Override
-    public int indexNameForOfferedPlaylist(String name) {
-        int result = -1;
-        for (int i = 0; i < offeredPlaylist.size(); i++) {
-            if (offeredPlaylist.get(i).getName().equals(name)) {
-                result = i;
-            }
-        }
-        return result;
-    }
-
-    public String getFileName(String input) {
+    private String getFileName(String input) {
         String output = "playlist_" + input + ".m3u";
         output = output.replace(" ", "_");
         output = output.replace("(", "_");
@@ -435,29 +391,17 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
         @Override
         protected void onPostExecute(String strJson) {
             super.onPostExecute(strJson);
-            Log.d(LOG_TAG, strJson);
-
             JSONObject dataJsonObj = null;
-
             try {
                 dataJsonObj = new JSONObject(strJson);
                 JSONArray playlists = dataJsonObj.getJSONArray("playlist");
-
-
                 for (int i = 0; i < playlists.length(); i++) {
                     JSONObject playlist = playlists.getJSONObject(i);
-
                     String name = playlist.getString("name");
                     String url = playlist.getString("url");
                     int type = playlist.getInt("type");
-
                     addToOfferedPlaylist(name, url, type);
-
-                    Log.d(LOG_TAG, "name: " + name);
-                    Log.d(LOG_TAG, "url: " + url);
-                    Log.d(LOG_TAG, "type: " + type);
                 }
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }

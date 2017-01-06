@@ -10,9 +10,9 @@ import java.util.List;
 import atua.anddev.globaltv.entity.Playlist;
 
 public interface PlaylistService {
-    List<Playlist> activePlaylist = new ArrayList<Playlist>();
-    List<Playlist> offeredPlaylist = new ArrayList<Playlist>();
-    List<String> activePlaylistName = new ArrayList<String>();
+    List<Playlist> activePlaylist = new ArrayList<>();
+    List<Playlist> offeredPlaylist = new ArrayList<>();
+    List<String> activePlaylistName = new ArrayList<>();
 
     List<Playlist> getSortedByDatePlaylists();
 
@@ -28,23 +28,13 @@ public interface PlaylistService {
 
     void clearActivePlaylist();
 
-    void clearOfferedPlaylist();
-
     int sizeOfActivePlaylist();
 
     int sizeOfOfferedPlaylist();
 
-    List<Playlist> getAllActivePlaylist();
-
-    List<Playlist> getAllOfferedPlaylist();
-
-    List<String> getAllNamesOfActivePlaylist();
-
     List<String> getAllNamesOfOfferedPlaylist();
 
     int indexNameForActivePlaylist(String name);
-
-    int indexNameForOfferedPlaylist(String name);
 
     void deleteActivePlaylistById(int id);
 
@@ -57,8 +47,6 @@ public interface PlaylistService {
     void saveData(Context context) throws FileNotFoundException, IOException;
 
     void setupProvider(String opt, Context context);
-
-    void setDateFromFile(int num);
 
     void readPlaylist(int num);
 

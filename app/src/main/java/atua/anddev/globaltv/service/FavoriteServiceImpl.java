@@ -13,11 +13,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import atua.anddev.globaltv.GlobalServices;
-import atua.anddev.globaltv.entity.Channel;
 import atua.anddev.globaltv.entity.Favorites;
 
 public class FavoriteServiceImpl implements FavoriteService, GlobalServices {
@@ -34,32 +32,8 @@ public class FavoriteServiceImpl implements FavoriteService, GlobalServices {
     }
 
     @Override
-    public List<String> getFavoriteListForProv(int provider) {
-        List<String> arr = new ArrayList<String>();
-        for (Favorites fav : favorites) {
-            for (Channel chn : channelService.getAllChannels()) {
-                if (fav.getName().equals(chn.getName()) && !arr.contains(fav.getName())
-                        && fav.getProv().equals(playlistService.getActivePlaylistById(provider).getName())) {
-                    arr.add(fav.getName());
-                }
-            }
-        }
-        return arr;
-    }
-
-    @Override
     public List<Favorites> getFavoriteList() {
         return favorites;
-    }
-
-    @Override
-    public boolean containsNameForFavorite(String name) {
-        boolean result = false;
-        for (Favorites favorite : favorites) {
-            if (name.equals(favorite.getName()))
-                result = true;
-        }
-        return result;
     }
 
     @Override
@@ -84,11 +58,6 @@ public class FavoriteServiceImpl implements FavoriteService, GlobalServices {
     @Override
     public Favorites getFavoriteById(int id) {
         return favorites.get(id);
-    }
-
-    @Override
-    public void clearAllFavorites() {
-        favorites.clear();
     }
 
     @Override
@@ -163,9 +132,7 @@ public class FavoriteServiceImpl implements FavoriteService, GlobalServices {
                 }
                 type = xpp.next();
             }
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (XmlPullParserException | IOException e) {
             e.printStackTrace();
         }
     }

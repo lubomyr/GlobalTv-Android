@@ -39,9 +39,9 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
         // Set sub.xml as user interface layout
         setContentView(R.layout.channellist);
 
-        channelList = new ArrayList<Channel>();
-        favoriteList = new ArrayList<Channel>();
-        searchList = new ArrayList<Channel>();
+        channelList = new ArrayList<>();
+        favoriteList = new ArrayList<>();
+        searchList = new ArrayList<>();
 
         getData();
         setupActionBar();
@@ -155,7 +155,7 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
         if (channelList.size() == 0) {
             for (Channel chn : channelService.getAllChannels()) {
                 chn.setProvider(playlistService.getActivePlaylistById(mSelectedProvider).getName());
-                if (catName.equals(getResources().getString(R.string.all)))
+                if (catName.equals(getString(R.string.all)))
                     channelList.add(chn);
                 else if (catName.equals(chn.getCategory()))
                     channelList.add(chn);
@@ -173,7 +173,7 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
 
     private void setInfo(String catName, int size) {
         TextView textView = (TextView) findViewById(R.id.playlistTextView1);
-        textView.setText(catName + " - " + size + " " + getResources().getString(R.string.channels));
+        textView.setText(catName + " - " + size + " " + getString(R.string.channels));
     }
 
     private void setTick(Channel channel) {

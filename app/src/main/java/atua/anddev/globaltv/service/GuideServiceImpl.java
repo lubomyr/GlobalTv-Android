@@ -1,16 +1,12 @@
 package atua.anddev.globaltv.service;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
-
-import atua.anddev.globaltv.Global;
-import atua.anddev.globaltv.entity.ChannelGuide;
-import atua.anddev.globaltv.entity.GuideProv;
-import atua.anddev.globaltv.entity.Programme;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,13 +19,19 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import atua.anddev.globaltv.Global;
+import atua.anddev.globaltv.entity.ChannelGuide;
+import atua.anddev.globaltv.entity.GuideProv;
+import atua.anddev.globaltv.entity.Programme;
+
+@SuppressLint("SimpleDateFormat")
 public class GuideServiceImpl implements GuideService {
     private static final DateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss Z");
     private String myPath = Global.myPath;
     private Calendar currentTime;
 
     public boolean checkForUpdate(Context context, int selectedGuideProv) {
-        boolean result = false;
+        boolean result;
         if (!isGuideExist(selectedGuideProv)) {
             result = true;
         } else {
@@ -153,7 +155,7 @@ public class GuideServiceImpl implements GuideService {
 
     private boolean checkGuideDates() {
         boolean result = false;
-        List<String> dateList = new ArrayList<String>();
+        List<String> dateList = new ArrayList<>();
         if (channelGuideList.size() > 0) {
             String chId = channelGuideList.get(0).getId();
             for (Programme programme : programmeList) {
@@ -259,7 +261,7 @@ public class GuideServiceImpl implements GuideService {
     }
 
     public List<Programme> getChannelGuide(String chName) {
-        List<Programme> result = new ArrayList<Programme>();
+        List<Programme> result = new ArrayList<>();
         String id = getIdByChannelName(chName);
         for (Programme programme : programmeList) {
             if (programme.getChannel().equals(id)) {
@@ -281,7 +283,7 @@ public class GuideServiceImpl implements GuideService {
     public String getTotalTimePeriod() {
         String result = null;
         final DateFormat totalSdf = new SimpleDateFormat("dd.MM");
-        List<String> dateList = new ArrayList<String>();
+        List<String> dateList = new ArrayList<>();
         if (channelGuideList.size() > 0) {
             String chId = channelGuideList.get(0).getId();
             for (Programme programme : programmeList) {

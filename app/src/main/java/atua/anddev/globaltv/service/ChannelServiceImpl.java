@@ -19,10 +19,9 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     public List<String> getCategoriesList() {
-        List<String> arr = new ArrayList<String>();
-        boolean cat_exist = false;
+        List<String> arr = new ArrayList<>();
         for (int i = 0; i < channel.size() - 1; i++) {
-            cat_exist = false;
+            boolean cat_exist = false;
             for (int j = 0; j <= arr.size() - 1; j++)
                 if (channel.get(i).getCategory().equalsIgnoreCase(arr.get(j)))
                     cat_exist = true;
@@ -33,21 +32,6 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
-    public int indexNameForChannel(String name) {
-        int result = -1;
-        for (int i = 0; i < channel.size(); i++) {
-            if (name.equals(channel.get(i).getName()))
-                result = i;
-        }
-        return result;
-    }
-
-    @Override
-    public Channel getChannelById(int id) {
-        return channel.get(id);
-    }
-
-    @Override
     public void addToChannelList(String name, String url, String category) {
         channel.add(new Channel(name, url, category));
     }
@@ -55,20 +39,6 @@ public class ChannelServiceImpl implements ChannelService {
     @Override
     public void clearAllChannel() {
         channel.clear();
-    }
-
-    @Override
-    public int sizeOfChannelList() {
-        return channel.size();
-    }
-
-    public void openChannel(String chName, Context context) {
-        for (Channel chn : channel) {
-            if (chName.equals(chn.getName())) {
-                openURL(chn.getUrl(), context);
-                return;
-            }
-        }
     }
 
     @Override

@@ -2,17 +2,17 @@ package atua.anddev.globaltv.service;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import atua.anddev.globaltv.entity.ChannelGuide;
 import atua.anddev.globaltv.entity.GuideProv;
 import atua.anddev.globaltv.entity.Programme;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public interface GuideService {
-    List<GuideProv> guideProvList = new ArrayList<GuideProv>();
-    List<ChannelGuide> channelGuideList = new ArrayList<ChannelGuide>();
-    List<Programme> programmeList = new ArrayList<Programme>();
+    List<GuideProv> guideProvList = new ArrayList<>();
+    List<ChannelGuide> channelGuideList = new ArrayList<>();
+    List<Programme> programmeList = new ArrayList<>();
 
     boolean checkForUpdate(Context context, int selectedGuideProv);
 
@@ -28,5 +28,5 @@ public interface GuideService {
 
     String getTotalTimePeriod();
 
-    public int getProgramPos(String chName);
+    int getProgramPos(String chName);
 }

@@ -34,15 +34,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import atua.anddev.globaltv.runnables.SaveGuideRunnable;
 
 import static atua.anddev.globaltv.service.GuideService.guideProvList;
+import static java.util.Arrays.asList;
 
 public class MainActivity extends Activity implements GlobalServices {
     private int selectedProvider;
@@ -199,10 +200,7 @@ public class MainActivity extends Activity implements GlobalServices {
     }
 
     private void showLocals() {
-        ArrayList<String> localsList = new ArrayList<String>();
-        localsList.add("English");
-        localsList.add("Українська");
-        localsList.add("Русский");
+        List<String> localsList = asList("English", "Українська", "Русский");
         Spinner spinnerView = (Spinner) findViewById(R.id.mainSpinner2);
         SpinnerAdapter adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_expandable_list_item_1, localsList);
@@ -297,10 +295,7 @@ public class MainActivity extends Activity implements GlobalServices {
             cal.setTimeInMillis(diffDate);
             int daysPassed = cal.get(Calendar.DAY_OF_YEAR);
             int hoursPassed = (int) TimeUnit.MILLISECONDS.toHours(diffDate);
-            if (hoursPassed > 12)
-                needUpdate = true;
-            else
-                needUpdate = false;
+            needUpdate = hoursPassed > 12;
 
             switch (daysPassed) {
                 case 1:

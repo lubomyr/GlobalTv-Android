@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CatlistActivity extends AppCompatActivity implements GlobalServices {
-    private List<String> categoryList = new ArrayList<String>();
+    private List<String> categoryList = new ArrayList<>();
     private int mSelectedProvider;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -55,15 +55,16 @@ public class CatlistActivity extends AppCompatActivity implements GlobalServices
     }
 
     private void createCatlist() {
-        categoryList.add(getResources().getString(R.string.all));
+        categoryList.add(getString(R.string.all));
         categoryList.addAll(channelService.getCategoriesList());
     }
 
     public void showCatlist() {
         TextView textView = (TextView) findViewById(R.id.catlistTextView1);
-        textView.setText(getResources().getString(R.string.selectCategory));
+        textView.setText(getString(R.string.selectCategory));
         ListView listView = (ListView) findViewById(R.id.catlistListView1);
-        ListAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, categoryList);
+        ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1,
+                categoryList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnItemClickListener() {
 
