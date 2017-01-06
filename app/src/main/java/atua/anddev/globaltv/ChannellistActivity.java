@@ -110,6 +110,7 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
                 else
                     mAdapter.setItems(channelList);
                 mAdapter.notifyDataSetChanged();
+                updateInfo();
                 return false;
             }
         });
@@ -167,18 +168,25 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
         mAdapter = new ChannelHolderAdapter(this, R.layout.item_channellist, channelList, false);
         mAdapter.setOnItemClickListener(ChannellistActivity.this);
         recyclerView.setAdapter(mAdapter);
-
-        setInfo(catName, channelList.size());
+        updateInfo();
     }
 
-    private void setInfo(String catName, int size) {
+    private void updateInfo() {
         TextView textView = (TextView) findViewById(R.id.playlistTextView1);
-        textView.setText(catName + " - " + size + " " + getString(R.string.channels));
+        StringBuilder str = new StringBuilder(mSelectedCategory);
+        if (mFavorite)
+            str.append(" : ").append(getString(R.string.favorites));
+        if (mSearch)
+            str.append(" : ").append(getString(R.string.search));
+        str.append(" - ").append(mAdapter.getItemCount());
+        str.append(" ").append(getString(R.string.channels));
+        textView.setText(str.toString());
     }
 
     private void setTick(Channel channel) {
         mAdapter.setSelected(channel);
         mAdapter.notifyDataSetChanged();
+        updateInfo();
     }
 
     private void changeFavorite(Channel item) {
@@ -193,6 +201,7 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
         } catch (IOException ignored) {
         }
         mAdapter.notifyDataSetChanged();
+        updateInfo();
     }
 
     private void guideActivity(String chName) {
@@ -210,6 +219,7 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
         }
         mAdapter.setItems(searchList);
         mAdapter.notifyDataSetChanged();
+        updateInfo();
     }
 
     private void showFavoriteList() {
@@ -225,5 +235,6 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
         }
         mAdapter.setItems(favoriteList);
         mAdapter.notifyDataSetChanged();
+        updateInfo();
     }
 }
