@@ -186,6 +186,8 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
             favoriteService.addToFavoriteList(item.getName(), playlistService.getActivePlaylistById(mSelectedProvider).getName());
         else
             favoriteService.deleteFromFavoritesById(favoriteService.indexNameForFavorite(item.getName()));
+        if (mFavorite)
+            favoriteList.remove(item);
         try {
             favoriteService.saveFavorites(ChannellistActivity.this);
         } catch (IOException ignored) {
