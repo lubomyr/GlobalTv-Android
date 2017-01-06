@@ -57,6 +57,7 @@
     <string name="no_selected_playlist">No Selected Playlist. Please add at least one</string>
     <string name="channel_list">Channel List</string>
     <string name="category_list">Category List</string>
+    <string name="logo_icon">Channel Icon</string>
 
     <string-array name="categories_list_orig">
         <item>Музыка</item>

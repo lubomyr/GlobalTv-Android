@@ -113,6 +113,7 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
         TextView chNameView;
         TextView provNameView;
         TextView titleView;
+        ImageView logoView;
         ImageView playView;
         ImageView favoriteView;
 
@@ -123,6 +124,7 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
             chNameView = (TextView) view.findViewById(R.id.heading);
             provNameView = (TextView) view.findViewById(R.id.provName);
             titleView = (TextView) view.findViewById(R.id.title);
+            logoView = (ImageView) view.findViewById(R.id.logoIcon);
             playView = (ImageView) view.findViewById(R.id.tickIcon);
             favoriteView = (ImageView) view.findViewById(R.id.favoriteIcon);
             playView.setOnClickListener(ViewHolder.this);
