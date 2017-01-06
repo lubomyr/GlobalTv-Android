@@ -12,6 +12,7 @@
     </style>
 
     <style name="ListViews" parent="@android:style/Widget.ListView">
+        <item name="android:listSelector">@android:color/black</item>
         <item name="android:divider">#414141</item>
         <item name="android:dividerHeight">1px</item>
     </style>
