@@ -1,8 +1,9 @@
 package atua.anddev.globaltv;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
@@ -16,7 +17,8 @@ import atua.anddev.globaltv.adapters.ChannelHolderAdapter;
 import atua.anddev.globaltv.entity.Channel;
 import atua.anddev.globaltv.entity.Favorites;
 
-public class GlobalFavoriteActivity extends Activity implements GlobalServices, ChannelHolderAdapter.OnItemClickListener {
+public class GlobalFavoriteActivity extends AppCompatActivity implements GlobalServices,
+        ChannelHolderAdapter.OnItemClickListener {
     private List<Channel> favoriteList;
     private ChannelHolderAdapter mAdapter;
 
@@ -26,8 +28,19 @@ public class GlobalFavoriteActivity extends Activity implements GlobalServices, 
         // Set sub.xml as user interface layout
         setContentView(R.layout.globalfavorite);
 
-        favoriteList = new ArrayList<Channel>();
+        favoriteList = new ArrayList<>();
+        setupActionBar();
         showFavorites();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -46,10 +59,16 @@ public class GlobalFavoriteActivity extends Activity implements GlobalServices, 
         }
     }
 
+    private void setupActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
 
     public void showFavorites() {
         TextView textview = (TextView) findViewById(R.id.globalfavoriteTextView1);
-        textview.setText(getResources().getString(R.string.favorites));
+        textview.setText(getString(R.string.favorites));
 
         if (favoriteList.size() == 0) {
             for (Favorites favorite : favoriteService.getFavoriteList()) {
@@ -70,7 +89,7 @@ public class GlobalFavoriteActivity extends Activity implements GlobalServices, 
         String getProvName = item.getProvider();
         int numA = playlistService.indexNameForActivePlaylist(getProvName);
         if (numA == -1) {
-            Toast.makeText(GlobalFavoriteActivity.this, getResources().getString(R.string.playlistnotexist), Toast.LENGTH_SHORT).show();
+            Toast.makeText(GlobalFavoriteActivity.this, getString(R.string.playlistnotexist), Toast.LENGTH_SHORT).show();
             return;
         }
         playlistService.readPlaylist(numA);

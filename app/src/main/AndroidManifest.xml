@@ -34,7 +34,7 @@
         <activity
             android:name=".GlobalSearchActivity"
             android:label="@string/search"
-            android:theme="@android:style/Theme.Holo" />
+            android:theme="@style/ChannelListTheme" />
 
         <activity
             android:name=".PlaylistManagerActivity"
@@ -49,7 +49,7 @@
         <activity
             android:name=".GlobalFavoriteActivity"
             android:label="@string/favorites"
-            android:theme="@android:style/Theme.Holo" />
+            android:theme="@style/ChannelListTheme" />
 
         <activity
             android:name=".UpdateInfoListActivity"

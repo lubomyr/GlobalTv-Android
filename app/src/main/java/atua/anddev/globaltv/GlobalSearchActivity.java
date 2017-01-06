@@ -1,9 +1,10 @@
 package atua.anddev.globaltv;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
@@ -14,7 +15,8 @@ import atua.anddev.globaltv.adapters.ChannelHolderAdapter;
 import atua.anddev.globaltv.entity.Channel;
 import atua.anddev.globaltv.entity.Favorites;
 
-public class GlobalSearchActivity extends Activity implements GlobalServices, ChannelHolderAdapter.OnItemClickListener {
+public class GlobalSearchActivity extends AppCompatActivity implements GlobalServices,
+        ChannelHolderAdapter.OnItemClickListener {
     private ProgressDialog progress;
     private String searchString;
     private ChannelHolderAdapter mAdapter;
@@ -26,10 +28,21 @@ public class GlobalSearchActivity extends Activity implements GlobalServices, Ch
         setContentView(R.layout.globalsearch);
 
         getData();
+        setupActionBar();
         if (searchService.sizeOfSearchList() == 0)
             runProgressBar();
         else
             showSearchResults();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -48,6 +61,13 @@ public class GlobalSearchActivity extends Activity implements GlobalServices, Ch
         }
     }
 
+    private void setupActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
     private void getData() {
         Intent intent = getIntent();
         searchString = intent.getStringExtra("search");
@@ -55,7 +75,7 @@ public class GlobalSearchActivity extends Activity implements GlobalServices, Ch
 
     private void runProgressBar() {
         progress = new ProgressDialog(this);
-        progress.setMessage(getResources().getString(R.string.searching));
+        progress.setMessage(getString(R.string.searching));
         progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progress.setMax(playlistService.sizeOfActivePlaylist());
         progress.setProgress(0);
@@ -95,8 +115,8 @@ public class GlobalSearchActivity extends Activity implements GlobalServices, Ch
 
     public void showSearchResults() {
         TextView textView = (TextView) findViewById(R.id.globalsearchTextView1);
-        textView.setText(getResources().getString(R.string.resultsfor) + " '" + searchString + "' - " +
-                searchService.sizeOfSearchList() + " " + getResources().getString(R.string.channels));
+        textView.setText(getString(R.string.resultsfor) + " '" + searchString + "' - " +
+                searchService.sizeOfSearchList() + " " + getString(R.string.channels));
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
