@@ -43,6 +43,7 @@ import java.util.concurrent.TimeUnit;
 import atua.anddev.globaltv.runnables.SaveGuideRunnable;
 
 import static atua.anddev.globaltv.service.GuideService.guideProvList;
+import static atua.anddev.globaltv.service.LogoService.logoList;
 import static java.util.Arrays.asList;
 
 public class MainActivity extends Activity implements GlobalServices {
@@ -72,6 +73,9 @@ public class MainActivity extends Activity implements GlobalServices {
 
         if (guideProvList.size() == 0)
             guideService.setupGuideProvList();
+
+        if (logoList.size() == 0)
+            logoService.setupLogos();
 
         if (!Global.guideLoaded) {
             Thread checkGuideUpdateThread = new Thread(checkGuideForUpdate);
@@ -252,7 +256,7 @@ public class MainActivity extends Activity implements GlobalServices {
 
     private void setupProviderView() {
         Spinner spinnerView = (Spinner) findViewById(R.id.mainSpinner1);
-        provAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1,
+        provAdapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1,
                 playlistService.activePlaylistName);
 
         spinnerView.setAdapter(provAdapter);

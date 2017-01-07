@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import atua.anddev.globaltv.Global;
@@ -18,6 +20,7 @@ import atua.anddev.globaltv.entity.Favorites;
 
 import static atua.anddev.globaltv.GlobalServices.favoriteService;
 import static atua.anddev.globaltv.GlobalServices.guideService;
+import static atua.anddev.globaltv.GlobalServices.logoService;
 
 public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdapter.ViewHolder> {
     private Activity activity;
@@ -73,6 +76,11 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
         } else {
             holder.favoriteView.setImageResource(R.drawable.favorite_inactive);
         }
+        String icon = logoService.getLogoByName(item.getName());
+        if ((icon != null) && !icon.isEmpty()) {
+            Glide.with(activity).load(icon).into(holder.logoView);
+        } else
+            holder.logoView.setImageDrawable(null);
         holder.itemView.setTag(item);
     }
 
