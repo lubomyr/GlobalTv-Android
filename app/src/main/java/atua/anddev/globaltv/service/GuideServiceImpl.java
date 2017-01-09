@@ -163,16 +163,8 @@ public class GuideServiceImpl implements GuideService {
                     dateList.add(programme.getStart());
                 }
             }
-            String startDateStr = dateList.get(0);
-            String endDateStr = dateList.get(dateList.size() - 1);
-            Calendar startDate = Calendar.getInstance();
-            Calendar endDate = Calendar.getInstance();
-            try {
-                startDate.setTime(sdf.parse(startDateStr));
-                endDate.setTime(sdf.parse(endDateStr));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            Calendar startDate = decodeDateTime(dateList.get(0));
+            Calendar endDate = decodeDateTime(dateList.get(dateList.size() - 1));
             result = !(currentTime.after(startDate) && currentTime.before(endDate));
         }
         return result;
@@ -191,19 +183,9 @@ public class GuideServiceImpl implements GuideService {
         String result = null;
         for (Programme programme : programmeList) {
             if (programme.getChannel().equals(id)) {
-                String startDateStr = programme.getStart();
-                String endDateStr = programme.getStop();
-                Calendar startDate = Calendar.getInstance();
-                Calendar endDate = Calendar.getInstance();
-
-                try {
-                    startDate.setTime(sdf.parse(startDateStr));
-                    endDate.setTime(sdf.parse(endDateStr));
-                } catch (ParseException e) {
-                    System.out.println(endDateStr);
-                    e.printStackTrace();
-                }
-                if (currentTime.after(startDate) && currentTime.before(endDate)) {
+                Calendar startTime = decodeDateTime(programme.getStart());
+                Calendar stopTime = decodeDateTime(programme.getStop());
+                if (currentTime.after(startTime) && currentTime.before(stopTime)) {
                     result = programme.getTitle();
                 }
             }
@@ -215,19 +197,9 @@ public class GuideServiceImpl implements GuideService {
         String result = null;
         for (Programme programme : programmeList) {
             if (programme.getChannel().equals(id)) {
-                String startDateStr = programme.getStart();
-                String endDateStr = programme.getStop();
-                Calendar startDate = Calendar.getInstance();
-                Calendar endDate = Calendar.getInstance();
-                try {
-                    if (!startDateStr.isEmpty())
-                        startDate.setTime(sdf.parse(startDateStr));
-                    if (!endDateStr.isEmpty())
-                        endDate.setTime(sdf.parse(endDateStr));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                if (currentTime.after(startDate) && currentTime.before(endDate)) {
+                Calendar startTime = decodeDateTime(programme.getStart());
+                Calendar stopTime = decodeDateTime(programme.getStop());
+                if (currentTime.after(startTime) && currentTime.before(stopTime)) {
                     result = programme.getDesc();
                 }
             }
@@ -241,18 +213,9 @@ public class GuideServiceImpl implements GuideService {
         for (Programme programme : programmeList) {
             if (programme.getChannel().equals(id)) {
                 n++;
-                String startDateStr = programme.getStart();
-                String endDateStr = programme.getStop();
-                Calendar startDate = Calendar.getInstance();
-                Calendar endDate = Calendar.getInstance();
-                try {
-                    startDate.setTime(sdf.parse(startDateStr));
-                    endDate.setTime(sdf.parse(endDateStr));
-                } catch (ParseException e) {
-                    System.out.println(endDateStr);
-                    e.printStackTrace();
-                }
-                if (currentTime.after(startDate) && currentTime.before(endDate)) {
+                Calendar startTime = decodeDateTime(programme.getStart());
+                Calendar stopTime = decodeDateTime(programme.getStop());
+                if (currentTime.after(startTime) && currentTime.before(stopTime)) {
                     result = n;
                 }
             }
@@ -291,17 +254,20 @@ public class GuideServiceImpl implements GuideService {
                     dateList.add(programme.getStart());
                 }
             }
-            String startDateStr = dateList.get(0);
-            String endDateStr = dateList.get(dateList.size() - 1);
-            Calendar startDate = Calendar.getInstance();
-            Calendar endDate = Calendar.getInstance();
-            try {
-                startDate.setTime(sdf.parse(startDateStr));
-                endDate.setTime(sdf.parse(endDateStr));
-                result = totalSdf.format(startDate.getTime()) + " - " + totalSdf.format(endDate.getTime());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            Calendar startDate = decodeDateTime(dateList.get(0));
+            Calendar endDate = decodeDateTime(dateList.get(dateList.size() - 1));
+            result = totalSdf.format(startDate.getTime()) + " - " + totalSdf.format(endDate.getTime());
+        }
+        return result;
+    }
+
+    private Calendar decodeDateTime(String str) {
+        Calendar result = Calendar.getInstance();
+        try {
+            if (!str.isEmpty())
+                result.setTime(sdf.parse(str));
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
         return result;
     }
