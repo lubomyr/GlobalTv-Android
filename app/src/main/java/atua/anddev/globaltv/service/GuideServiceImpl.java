@@ -24,18 +24,14 @@ import atua.anddev.globaltv.entity.ChannelGuide;
 import atua.anddev.globaltv.entity.GuideProv;
 import atua.anddev.globaltv.entity.Programme;
 
-@SuppressLint("SimpleDateFormat")
 public class GuideServiceImpl implements GuideService {
-    private static final DateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss Z");
     private String myPath = Global.myPath;
-    private Calendar currentTime;
 
     public boolean checkForUpdate(Context context, int selectedGuideProv) {
         boolean result;
         if (!isGuideExist(selectedGuideProv)) {
             result = true;
         } else {
-            currentTime = Calendar.getInstance();
             parseGuide(context, selectedGuideProv);
             result = checkGuideDates();
         }
@@ -134,21 +130,18 @@ public class GuideServiceImpl implements GuideService {
 
     @Override
     public String getProgramTitle(String chName) {
-        currentTime = Calendar.getInstance();
         String id = getIdByChannelName(chName);
         return getProgramTitlebyId(id);
     }
 
     @Override
     public String getProgramDesc(String chName) {
-        currentTime = Calendar.getInstance();
         String id = getIdByChannelName(chName);
         return getProgramDescbyId(id);
     }
 
     @Override
     public int getProgramPos(String chName) {
-        currentTime = Calendar.getInstance();
         String id = getIdByChannelName(chName);
         return getProgramPositionbyId(id);
     }
@@ -165,6 +158,7 @@ public class GuideServiceImpl implements GuideService {
             }
             Calendar startDate = decodeDateTime(dateList.get(0));
             Calendar endDate = decodeDateTime(dateList.get(dateList.size() - 1));
+            Calendar currentTime = Calendar.getInstance();
             result = !(currentTime.after(startDate) && currentTime.before(endDate));
         }
         return result;
@@ -185,6 +179,7 @@ public class GuideServiceImpl implements GuideService {
             if (programme.getChannel().equals(id)) {
                 Calendar startTime = decodeDateTime(programme.getStart());
                 Calendar stopTime = decodeDateTime(programme.getStop());
+                Calendar currentTime = Calendar.getInstance();
                 if (currentTime.after(startTime) && currentTime.before(stopTime)) {
                     result = programme.getTitle();
                 }
@@ -199,6 +194,7 @@ public class GuideServiceImpl implements GuideService {
             if (programme.getChannel().equals(id)) {
                 Calendar startTime = decodeDateTime(programme.getStart());
                 Calendar stopTime = decodeDateTime(programme.getStop());
+                Calendar currentTime = Calendar.getInstance();
                 if (currentTime.after(startTime) && currentTime.before(stopTime)) {
                     result = programme.getDesc();
                 }
@@ -215,6 +211,7 @@ public class GuideServiceImpl implements GuideService {
                 n++;
                 Calendar startTime = decodeDateTime(programme.getStart());
                 Calendar stopTime = decodeDateTime(programme.getStop());
+                Calendar currentTime = Calendar.getInstance();
                 if (currentTime.after(startTime) && currentTime.before(stopTime)) {
                     result = n;
                 }
@@ -243,6 +240,7 @@ public class GuideServiceImpl implements GuideService {
                 "ttvru.xml.gz"));
     }
 
+    @SuppressLint("SimpleDateFormat")
     public String getTotalTimePeriod() {
         String result = null;
         final DateFormat totalSdf = new SimpleDateFormat("dd.MM");
@@ -261,7 +259,9 @@ public class GuideServiceImpl implements GuideService {
         return result;
     }
 
+    @SuppressLint("SimpleDateFormat")
     private Calendar decodeDateTime(String str) {
+        final DateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss Z");
         Calendar result = Calendar.getInstance();
         try {
             if (!str.isEmpty())
