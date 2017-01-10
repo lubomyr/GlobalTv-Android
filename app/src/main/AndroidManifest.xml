@@ -64,7 +64,7 @@
         <activity
             android:name=".PlayerActivity"
             android:label="Player"
-            android:theme="@android:style/Theme.Holo" />
+            android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" />
 
     </application>
 
