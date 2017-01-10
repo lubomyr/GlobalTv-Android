@@ -52,7 +52,7 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
 
     @Override
     public List<Playlist> getSortedByDatePlaylists() {
-        List<Playlist> sortedList = new ArrayList<Playlist>();
+        List<Playlist> sortedList = new ArrayList<>();
         sortedList.addAll(activePlaylist);
         Collections.sort(sortedList, PlstDateComparator);
         return sortedList;
@@ -298,7 +298,7 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
                     if (chName.startsWith(" ")) {
                         chName = chName.substring(1, chName.length());
                     }
-                    if (chName.charAt(chName.length() - 1) == '\15') {
+                    if ((chName.length() > 0) && (chName.charAt(chName.length() - 1) == '\15')) {
                         chName = chName.substring(0, chName.length() - 1);
                     }
                     chCategory = translate(chCategory);
