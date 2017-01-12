@@ -7,4 +7,5 @@ public class Global {
     public static String translatedNames[];
     public static String torrentKey;
     public static String myPath;
+    static boolean useInternalPlayer;
 }

@@ -3,17 +3,20 @@ package atua.anddev.globaltv;
 import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.widget.MediaController;
 import android.widget.VideoView;
+
+import atua.anddev.globaltv.entity.Channel;
+
+import static atua.anddev.globaltv.GlobalServices.channelService;
 
 public class PlayerActivity extends Activity implements MediaPlayer.OnCompletionListener,
         MediaPlayer.OnInfoListener {
     private MediaController mediaControls;
     private VideoView mVideoView;
-    private Uri uri;
     private Integer position;
+    private Channel channel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +27,8 @@ public class PlayerActivity extends Activity implements MediaPlayer.OnCompletion
             mediaControls = new MediaController(this);
 
         getData();
-        startPlayer();
+        setupPlayer();
+        openChannel();
     }
 
     @Override
@@ -48,24 +52,43 @@ public class PlayerActivity extends Activity implements MediaPlayer.OnCompletion
     @Override
     public void onCompletion(MediaPlayer p1) {
         if (!p1.isPlaying()) {
-            startPlayer();
+            openChannel();
         }
     }
 
     private void getData() {
         Intent intent = getIntent();
-        position = intent.getIntExtra("Position", 0);
-        uri = intent.getParcelableExtra("video");
+        channel = (Channel) intent.getSerializableExtra("channel");
     }
 
-    private void startPlayer() {
+    private void setupPlayer() {
         mVideoView = (VideoView) findViewById(R.id.video);
-        mVideoView.setVideoURI(uri);
         mVideoView.setMediaController(mediaControls);
-        mediaControls.show();
-        mVideoView.start();
-        if ((position != null) && (position != 0))
-            mVideoView.seekTo(position);
         mVideoView.setOnCompletionListener(this);
+    }
+
+    private void openChannel() {
+        if (channel.getProvider().equals("Kineskop.tv"))
+            openWithUpdatedUrl();
+        else {
+            mVideoView.setVideoPath(channel.getUrl());
+            mVideoView.start();
+        }
+    }
+
+    private void openWithUpdatedUrl() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String url = channelService.getUpdatedUrl(channel);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mVideoView.setVideoPath(url);
+                        mVideoView.start();
+                    }
+                });
+            }
+        }).start();
     }
 }

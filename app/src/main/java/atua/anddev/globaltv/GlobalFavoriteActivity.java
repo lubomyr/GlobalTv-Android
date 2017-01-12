@@ -92,7 +92,7 @@ public class GlobalFavoriteActivity extends AppCompatActivity implements GlobalS
         playlistService.readPlaylist(numA);
         for (Channel chn : channelService.getAllChannels()) {
             if (chn.getName().equals(item.getName())) {
-                channelService.openURL(chn.getUrl(), GlobalFavoriteActivity.this);
+                channelService.openChannel(GlobalFavoriteActivity.this, chn);
                 break;
             }
         }

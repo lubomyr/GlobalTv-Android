@@ -58,6 +58,7 @@
     <string name="channel_list">Channel List</string>
     <string name="category_list">Category List</string>
     <string name="logo_icon">Channel Icon</string>
+    <string name="use_external_player">Use External Player</string>
 
     <string-array name="categories_list_orig">
         <item>Музыка</item>

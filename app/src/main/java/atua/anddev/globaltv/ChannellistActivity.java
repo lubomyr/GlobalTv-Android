@@ -90,7 +90,7 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
                 break;
             default:
                 setTick(item);
-                channelService.openURL(item.getUrl(), ChannellistActivity.this);
+                openChannel(item);
                 break;
         }
     }
@@ -235,5 +235,14 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
         mAdapter.setItems(favoriteList);
         mAdapter.notifyDataSetChanged();
         updateInfo();
+    }
+
+    private void openChannel(Channel channel) {
+        if (Global.useInternalPlayer) {
+            Intent intent = new Intent(ChannellistActivity.this, PlayerActivity.class);
+            intent.putExtra("channel", channel);
+            startActivity(intent);
+        } else
+            channelService.openChannel(ChannellistActivity.this, channel);
     }
 }

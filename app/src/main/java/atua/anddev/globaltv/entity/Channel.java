@@ -1,6 +1,11 @@
 package atua.anddev.globaltv.entity;
 
-public class Channel {
+import java.io.Serializable;
+
+public class Channel implements Serializable {
+
+    private static final long serialVersionUID = -361931352168739862L;
+
     private String name;
     private String url;
     private String category;

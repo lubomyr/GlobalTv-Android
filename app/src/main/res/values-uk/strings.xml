@@ -56,6 +56,7 @@
     <string name="no_selected_playlist">Немає обраних плейлистів. Додайте хочаб один</string>
     <string name="channel_list">Список Каналів</string>
     <string name="category_list">Список Категорій</string>
+    <string name="use_external_player">Використ. зовн. плеєр</string>
 
     <string-array name="categories_list_orig">
         <item>Музыка</item>

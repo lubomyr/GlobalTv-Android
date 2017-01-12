@@ -17,6 +17,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -92,6 +94,7 @@ public class MainActivity extends Activity implements GlobalServices {
             addPlaylistDialog();
             needUpdate = true;
         }
+        setupPlayer();
         setupProviderView();
         showLocals();
     }
@@ -198,9 +201,7 @@ public class MainActivity extends Activity implements GlobalServices {
         TextView playlistView = (TextView) findViewById(R.id.mainTextView2);
         playlistView.setText(getString(R.string.playlist));
         TextView autoupdateView = (TextView) findViewById(R.id.mainTextView3);
-        autoupdateView.setText(getString(R.string.autoUpdate));
-        TextView every12hView = (TextView) findViewById(R.id.mainTextView4);
-        every12hView.setText(getString(R.string.every12h));
+        autoupdateView.setText(getString(R.string.use_external_player));
     }
 
     private void showLocals() {
@@ -273,6 +274,16 @@ public class MainActivity extends Activity implements GlobalServices {
             @Override
             public void onNothingSelected(AdapterView<?> p1) {
                 // nothing to do
+            }
+        });
+    }
+
+    private void setupPlayer() {
+        CheckBox useInternalPlayerCb = (CheckBox) findViewById(R.id.mainCheckBox1);
+        useInternalPlayerCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Global.useInternalPlayer = !b;
             }
         });
     }
@@ -547,16 +558,20 @@ public class MainActivity extends Activity implements GlobalServices {
                                 Log.i("GlobalTV", "Error: " + e.toString());
                             }
                             checkPlaylistFile(selectedProvider);
-                            Toast.makeText(MainActivity.this, getString(R.string.playlistupdated,
-                                    playlistService.getActivePlaylistById(num).getName()), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this,
+                                    getString(R.string.playlistupdated,
+                                            playlistService.getActivePlaylistById(num).getName()),
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             } catch (Exception e) {
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(MainActivity.this, getString(R.string.updatefailed,
-                                playlistService.getActivePlaylistById(num).getName()), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this,
+                                getString(R.string.updatefailed,
+                                        playlistService.getActivePlaylistById(num).getName()),
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
                 Log.i("GlobalTV", "Error: " + e.toString());

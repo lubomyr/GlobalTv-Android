@@ -18,5 +18,7 @@ public interface ChannelService {
 
     List<String> getCategoriesList();
 
-    void openURL(final String chURL, final Context context);
+    String getUpdatedUrl(Channel channel);
+
+    void openChannel(Context context, Channel channel);
 }

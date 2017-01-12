@@ -55,7 +55,7 @@ public class GlobalSearchActivity extends AppCompatActivity implements GlobalSer
                 break;
             default:
                 setTick(item);
-                channelService.openURL(item.getUrl(), GlobalSearchActivity.this);
+                channelService.openChannel(GlobalSearchActivity.this, item);
                 break;
         }
     }
