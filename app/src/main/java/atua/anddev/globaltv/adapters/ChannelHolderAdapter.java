@@ -75,7 +75,11 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
         } else {
             holder.favoriteView.setImageResource(R.drawable.favorite_inactive);
         }
-        String icon = logoService.getLogoByName(item.getName());
+        String icon;
+        if ((item.getIcon() != null) && (!item.getIcon().isEmpty()))
+            icon = item.getIcon();
+        else
+            icon = logoService.getLogoByName(item.getName());
         if ((icon != null) && !icon.isEmpty()) {
             Glide.with(activity).load(icon).into(holder.logoView);
         } else
