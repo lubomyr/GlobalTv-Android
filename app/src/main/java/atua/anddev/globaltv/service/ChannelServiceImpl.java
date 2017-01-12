@@ -14,31 +14,31 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     public List<Channel> getAllChannels() {
-        return channel;
+        return channels;
     }
 
     @Override
     public List<String> getCategoriesList() {
         List<String> arr = new ArrayList<>();
-        for (int i = 0; i < channel.size() - 1; i++) {
+        for (int i = 0; i < channels.size() - 1; i++) {
             boolean cat_exist = false;
             for (int j = 0; j <= arr.size() - 1; j++)
-                if (channel.get(i).getCategory().equalsIgnoreCase(arr.get(j)))
+                if (channels.get(i).getCategory().equalsIgnoreCase(arr.get(j)))
                     cat_exist = true;
-            if (!cat_exist && !channel.get(i).getCategory().equals(""))
-                arr.add(channel.get(i).getCategory());
+            if (!cat_exist && !channels.get(i).getCategory().equals(""))
+                arr.add(channels.get(i).getCategory());
         }
         return arr;
     }
 
     @Override
     public void addToChannelList(String name, String url, String category) {
-        channel.add(new Channel(name, url, category));
+        channels.add(new Channel(name, url, category));
     }
 
     @Override
     public void clearAllChannel() {
-        channel.clear();
+        channels.clear();
     }
 
     @Override

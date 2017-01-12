@@ -8,7 +8,7 @@ import java.util.List;
 import atua.anddev.globaltv.entity.Channel;
 
 public interface ChannelService {
-    List<Channel> channel = new ArrayList<>();
+    List<Channel> channels = new ArrayList<>();
 
     void addToChannelList(String name, String url, String category);
 
