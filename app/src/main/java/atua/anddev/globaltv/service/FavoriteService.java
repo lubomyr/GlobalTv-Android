@@ -7,14 +7,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import atua.anddev.globaltv.entity.Favorites;
+import atua.anddev.globaltv.entity.Channel;
 
 public interface FavoriteService {
-    List<Favorites> favorites = new ArrayList<>();
+    List<Channel> favorites = new ArrayList<>();
 
-    void addToFavoriteList(String name, String prov);
+    void addToFavoriteList(Channel channel);
 
-    Favorites getFavoriteById(int id);
+    Channel getFavoriteById(int id);
 
     int sizeOfFavoriteList();
 
@@ -22,11 +22,11 @@ public interface FavoriteService {
 
     void deleteFromFavoritesById(int id);
 
-    void deleteFromFavoritesByNameAndProv(String name, String prov);
+    void deleteFromFavoritesByChannel(Channel channel);
 
-    List<Favorites> getFavoriteList();
+    List<Channel> getFavoriteList();
 
-    int indexOfFavoriteByNameAndProv(String name, String prov);
+    int indexOfFavoriteByChannel(Channel channel);
 
     void saveFavorites(Context context) throws FileNotFoundException, IOException;
 

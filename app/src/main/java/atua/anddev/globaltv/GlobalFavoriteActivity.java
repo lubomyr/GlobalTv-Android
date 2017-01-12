@@ -15,7 +15,6 @@ import java.util.List;
 
 import atua.anddev.globaltv.adapters.ChannelHolderAdapter;
 import atua.anddev.globaltv.entity.Channel;
-import atua.anddev.globaltv.entity.Favorites;
 
 public class GlobalFavoriteActivity extends AppCompatActivity implements GlobalServices,
         ChannelHolderAdapter.OnItemClickListener {
@@ -67,13 +66,7 @@ public class GlobalFavoriteActivity extends AppCompatActivity implements GlobalS
     }
 
     public void showFavorites() {
-        if (favoriteList.size() == 0) {
-            for (Favorites favorite : favoriteService.getFavoriteList()) {
-                Channel channel = new Channel(favorite.getName(), "", "");
-                channel.setProvider(favorite.getProv());
-                favoriteList.add(channel);
-            }
-        }
+        favoriteList = favoriteService.getFavoriteList();
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
@@ -111,7 +104,7 @@ public class GlobalFavoriteActivity extends AppCompatActivity implements GlobalS
     }
 
     private void changeFavorite(Channel item) {
-        favoriteService.deleteFromFavoritesByNameAndProv(item.getName(), item.getProvider());
+        favoriteService.deleteFromFavoritesByChannel(item);
         favoriteList.remove(item);
         try {
             favoriteService.saveFavorites(GlobalFavoriteActivity.this);

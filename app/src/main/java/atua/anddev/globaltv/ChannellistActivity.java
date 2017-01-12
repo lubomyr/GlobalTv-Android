@@ -18,7 +18,6 @@ import java.util.List;
 
 import atua.anddev.globaltv.adapters.ChannelHolderAdapter;
 import atua.anddev.globaltv.entity.Channel;
-import atua.anddev.globaltv.entity.Favorites;
 
 public class ChannellistActivity extends AppCompatActivity implements GlobalServices,
         ChannelHolderAdapter.OnItemClickListener, SearchView.OnQueryTextListener {
@@ -190,8 +189,8 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
     }
 
     private void changeFavorite(Channel item) {
-        if (favoriteService.indexOfFavoriteByNameAndProv(item.getName(), playlistService.getActivePlaylistById(mSelectedProvider).getName()) == -1)
-            favoriteService.addToFavoriteList(item.getName(), playlistService.getActivePlaylistById(mSelectedProvider).getName());
+        if (favoriteService.indexOfFavoriteByChannel(item) == -1)
+            favoriteService.addToFavoriteList(item);
         else
             favoriteService.deleteFromFavoritesById(favoriteService.indexNameForFavorite(item.getName()));
         if (mFavorite)
@@ -225,10 +224,10 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
     private void showFavoriteList() {
         favoriteList.clear();
         List<Channel> list = mSearch ? searchList : channelList;
-        for (Favorites fav : favoriteService.getFavoriteList()) {
+        for (Channel fav : favoriteService.getFavoriteList()) {
             for (Channel chn : list) {
                 if (fav.getName().equals(chn.getName()) && !favoriteList.contains(fav.getName())
-                        && fav.getProv().equals(playlistService.getActivePlaylistById(mSelectedProvider).getName())) {
+                        && fav.getProvider().equals(playlistService.getActivePlaylistById(mSelectedProvider).getName())) {
                     favoriteList.add(chn);
                 }
             }

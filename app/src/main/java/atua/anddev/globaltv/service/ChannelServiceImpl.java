@@ -32,8 +32,8 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
-    public void addToChannelList(String name, String url, String category) {
-        channels.add(new Channel(name, url, category));
+    public void addToChannelList(Channel channel) {
+        channels.add(channel);
     }
 
     @Override

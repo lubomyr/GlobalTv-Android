@@ -16,15 +16,16 @@ import java.io.IOException;
 import java.util.List;
 
 import atua.anddev.globaltv.GlobalServices;
-import atua.anddev.globaltv.entity.Favorites;
+import atua.anddev.globaltv.entity.Channel;
 
 public class FavoriteServiceImpl implements FavoriteService, GlobalServices {
 
     @Override
-    public int indexOfFavoriteByNameAndProv(String name, String prov) {
+    public int indexOfFavoriteByChannel(Channel channel) {
         int result = -1;
         for (int i = 0; i < sizeOfFavoriteList(); i++) {
-            if (name.equals(favorites.get(i).getName()) && prov.equals(favorites.get(i).getProv())) {
+            if (channel.getName().equals(favorites.get(i).getName()) &&
+                    channel.getProvider().equals(favorites.get(i).getProvider())) {
                 result = i;
             }
         }
@@ -32,7 +33,7 @@ public class FavoriteServiceImpl implements FavoriteService, GlobalServices {
     }
 
     @Override
-    public List<Favorites> getFavoriteList() {
+    public List<Channel> getFavoriteList() {
         return favorites;
     }
 
@@ -42,21 +43,22 @@ public class FavoriteServiceImpl implements FavoriteService, GlobalServices {
     }
 
     @Override
-    public void deleteFromFavoritesByNameAndProv(String name, String prov) {
+    public void deleteFromFavoritesByChannel(Channel channel) {
         for (int i = 0; i < sizeOfFavoriteList(); i++) {
-            if (name.equals(getFavoriteById(i).getName()) && prov.equals(getFavoriteById(i).getProv())) {
+            if (channel.getName().equals(getFavoriteById(i).getName()) &&
+                    channel.getProvider().equals(getFavoriteById(i).getProvider())) {
                 favorites.remove(i);
             }
         }
     }
 
     @Override
-    public void addToFavoriteList(String name, String prov) {
-        favorites.add(new Favorites(name, prov));
+    public void addToFavoriteList(Channel channel) {
+        favorites.add(channel);
     }
 
     @Override
-    public Favorites getFavoriteById(int id) {
+    public Channel getFavoriteById(int id) {
         return favorites.get(id);
     }
 
@@ -93,7 +95,7 @@ public class FavoriteServiceImpl implements FavoriteService, GlobalServices {
             serializer.endTag(null, "channel");
 
             serializer.startTag(null, "playlist");
-            serializer.text(getFavoriteById(j).getProv());
+            serializer.text(getFavoriteById(j).getProvider());
             serializer.endTag(null, "playlist");
 
             serializer.endTag(null, "favorites");
@@ -125,7 +127,7 @@ public class FavoriteServiceImpl implements FavoriteService, GlobalServices {
                     if (endTag.equals("playlist"))
                         prov = text;
                     if (endTag.equals("favorites")) {
-                        addToFavoriteList(name, prov);
+                        addToFavoriteList(new Channel(name, null, null, null, prov));
                     }
                 } else if (type == XmlPullParser.TEXT) {
                     text = xpp.getText();

@@ -32,6 +32,7 @@ import java.util.Scanner;
 
 import atua.anddev.globaltv.Global;
 import atua.anddev.globaltv.GlobalServices;
+import atua.anddev.globaltv.entity.Channel;
 import atua.anddev.globaltv.entity.Playlist;
 
 public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
@@ -276,8 +277,9 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
 
     public void readPlaylist(int num) {
         String fname = getActivePlaylistById(num).getFile();
+        String provName = getActivePlaylistById(num).getName();
         int type = getActivePlaylistById(num).getType();
-        String lineStr, chName = "", chCategory = "", chLink = "";
+        String lineStr, chName = "", chCategory = "", chLink = "", chIcon = "";
         String groupName = "", groupName2 = "";
         channelService.clearAllChannel();
         try {
@@ -302,10 +304,12 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
                         chName = chName.substring(0, chName.length() - 1);
                     }
                     chCategory = translate(chCategory);
-                    channelService.addToChannelList(chName, chLink, chCategory);
+                    Channel channel = new Channel(chName, chLink, chCategory, chIcon, provName);
+                    channelService.addToChannelList(channel);
                     chName = "";
                     chCategory = "";
                     chLink = "";
+                    chIcon = "";
                     groupName = "";
                     groupName2 = "";
                 }

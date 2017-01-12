@@ -13,7 +13,6 @@ import java.io.IOException;
 
 import atua.anddev.globaltv.adapters.ChannelHolderAdapter;
 import atua.anddev.globaltv.entity.Channel;
-import atua.anddev.globaltv.entity.Favorites;
 
 public class GlobalSearchActivity extends AppCompatActivity implements GlobalServices,
         ChannelHolderAdapter.OnItemClickListener {
@@ -132,13 +131,13 @@ public class GlobalSearchActivity extends AppCompatActivity implements GlobalSer
 
     private void changeFavorite(Channel item) {
         Boolean changesAllowed = true;
-        for (Favorites fav : favoriteService.getFavoriteList()) {
+        for (Channel fav : favoriteService.getFavoriteList()) {
             if (item.getName().equals(fav.getName())
-                    && item.getProvider().equals(fav.getProv()))
+                    && item.getProvider().equals(fav.getProvider()))
                 changesAllowed = false;
         }
         if (changesAllowed)
-            favoriteService.addToFavoriteList(item.getName(), item.getProvider());
+            favoriteService.addToFavoriteList(item);
         else
             favoriteService.deleteFromFavoritesById(favoriteService.indexNameForFavorite(item.getName()));
         try {
