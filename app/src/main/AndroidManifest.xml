@@ -58,13 +58,18 @@
 
         <activity
             android:name=".GuideActivity"
-            android:label="Program Guide"
+            android:label="@string/program_guide"
             android:theme="@android:style/Theme.Holo" />
 
         <activity
             android:name=".PlayerActivity"
             android:label="Player"
             android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" />
+
+        <activity
+            android:name=".SearchProgramActivity"
+            android:label="@string/search_program"
+            android:theme="@style/ChannelListTheme" />
 
     </application>
 

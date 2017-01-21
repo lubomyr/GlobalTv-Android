@@ -5,6 +5,37 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/channelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:gravity="center_vertical"
+        android:weightSum="1.0"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/chIcon"
+            android:contentDescription="@string/logo_icon"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="0.1" />
+
+        <TextView
+            android:id="@+id/chName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.9"
+            android:layout_marginLeft="10dp"
+            android:textColor="#009ccc"
+            android:textSize="14.0sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"

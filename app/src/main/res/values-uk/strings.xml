@@ -57,6 +57,13 @@
     <string name="channel_list">Список Каналів</string>
     <string name="category_list">Список Категорій</string>
     <string name="use_external_player">Використ. зовн. плеєр</string>
+    <string name="search_channel">Пошук Каналів</string>
+    <string name="search_program">Пошук Програм</string>
+    <string name="program_guide">Програма передач</string>
+    <string name="all_period">Весь період</string>
+    <string name="today">Сьогодні</string>
+    <string name="after_moment">Після поточного моменту</string>
+    <string name="now">Зараз</string>
 
     <string-array name="categories_list_orig">
         <item>Музыка</item>

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-        android:text="Playlist"
+        android:text="@string/playlist"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <Spinner
@@ -62,7 +62,7 @@
             android:layout_marginRight="20dp"
             android:width="140dp"
             android:onClick="downloadButton"
-            android:text="Update Playlist" />
+            android:text="@string/updatePlaylistButton" />
 
     </LinearLayout>
 
@@ -74,79 +74,79 @@
         android:layout_marginTop="15dp"
         android:height="60dp"
         android:onClick="openPlaylist"
-        android:text="Open Playlist" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp"
-        android:text="Global IPTV App"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:text="@string/openPlaylistButton" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="15dp"
+        android:weightSum="1.0"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/mainButton6"
             style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
             android:layout_marginLeft="20dp"
-            android:width="150dp"
             android:onClick="updateAll"
-            android:text="Update Outdated Playlists" />
+            android:text="@string/updateOutdatedPlaylists" />
 
         <Button
             android:id="@+id/mainButton5"
             style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_gravity="right"
+            android:layout_weight="0.5"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:width="150dp"
             android:onClick="globalFavorite"
-            android:text="Favorites" />
+            android:text="@string/favorites" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
+        android:weightSum="1.0"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="15dp"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/mainButton4"
+            android:id="@+id/mainSearchProgram"
             style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
             android:layout_marginLeft="20dp"
-            android:width="150dp"
-            android:onClick="playlistManager"
-            android:text="Playlists Manager" />
+            android:onClick="searchProgram"
+            android:text="@string/search_program" />
 
         <Button
             android:id="@+id/mainButton3"
             style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_gravity="right"
+            android:layout_weight="0.5"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:width="150dp"
             android:onClick="globalSearch"
-            android:text="Global Search" />
+            android:text="@string/search_channel" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/mainButton4"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"
+        android:onClick="playlistManager"
+        android:text="@string/playlistsManager" />
 
     <Spinner
         android:id="@+id/mainSpinner2"

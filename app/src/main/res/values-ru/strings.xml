@@ -56,6 +56,13 @@
     <string name="no_selected_playlist">Нет избранных плейлистов. Добавте хотябы один</string>
     <string name="channel_list">Список Каналов</string>
     <string name="category_list">Список Категорий</string>
+    <string name="search_channel">Поиск Каналов</string>
+    <string name="search_program">Поиск Програм</string>
+    <string name="program_guide">Программа передач</string>
+    <string name="all_period">Весь период</string>
+    <string name="today">Сегодня</string>
+    <string name="after_moment">После</string>
+    <string name="now">Счас</string>
 
     <string-array name="categories_list_orig">
         <item>Europe</item>

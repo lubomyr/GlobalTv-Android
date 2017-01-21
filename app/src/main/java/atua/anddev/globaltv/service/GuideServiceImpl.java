@@ -272,4 +272,63 @@ public class GuideServiceImpl implements GuideService {
         return result;
     }
 
+    public String getChannelNameById(String id) {
+        for (ChannelGuide cg : channelGuideList) {
+            if (id.equals(cg.getId()))
+                return cg.getDisplayName();
+        }
+        return null;
+    }
+
+    public List<Programme> searchAllPeriod(String str) {
+        List<Programme> list = new ArrayList<>();
+        for (Programme p : programmeList) {
+            if (p.getTitle().toLowerCase().contains(str.toLowerCase()))
+                list.add(p);
+        }
+        return list;
+    }
+
+    public List<Programme> searchAfterMoment(String str) {
+        List<Programme> list = new ArrayList<>();
+        for (Programme p : programmeList) {
+            if (p.getTitle().toLowerCase().contains(str.toLowerCase())) {
+                Calendar stopTime = decodeDateTime(p.getStop());
+                Calendar currentTime = Calendar.getInstance();
+                if (currentTime.before(stopTime))
+                    list.add(p);
+            }
+        }
+        return list;
+    }
+
+    public List<Programme> searchToday(String str) {
+        List<Programme> list = new ArrayList<>();
+        for (Programme p : programmeList) {
+            if (p.getTitle().toLowerCase().contains(str.toLowerCase())) {
+                Calendar startTime = decodeDateTime(p.getStart());
+                Calendar stopTime = decodeDateTime(p.getStop());
+                Calendar currentTime = Calendar.getInstance();
+                if ((currentTime.get(Calendar.MONTH) == startTime.get(Calendar.MONTH)) &&
+                        (currentTime.get(Calendar.DAY_OF_MONTH) == startTime.get(Calendar.DAY_OF_MONTH)))
+                    list.add(p);
+            }
+        }
+        return list;
+    }
+
+    public List<Programme> searchCurrentMoment(String str) {
+        List<Programme> list = new ArrayList<>();
+        for (Programme p : programmeList) {
+            if (p.getTitle().toLowerCase().contains(str.toLowerCase())) {
+                Calendar startTime = decodeDateTime(p.getStart());
+                Calendar stopTime = decodeDateTime(p.getStop());
+                Calendar currentTime = Calendar.getInstance();
+                if (currentTime.after(startTime) && currentTime.before(stopTime))
+                    list.add(p);
+            }
+        }
+        return list;
+    }
+
 }

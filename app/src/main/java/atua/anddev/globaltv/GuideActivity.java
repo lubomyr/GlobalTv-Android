@@ -31,7 +31,7 @@ public class GuideActivity extends Activity implements GlobalServices {
         List<Programme> guideList = guideService.getChannelGuide(chName);
 
         ExpandableListView expandableListView = (ExpandableListView) findViewById(R.id.guideList);
-        GuideExpListAdapter adapter = new GuideExpListAdapter(this, guideList);
+        GuideExpListAdapter adapter = new GuideExpListAdapter(this, guideList, false);
         expandableListView.setAdapter(adapter);
         int pos = guideService.getProgramPos(chName);
         int total = guideList.size();

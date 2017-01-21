@@ -191,7 +191,7 @@ public class MainActivity extends Activity implements GlobalServices {
         Button openButton = (Button) findViewById(R.id.mainButton1);
         openButton.setText(getString(R.string.openPlaylistButton));
         Button globalSearchButton = (Button) findViewById(R.id.mainButton3);
-        globalSearchButton.setText(getString(R.string.search));
+        globalSearchButton.setText(getString(R.string.search_channel));
         Button playlistManagerButton = (Button) findViewById(R.id.mainButton4);
         playlistManagerButton.setText(getString(R.string.playlistsManager));
         Button globalFavoriteButton = (Button) findViewById(R.id.mainButton5);
@@ -202,6 +202,8 @@ public class MainActivity extends Activity implements GlobalServices {
         playlistView.setText(getString(R.string.playlist));
         TextView autoupdateView = (TextView) findViewById(R.id.mainTextView3);
         autoupdateView.setText(getString(R.string.use_external_player));
+        Button searchProgramButton = (Button) findViewById(R.id.mainSearchProgram);
+        searchProgramButton.setText(getString(R.string.search_program));
     }
 
     private void showLocals() {
@@ -479,6 +481,11 @@ public class MainActivity extends Activity implements GlobalServices {
 
     public void playerActivity() {
         Intent intent = new Intent(this, PlayerActivity.class);
+        startActivity(intent);
+    }
+
+    public void searchProgram(View view) {
+        Intent intent = new Intent(this, SearchProgramActivity.class);
         startActivity(intent);
     }
 

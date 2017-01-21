@@ -59,6 +59,13 @@
     <string name="category_list">Category List</string>
     <string name="logo_icon">Channel Icon</string>
     <string name="use_external_player">Use External Player</string>
+    <string name="search_channel">Search Channel</string>
+    <string name="search_program">Search Program</string>
+    <string name="program_guide">Program Guide</string>
+    <string name="all_period">All period</string>
+    <string name="today">Today</string>
+    <string name="after_moment">After current moment</string>
+    <string name="now">Now</string>
 
     <string-array name="categories_list_orig">
         <item>Музыка</item>

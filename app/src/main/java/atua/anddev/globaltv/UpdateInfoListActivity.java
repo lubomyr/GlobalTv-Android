@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import atua.anddev.globaltv.adapters.UpdateListAdapter;
 import atua.anddev.globaltv.entity.Playlist;
 
 public class UpdateInfoListActivity extends Activity implements GlobalServices {
@@ -24,8 +25,8 @@ public class UpdateInfoListActivity extends Activity implements GlobalServices {
 
     private void showSortedDateOfPlaylist() {
         List<Playlist> sortedList = playlistService.getSortedByDatePlaylists();
-        List<String> name = new ArrayList<String>();
-        List<String> date = new ArrayList<String>();
+        List<String> name = new ArrayList<>();
+        List<String> date = new ArrayList<>();
 
         for (Playlist plst : sortedList) {
             Long longDate;
@@ -40,7 +41,7 @@ public class UpdateInfoListActivity extends Activity implements GlobalServices {
 
             date.add(daysPassed);
         }
-        final GlobalAdapter adapter = new GlobalAdapter(this, name, date);
+        final UpdateListAdapter adapter = new UpdateListAdapter(this, name, date);
         ListView list = (ListView) findViewById(R.id.sortedPlaylistListView1);
         list.setAdapter(adapter);
     }

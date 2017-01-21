@@ -1,5 +1,6 @@
 package atua.anddev.globaltv.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.Html;
@@ -7,7 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -15,18 +20,19 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-import atua.anddev.globaltv.Global;
-import atua.anddev.globaltv.R;
 import atua.anddev.globaltv.GlobalServices;
+import atua.anddev.globaltv.R;
 import atua.anddev.globaltv.entity.Programme;
 
 public class GuideExpListAdapter extends BaseExpandableListAdapter implements GlobalServices {
     private Context context;
     private List<Programme> itemList;
+    private boolean showChannelName;
 
-    public GuideExpListAdapter(Context context, List<Programme> itemList) {
+    public GuideExpListAdapter(Context context, List<Programme> itemList, boolean showChannelName) {
         this.context = context;
         this.itemList = itemList;
+        this.showChannelName = showChannelName;
     }
 
     @Override
@@ -100,6 +106,20 @@ public class GuideExpListAdapter extends BaseExpandableListAdapter implements Gl
         title = (title != null) ? title : "";
         titleView.setText(Html.fromHtml(title));
         titleView.setTextColor(color);
+        LinearLayout channelLayout = (LinearLayout) view.findViewById(R.id.channelLayout);
+        if (showChannelName) {
+            channelLayout.setVisibility(View.VISIBLE);
+            TextView channelNameView = (TextView) view.findViewById(R.id.chName);
+            String chName = guideService.getChannelNameById(item.getChannel());
+            channelNameView.setText(chName);
+            ImageView iconView = (ImageView) view.findViewById(R.id.chIcon);
+            String icon = logoService.getLogoByName(chName);
+            if ((icon != null) && !icon.isEmpty()) {
+                Glide.with(context).load(icon).into(iconView);
+            } else
+                iconView.setImageDrawable(null);
+        } else
+            channelLayout.setVisibility(View.GONE);
 
         return view;
     }
@@ -118,48 +138,40 @@ public class GuideExpListAdapter extends BaseExpandableListAdapter implements Gl
         this.itemList = itemList;
     }
 
+    @SuppressLint("SimpleDateFormat")
     private String getTimeString(Programme programme) {
-        final DateFormat sdfInput = new SimpleDateFormat("yyyyMMddHHmmss Z");
         final DateFormat sdfStartOutput = new SimpleDateFormat("dd.MM HH:mm");
         final DateFormat sdfEndOutput = new SimpleDateFormat("HH:mm");
-        String startDateInput = programme.getStart();
-        String endDateInput = programme.getStop();
-        Calendar startDate = Calendar.getInstance();
-        Calendar endDate = Calendar.getInstance();
-        try {
-            if (!startDateInput.isEmpty())
-                startDate.setTime(sdfInput.parse(startDateInput));
-            if (!endDateInput.isEmpty())
-                endDate.setTime(sdfInput.parse(endDateInput));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        String timeOutput = sdfStartOutput.format(startDate.getTime()) + " - " + sdfEndOutput.format(endDate.getTime());
+        Calendar startTime = decodeDateTime(programme.getStart());
+        Calendar stopTime = decodeDateTime(programme.getStop());
+        String timeOutput = sdfStartOutput.format(startTime.getTime()) + " - " + sdfEndOutput.format(stopTime.getTime());
         return timeOutput;
     }
 
     private int getColor(Programme programme) {
         int color;
         Calendar currentTime = Calendar.getInstance();
-        final DateFormat sdfInput = new SimpleDateFormat("yyyyMMddHHmmss Z");
-        String startDateInput = programme.getStart();
-        String endDateInput = programme.getStop();
-        Calendar startDate = Calendar.getInstance();
-        Calendar endDate = Calendar.getInstance();
-        try {
-            if (!startDateInput.isEmpty())
-                startDate.setTime(sdfInput.parse(startDateInput));
-            if (!endDateInput.isEmpty())
-                endDate.setTime(sdfInput.parse(endDateInput));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        if (currentTime.after(startDate) && currentTime.before(endDate)) {
+        Calendar startTime = decodeDateTime(programme.getStart());
+        Calendar stopTime = decodeDateTime(programme.getStop());
+        if (currentTime.after(startTime) && currentTime.before(stopTime)) {
             color = Color.WHITE;
         } else {
             color = Color.parseColor("#959595");
         }
         return color;
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private Calendar decodeDateTime(String str) {
+        final DateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss Z");
+        Calendar result = Calendar.getInstance();
+        try {
+            if (!str.isEmpty())
+                result.setTime(sdf.parse(str));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
 }
