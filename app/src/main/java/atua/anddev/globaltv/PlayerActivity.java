@@ -51,7 +51,7 @@ public class PlayerActivity extends Activity implements MediaPlayer.OnCompletion
 
     @Override
     public void onCompletion(MediaPlayer p1) {
-        if (!p1.isPlaying()) {
+        if (!p1.isPlaying() && (p1.getCurrentPosition() != 0)) {
             openChannel();
         }
     }
