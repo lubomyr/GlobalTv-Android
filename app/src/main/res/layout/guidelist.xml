@@ -4,6 +4,48 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:orientation="horizontal"
+        android:weightSum="1.0">
+
+        <ImageView
+            android:id="@+id/logoIcon"
+            android:contentDescription="@string/logo_icon"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="0.2" />
+
+        <TextView
+            android:id="@+id/channelName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6"
+            android:gravity="center_horizontal"
+            android:textColor="#009ccc"
+            android:textSize="24.0sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/favoriteIcon"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="0.1"
+            android:src="@drawable/favorite_inactive" />
+
+        <ImageView
+            android:id="@+id/playIcon"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="0.1"
+            android:src="@drawable/play_inactive" />
+
+    </LinearLayout>
+
     <ExpandableListView
         android:id="@+id/guideList"
         android:layout_width="match_parent"

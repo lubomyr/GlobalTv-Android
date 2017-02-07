@@ -78,6 +78,17 @@ public class FavoriteServiceImpl implements FavoriteService, GlobalServices {
     }
 
     @Override
+    public boolean isChannelFavorite(Channel item) {
+        Boolean result = false;
+        for (Channel fav : getFavoriteList()) {
+            if (item.getName().equals(fav.getName())
+                    && item.getProvider().equals(fav.getProvider()))
+                result = true;
+        }
+        return result;
+    }
+
+    @Override
     public void saveFavorites(Context context) throws FileNotFoundException, IOException {
         FileOutputStream fos;
         fos = context.getApplicationContext().openFileOutput("favorites.xml", Context.MODE_WORLD_WRITEABLE);

@@ -70,7 +70,7 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
         } else {
             holder.playView.setImageResource(R.drawable.play_inactive);
         }
-        if (isChannelFavorite(item)) {
+        if (favoriteService.isChannelFavorite(item)) {
             holder.favoriteView.setImageResource(R.drawable.favorite_active);
         } else {
             holder.favoriteView.setImageResource(R.drawable.favorite_inactive);
@@ -102,16 +102,6 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
 
     public void setSelected(Channel item) {
         this.selectedItem = item;
-    }
-
-    private boolean isChannelFavorite(Channel item) {
-        Boolean result = false;
-        for (Channel fav : favoriteService.getFavoriteList()) {
-            if (item.getName().equals(fav.getName())
-                    && item.getProvider().equals(fav.getProvider()))
-                result = true;
-        }
-        return result;
     }
 
     public interface OnItemClickListener {

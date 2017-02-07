@@ -51,11 +51,11 @@ public class GlobalSearchActivity extends AppCompatActivity implements GlobalSer
                 changeFavorite(item);
                 break;
             case R.id.title:
-                guideActivity(item.getName());
+                guideActivity(item);
                 break;
             default:
                 setTick(item);
-                channelService.openChannel(GlobalSearchActivity.this, item);
+                openChannel(item);
                 break;
         }
     }
@@ -147,9 +147,18 @@ public class GlobalSearchActivity extends AppCompatActivity implements GlobalSer
         mAdapter.notifyDataSetChanged();
     }
 
-    private void guideActivity(String chName) {
+    private void guideActivity(Channel channel) {
         Intent intent = new Intent(this, GuideActivity.class);
-        intent.putExtra("name", chName);
+        intent.putExtra("channel", channel);
         startActivity(intent);
+    }
+
+    private void openChannel(Channel channel) {
+        if (Global.useInternalPlayer) {
+            Intent intent = new Intent(GlobalSearchActivity.this, PlayerActivity.class);
+            intent.putExtra("channel", channel);
+            startActivity(intent);
+        } else
+            channelService.openChannel(GlobalSearchActivity.this, channel);
     }
 }

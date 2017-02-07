@@ -49,7 +49,7 @@ public class GlobalFavoriteActivity extends AppCompatActivity implements GlobalS
                 changeFavorite(item);
                 break;
             case R.id.title:
-                guideActivity(item.getName());
+                guideActivity(item);
                 break;
             default:
                 setTick(item);
@@ -92,7 +92,7 @@ public class GlobalFavoriteActivity extends AppCompatActivity implements GlobalS
         playlistService.readPlaylist(numA);
         for (Channel chn : channelService.getAllChannels()) {
             if (chn.getName().equals(item.getName())) {
-                channelService.openChannel(GlobalFavoriteActivity.this, chn);
+                openChannel(chn);
                 break;
             }
         }
@@ -113,10 +113,19 @@ public class GlobalFavoriteActivity extends AppCompatActivity implements GlobalS
         mAdapter.notifyDataSetChanged();
     }
 
-    private void guideActivity(String chName) {
+    private void guideActivity(Channel channel) {
         Intent intent = new Intent(this, GuideActivity.class);
-        intent.putExtra("name", chName);
+        intent.putExtra("channel", channel);
         startActivity(intent);
+    }
+
+    private void openChannel(Channel channel) {
+        if (Global.useInternalPlayer) {
+            Intent intent = new Intent(GlobalFavoriteActivity.this, PlayerActivity.class);
+            intent.putExtra("channel", channel);
+            startActivity(intent);
+        } else
+            channelService.openChannel(GlobalFavoriteActivity.this, channel);
     }
 
 }

@@ -86,7 +86,7 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
                 changeFavorite(item);
                 break;
             case R.id.title:
-                guideActivity(item.getName());
+                guideActivity(item);
                 break;
             default:
                 setTick(item);
@@ -203,9 +203,9 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
         updateInfo();
     }
 
-    private void guideActivity(String chName) {
+    private void guideActivity(Channel channel) {
         Intent intent = new Intent(this, GuideActivity.class);
-        intent.putExtra("name", chName);
+        intent.putExtra("channel", channel);
         startActivity(intent);
     }
 

@@ -28,6 +28,8 @@ public interface FavoriteService {
 
     int indexOfFavoriteByChannel(Channel channel);
 
+    boolean isChannelFavorite(Channel item);
+
     void saveFavorites(Context context) throws FileNotFoundException, IOException;
 
     void loadFavorites(Context context) throws IOException;
