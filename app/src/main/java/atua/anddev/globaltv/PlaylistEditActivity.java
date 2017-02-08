@@ -68,8 +68,9 @@ public class PlaylistEditActivity extends Activity implements GlobalServices {
         ArrayList<String> typeList = new ArrayList<String>();
         typeList.add(getString(R.string.standardplaylist));
         typeList.add(getString(R.string.torrenttvplaylist));
+        typeList.add(getString(R.string.w3u_playlist));
         Spinner spinnerView = (Spinner) findViewById(R.id.playlisteditSpinner1);
-        SpinnerAdapter adapter = new ArrayAdapter<String>(this,
+        SpinnerAdapter adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_expandable_list_item_1, typeList);
         spinnerView.setAdapter(adapter);
 

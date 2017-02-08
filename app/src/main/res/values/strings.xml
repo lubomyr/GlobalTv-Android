@@ -42,6 +42,7 @@
     <string name="type">Type</string>
     <string name="standardplaylist">Standard playlist</string>
     <string name="torrenttvplaylist">TorrentTV playlist</string>
+    <string name="w3u_playlist">w3u playlist</string>
     <string name="selected">Selected</string>
     <string name="offered">Offered</string>
     <string name="pleasefillallfields">Please fill all fields</string>

@@ -42,6 +42,7 @@
     <string name="type">Тип</string>
     <string name="standardplaylist">Стандартный плейлист</string>
     <string name="torrenttvplaylist">TorrentTV плейлист</string>
+    <string name="w3u_playlist">w3u плейлист</string>
     <string name="selected">Избранные</string>
     <string name="offered">Предлагаемые</string>
     <string name="pleasefillallfields">Заполните все поля</string>
