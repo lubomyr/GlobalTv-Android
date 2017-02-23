@@ -282,9 +282,11 @@ public class GuideServiceImpl implements GuideService {
 
     public List<Programme> searchAllPeriod(String str) {
         List<Programme> list = new ArrayList<>();
-        for (Programme p : programmeList) {
-            if (p.getTitle().toLowerCase().contains(str.toLowerCase()))
-                list.add(p);
+        if (str != null) {
+            for (Programme p : programmeList) {
+                if (p.getTitle().toLowerCase().contains(str.toLowerCase()))
+                    list.add(p);
+            }
         }
         return list;
     }

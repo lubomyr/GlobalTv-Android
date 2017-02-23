@@ -22,10 +22,7 @@ public class SearchProgramActivity extends AppCompatActivity implements GlobalSe
         SearchView.OnQueryTextListener {
     private GuideExpListAdapter mAdapter;
     private int searchType;
-    private final int ALL_PERIOD = 0;
-    private final int TODAY = 1;
-    private final int AFTER = 2;
-    private final int NOW = 3;
+    private String searchStr;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +44,7 @@ public class SearchProgramActivity extends AppCompatActivity implements GlobalSe
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        searchStr = query;
         searchProgram(query);
         return true;
     }
@@ -98,6 +96,7 @@ public class SearchProgramActivity extends AppCompatActivity implements GlobalSe
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 searchType = i;
+                searchProgram(searchStr);
             }
 
             @Override
@@ -115,6 +114,11 @@ public class SearchProgramActivity extends AppCompatActivity implements GlobalSe
 
     private void searchProgram(String searchStr) {
         List<Programme> programmeList = null;
+        final int ALL_PERIOD = 0;
+        final int TODAY      = 1;
+        final int AFTER      = 2;
+        final int NOW        = 3;
+
         switch (searchType) {
             case ALL_PERIOD:
                 programmeList = guideService.searchAllPeriod(searchStr);
