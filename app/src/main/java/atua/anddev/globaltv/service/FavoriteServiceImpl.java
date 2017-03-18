@@ -91,7 +91,7 @@ public class FavoriteServiceImpl implements FavoriteService, GlobalServices {
     @Override
     public void saveFavorites(Context context) throws FileNotFoundException, IOException {
         FileOutputStream fos;
-        fos = context.getApplicationContext().openFileOutput("favorites.xml", Context.MODE_WORLD_WRITEABLE);
+        fos = context.getApplicationContext().openFileOutput("favorites.xml", Context.MODE_PRIVATE);
         XmlSerializer serializer = Xml.newSerializer();
         serializer.setOutput(fos, "UTF-8");
         serializer.startDocument(null, true);

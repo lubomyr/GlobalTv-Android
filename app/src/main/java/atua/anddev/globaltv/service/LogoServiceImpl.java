@@ -48,7 +48,7 @@ public class LogoServiceImpl implements LogoService {
         @Override
         protected String doInBackground(Void... params) {
             try {
-                URL url = new URL("https://dl.dropboxusercontent.com/u/47797448/playlist/icons.json");
+                URL url = new URL("http://anddev.at.ua/globaltv/icons.json");
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");

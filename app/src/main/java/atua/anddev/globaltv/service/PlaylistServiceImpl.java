@@ -171,7 +171,7 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
     @Override
     public void saveData(Context context) throws FileNotFoundException, IOException {
         FileOutputStream fos;
-        fos = context.getApplicationContext().openFileOutput("userdata.xml", Context.MODE_WORLD_WRITEABLE);
+        fos = context.getApplicationContext().openFileOutput("userdata.xml", Context.MODE_PRIVATE);
         XmlSerializer serializer = Xml.newSerializer();
         serializer.setOutput(fos, "UTF-8");
         serializer.startDocument(null, true);
@@ -411,7 +411,7 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
         @Override
         protected String doInBackground(Void... params) {
             try {
-                URL url = new URL("https://dl.dropboxusercontent.com/u/47797448/playlist/playlists.json");
+                URL url = new URL("http://anddev.at.ua/globaltv/playlists.json");
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
