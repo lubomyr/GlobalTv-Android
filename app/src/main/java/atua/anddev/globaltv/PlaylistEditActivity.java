@@ -128,7 +128,7 @@ public class PlaylistEditActivity extends Activity implements GlobalServices {
                 }
             }
         }
-        if (editAction.equals("add")) {
+        if (editAction.equals("addNew")) {
             if (name.toString().length() == 0 || url.toString().length() == 0) {
                 Toast.makeText(PlaylistEditActivity.this,
                         getString(R.string.pleasefillallfields), Toast.LENGTH_SHORT).show();
