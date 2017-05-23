@@ -56,6 +56,7 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
     public void deleteActivePlaylistById(int id) {
         List<Playlist> list = PlaylistRepository.getAll();
         Playlist playlist = list.get(id);
+        activePlaylistName.remove(playlist.getName());
         PlaylistRepository.delete(playlist);
     }
 
@@ -79,6 +80,7 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
         playlist.setUrl(url);
         playlist.setType(type);
         PlaylistRepository.update(playlist);
+        activePlaylistName.set(id, name);
     }
 
     @Override
