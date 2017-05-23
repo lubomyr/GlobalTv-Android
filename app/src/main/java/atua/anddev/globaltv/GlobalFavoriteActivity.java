@@ -7,9 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +64,7 @@ public class GlobalFavoriteActivity extends AppCompatActivity implements GlobalS
     }
 
     public void showFavorites() {
-        favoriteList = favoriteService.getFavoriteList();
+        favoriteList = favoriteService.getAllFavorites();
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
@@ -83,19 +81,9 @@ public class GlobalFavoriteActivity extends AppCompatActivity implements GlobalS
     }
 
     private void openFavorite(Channel item) {
-        String getProvName = item.getProvider();
-        int numA = playlistService.indexNameForActivePlaylist(getProvName);
-        if (numA == -1) {
-            Toast.makeText(GlobalFavoriteActivity.this, getString(R.string.playlistnotexist), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        playlistService.readPlaylist(numA);
-        for (Channel chn : channelService.getAllChannels()) {
-            if (chn.getName().equals(item.getName())) {
-                openChannel(chn);
-                break;
-            }
-        }
+        String url = channelService.getUrlByChannel(item);
+        item.setUrl(url);
+        openChannel(item);
     }
 
     private void setTick(Channel channel) {
@@ -106,10 +94,6 @@ public class GlobalFavoriteActivity extends AppCompatActivity implements GlobalS
     private void changeFavorite(Channel item) {
         favoriteService.deleteFromFavoritesByChannel(item);
         favoriteList.remove(item);
-        try {
-            favoriteService.saveFavorites(GlobalFavoriteActivity.this);
-        } catch (IOException ignored) {
-        }
         mAdapter.notifyDataSetChanged();
     }
 
@@ -121,11 +105,10 @@ public class GlobalFavoriteActivity extends AppCompatActivity implements GlobalS
 
     private void openChannel(Channel channel) {
         if (Global.useInternalPlayer) {
-            Intent intent = new Intent(GlobalFavoriteActivity.this, PlayerActivity.class);
+            Intent intent = new Intent(this, PlayerActivity.class);
             intent.putExtra("channel", channel);
             startActivity(intent);
         } else
-            channelService.openChannel(GlobalFavoriteActivity.this, channel);
+            channelService.openChannel(this, channel);
     }
-
 }

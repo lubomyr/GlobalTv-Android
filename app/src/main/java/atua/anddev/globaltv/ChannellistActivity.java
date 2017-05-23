@@ -12,7 +12,6 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +30,6 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
     private List<Channel> favoriteList;
     private List<Channel> searchList;
 
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -48,51 +46,10 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
     }
 
     @Override
-    public boolean onOptionsItemSelected(android.view.MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-            case R.id.action_favorites:
-                mFavorite = !mFavorite;
-                if (mFavorite) {
-                    item.setIcon(R.drawable.favorite_inactive);
-                    showFavoriteList();
-                } else {
-                    item.setIcon(R.drawable.favorite_active);
-                    if (mSearch)
-                        searchChannel(mSearchString);
-                    else {
-                        mAdapter.setItems(channelList);
-                        mAdapter.notifyDataSetChanged();
-                    }
-                }
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.search_menu, menu);
         return true;
-    }
-
-    @Override
-    public void onItemClick(Channel item, int viewId) {
-        switch (viewId) {
-            case R.id.favoriteIcon:
-                changeFavorite(item);
-                break;
-            case R.id.title:
-                guideActivity(item);
-                break;
-            default:
-                setTick(item);
-                openChannel(item);
-                break;
-        }
     }
 
     @Override
@@ -138,10 +95,30 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
         return false;
     }
 
-    private void getData() {
-        Intent intent = getIntent();
-        mSelectedCategory = intent.getStringExtra("category");
-        mSelectedProvider = intent.getIntExtra("provider", -1);
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.action_favorites:
+                mFavorite = !mFavorite;
+                if (mFavorite) {
+                    item.setIcon(R.drawable.favorite_inactive);
+                    showFavoriteList();
+                } else {
+                    item.setIcon(R.drawable.favorite_active);
+                    if (mSearch)
+                        searchChannel(mSearchString);
+                    else {
+                        mAdapter.setItems(channelList);
+                        mAdapter.notifyDataSetChanged();
+                        updateInfo();
+                    }
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupActionBar() {
@@ -151,16 +128,16 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
         }
     }
 
+    private void getData() {
+        Intent intent = getIntent();
+        mSelectedCategory = intent.getStringExtra("category");
+        mSelectedProvider = intent.getIntExtra("provider", -1);
+    }
+
     private void openCategory(final String catName) {
-        if (channelList.size() == 0) {
-            for (Channel chn : channelService.getAllChannels()) {
-                chn.setProvider(playlistService.getActivePlaylistById(mSelectedProvider).getName());
-                if (catName.equals(getString(R.string.all)))
-                    channelList.add(chn);
-                else if (catName.equals(chn.getCategory()))
-                    channelList.add(chn);
-            }
-        }
+        String plname = playlistService.getActivePlaylistById(mSelectedProvider).getName();
+        channelList = catName.equals(getString(R.string.all)) ?
+                channelService.getChannelsByPlist(plname) : channelService.getChannelsByCategory(plname, catName);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
@@ -170,20 +147,24 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
         updateInfo();
     }
 
-    private void updateInfo() {
-        TextView textView = (TextView) findViewById(R.id.playlistTextView1);
-        StringBuilder str = new StringBuilder(mSelectedCategory);
-        if (mFavorite)
-            str.append(" : ").append(getString(R.string.favorites));
-        if (mSearch)
-            str.append(" : ").append(getString(R.string.search));
-        str.append(" - ").append(mAdapter.getItemCount());
-        str.append(" ").append(getString(R.string.channels));
-        textView.setText(str.toString());
+    @Override
+    public void onItemClick(Channel item, int viewId) {
+        switch (viewId) {
+            case R.id.favoriteIcon:
+                changeFavorite(item);
+                break;
+            case R.id.title:
+                guideActivity(item);
+                break;
+            default:
+                setTick(item);
+                openChannel(item);
+                break;
+        }
     }
 
-    private void setTick(Channel channel) {
-        mAdapter.setSelected(channel);
+    private void setTick(Channel item) {
+        mAdapter.setSelected(item);
         mAdapter.notifyDataSetChanged();
         updateInfo();
     }
@@ -195,12 +176,20 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
             favoriteService.deleteFromFavoritesById(favoriteService.indexNameForFavorite(item.getName()));
         if (mFavorite)
             favoriteList.remove(item);
-        try {
-            favoriteService.saveFavorites(ChannellistActivity.this);
-        } catch (IOException ignored) {
-        }
         mAdapter.notifyDataSetChanged();
         updateInfo();
+    }
+
+    private void updateInfo() {
+        TextView textView = (TextView) findViewById(R.id.playlistTextView1);
+        StringBuilder str = new StringBuilder(channelService.translate(mSelectedCategory));
+        if (mFavorite)
+            str.append(" : ").append(getString(R.string.favorites));
+        if (mSearch)
+            str.append(" : ").append(getString(R.string.search));
+        str.append(" - ").append(mAdapter.getItemCount());
+        str.append(" ").append(getString(R.string.channels));
+        textView.setText(str.toString());
     }
 
     private void guideActivity(Channel channel) {
@@ -224,7 +213,7 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
     private void showFavoriteList() {
         favoriteList.clear();
         List<Channel> list = mSearch ? searchList : channelList;
-        for (Channel fav : favoriteService.getFavoriteList()) {
+        for (Channel fav : favoriteService.getAllFavorites()) {
             for (Channel chn : list) {
                 if (fav.getName().equals(chn.getName()) && !favoriteList.contains(fav.getName())
                         && fav.getProvider().equals(playlistService.getActivePlaylistById(mSelectedProvider).getName())) {
@@ -239,10 +228,10 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
 
     private void openChannel(Channel channel) {
         if (Global.useInternalPlayer) {
-            Intent intent = new Intent(ChannellistActivity.this, PlayerActivity.class);
+            Intent intent = new Intent(this, PlayerActivity.class);
             intent.putExtra("channel", channel);
             startActivity(intent);
         } else
-            channelService.openChannel(ChannellistActivity.this, channel);
+            channelService.openChannel(this, channel);
     }
 }

@@ -27,7 +27,6 @@ public class UpdateInfoListActivity extends Activity implements GlobalServices {
         List<Playlist> sortedList = playlistService.getSortedByDatePlaylists();
         List<String> name = new ArrayList<>();
         List<String> date = new ArrayList<>();
-
         for (Playlist plst : sortedList) {
             Long longDate;
             String daysPassed;
@@ -38,7 +37,6 @@ public class UpdateInfoListActivity extends Activity implements GlobalServices {
             } catch (Exception e) {
                 daysPassed = getString(R.string.playlistnotexist);
             }
-
             date.add(daysPassed);
         }
         final UpdateListAdapter adapter = new UpdateListAdapter(this, name, date);
@@ -48,11 +46,11 @@ public class UpdateInfoListActivity extends Activity implements GlobalServices {
 
     private String getDiffDays(long inputDate) {
         String tmpText;
-        long currDate = new Date().getTime();
-        long resDate = currDate - inputDate;
+        long currDate = (new Date()).getTime();
+        long diffDate = currDate - inputDate;
         Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(resDate);
-        int daysPassed = cal.get(Calendar.DAY_OF_YEAR);
+        cal.setTimeInMillis(diffDate);
+        int daysPassed = cal.get(Calendar.DATE);
         switch (daysPassed) {
             case 1:
                 DateFormat format = DateFormat.getDateTimeInstance();
@@ -72,5 +70,4 @@ public class UpdateInfoListActivity extends Activity implements GlobalServices {
         }
         return tmpText;
     }
-
 }

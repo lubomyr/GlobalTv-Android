@@ -1,20 +1,13 @@
 package atua.anddev.globaltv.service;
 
-import android.content.Context;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import atua.anddev.globaltv.entity.Playlist;
 
 public interface PlaylistService {
-    List<Playlist> activePlaylist = new ArrayList<>();
     List<Playlist> offeredPlaylist = new ArrayList<>();
     List<String> activePlaylistName = new ArrayList<>();
-
-    List<Playlist> getSortedByDatePlaylists();
 
     void addToActivePlaylist(String name, String url, int type, String md5, String update);
 
@@ -32,6 +25,8 @@ public interface PlaylistService {
 
     int sizeOfOfferedPlaylist();
 
+    List<String> getAllNamesOfActivePlaylist();
+
     List<String> getAllNamesOfOfferedPlaylist();
 
     int indexNameForActivePlaylist(String name);
@@ -44,9 +39,9 @@ public interface PlaylistService {
 
     void setUpdateDate(int id, Long update);
 
-    void saveData(Context context) throws FileNotFoundException, IOException;
+    void setupProvider();
 
-    void setupProvider(String opt, Context context);
+    List<Playlist> getSortedByDatePlaylists();
 
     void readPlaylist(int num);
 

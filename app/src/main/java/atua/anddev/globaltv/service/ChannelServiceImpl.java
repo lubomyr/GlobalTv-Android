@@ -13,40 +13,79 @@ import atua.anddev.globaltv.Global;
 import atua.anddev.globaltv.MainActivity;
 import atua.anddev.globaltv.entity.Channel;
 import atua.anddev.globaltv.entity.Playlist;
+import atua.anddev.globaltv.repository.ChannelDb;
 
 import static atua.anddev.globaltv.GlobalServices.playlistService;
 
 public class ChannelServiceImpl implements ChannelService {
+    private ChannelDb channelDb = MainActivity.channelDb;
 
     @Override
-    public List<Channel> getAllChannels() {
-        return channels;
+    public String getCategoryById(String name, int id) {
+        return getCategoriesList(name).get(id);
     }
 
     @Override
-    public List<String> getCategoriesList() {
-        List<String> arr = new ArrayList<>();
-        for (int i = 0; i < channels.size() - 1; i++) {
-            boolean cat_exist = false;
-            for (int j = 0; j <= arr.size() - 1; j++)
-                if (channels.get(i).getCategory().equalsIgnoreCase(arr.get(j)))
-                    cat_exist = true;
-            if (!cat_exist && !channels.get(i).getCategory().equals(""))
-                arr.add(channels.get(i).getCategory());
+    public String getUrlByChannel(Channel channel) {
+        return channelDb.getChannelsUrlByPlistAndName(channel.getProvider(), channel.getName());
+    }
+
+    @Override
+    public List<Channel> getChannelsByCategory(String plname, String catname) {
+        return channelDb.getChannelsByCategory(plname, catname);
+    }
+
+    @Override
+    public void insertAllChannels(List<Channel> channels) {
+        channelDb.insertAllChannels(channels);
+    }
+
+    @Override
+    public void deleteChannelbyPlist(String plist) {
+        channelDb.deleteChannelbyPlist(plist);
+    }
+
+    @Override
+    public List<Channel> getChannelsByPlist(String name) {
+        return channelDb.getChannelsByPlist(name);
+    }
+
+    @Override
+    public int getCategoriesNumber(String name) {
+        return getCategoriesList(name).size();
+    }
+
+    @Override
+    public List<String> getCategoriesList(String name) {
+        return channelDb.getCategoriesList(name);
+    }
+
+    @Override
+    public List<String> getTranslatedCategoriesList(String name) {
+        List<String> res = new ArrayList<>();
+        List<String> catList = channelDb.getCategoriesList(name);
+        for (String str : catList) {
+            res.add(translate(str));
         }
-        return arr;
+        return res;
     }
 
     @Override
-    public void addToChannelList(Channel channel) {
-        channels.add(channel);
+    public Channel getChannelById(int id) {
+        List<Integer> idList = channelDb.getAllChannelId();
+        int iddb = idList.get(id);
+        return channelDb.getChannelById(iddb);
     }
 
     @Override
     public void clearAllChannel() {
-        channels.clear();
+        channelDb.deleteAllChannels();
     }
 
+    @Override
+    public int sizeOfChannelList() {
+        return channelDb.numberOfRows();
+    }
 
     @Override
     public void openChannel(final Context context, final Channel channel) {
@@ -63,16 +102,19 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     private void openURL(final Context context, final String chURL) {
-        try {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(chURL));
-            browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            if (chURL.startsWith("http"))
-                browserIntent.setDataAndType(Uri.parse(chURL.trim()), "video/*");
-            context.startActivity(browserIntent);
-        } catch (Exception e) {
-            Log.i("GlobalTv", "Error: " + e.toString());
-        }
-
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(chURL));
+                    browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    if (chURL.startsWith("http"))
+                        browserIntent.setDataAndType(Uri.parse(chURL.trim()), "video/*");
+                    context.getApplicationContext().startActivity(browserIntent);
+                } catch (Exception e) {
+                    Log.i("SDL", "Error: " + e.toString());
+                }
+            }
+        }).start();
     }
 
     public String getUpdatedUrl(Channel channel) {
@@ -85,14 +127,21 @@ public class ChannelServiceImpl implements ChannelService {
             e.printStackTrace();
         }
         playlistService.readPlaylist(provId);
-        return getChannelsUrl(channel);
+        return getUrlByChannel(channel);
     }
 
-    private String getChannelsUrl(Channel channel) {
-        for (Channel chn : channels) {
-            if (channel.getName().equals(chn.getName()))
-                return chn.getUrl();
+    public String translate(String input) {
+        String output;
+        output = input;
+
+        if (Global.origNames.length > 0) {
+            for (int i = 0; i < Global.origNames.length; i++) {
+                if (Global.origNames[i].equalsIgnoreCase(input)) {
+                    output = Global.translatedNames[i];
+                    break;
+                }
+            }
         }
-        return null;
+        return output;
     }
 }

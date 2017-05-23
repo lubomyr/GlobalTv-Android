@@ -8,7 +8,6 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -24,26 +23,13 @@ import atua.anddev.globaltv.entity.ChannelGuide;
 import atua.anddev.globaltv.entity.GuideProv;
 import atua.anddev.globaltv.entity.Programme;
 
+import static atua.anddev.globaltv.MainActivity.channelGuideDb;
+import static atua.anddev.globaltv.MainActivity.programmeDb;
+
 public class GuideServiceImpl implements GuideService {
-    private String myPath = Global.myPath;
 
     public boolean checkForUpdate(Context context, int selectedGuideProv) {
-        boolean result;
-        if (!isGuideExist(selectedGuideProv)) {
-            result = true;
-        } else {
-            parseGuide(context, selectedGuideProv);
-            result = checkGuideDates();
-        }
-        return result;
-    }
-
-    private boolean isGuideExist(int selectedGuideProv) {
-        boolean result;
-        GuideProv guideProv = guideProvList.get(selectedGuideProv);
-        File file = new File(myPath + "/" +guideProv.getFile());
-        result = file.exists();
-        return result;
+        return checkGuideDates();
     }
 
     public void parseGuide(Context context, int selectedGuideProv) {
@@ -51,8 +37,8 @@ public class GuideServiceImpl implements GuideService {
         String dispName = null, id = null, start = null, stop = null, channel = null;
         String endTag, text = null, title = null, desc = null, category = null;
         Global.guideLoaded = false;
-        channelGuideList.clear();
-        programmeList.clear();
+        List<ChannelGuide> channelGuideList = new ArrayList<>();
+        List<Programme> programmeList = new ArrayList<>();
         try {
             XmlPullParser xpp;
             XmlPullParserFactory xppf = XmlPullParserFactory.newInstance();
@@ -62,8 +48,6 @@ public class GuideServiceImpl implements GuideService {
             FileInputStream fis = context.getApplicationContext().openFileInput(guideProv.getFile());
             GZIPInputStream gzipIs = new GZIPInputStream(fis);
             xpp.setInput(gzipIs, null);
-
-            String tmp = "";
             while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
                 switch (xpp.getEventType()) {
                     case XmlPullParser.START_DOCUMENT:
@@ -71,7 +55,7 @@ public class GuideServiceImpl implements GuideService {
 
                     case XmlPullParser.START_TAG:
                         for (int i = 0; i < xpp.getAttributeCount(); i++) {
-                            tmp = xpp.getAttributeName(i);
+                            String tmp = xpp.getAttributeName(i);
                             if (tmp.equals("id"))
                                 id = xpp.getAttributeValue(i);
                             if (tmp.equals("start"))
@@ -120,9 +104,13 @@ public class GuideServiceImpl implements GuideService {
                 }
                 xpp.next();
             }
+            channelGuideDb.deleteAll();
+            programmeDb.deleteAll();
+            channelGuideDb.insertAll(channelGuideList);
+            programmeDb.insertAll(programmeList);
         } catch (XmlPullParserException | IOException e) {
             e.printStackTrace();
-            Log.d("globaltv", "parsing error "+e.getMessage());
+            Log.d("globaltv", "parsing error " + e.getMessage());
         }
         Log.d("globaltv", "parsing finished");
         Global.guideLoaded = true;
@@ -146,20 +134,86 @@ public class GuideServiceImpl implements GuideService {
         return getProgramPositionbyId(id);
     }
 
-    private boolean checkGuideDates() {
-        boolean result = false;
-        List<String> dateList = new ArrayList<>();
-        if (channelGuideList.size() > 0) {
-            String chId = channelGuideList.get(0).getId();
-            for (Programme programme : programmeList) {
-                if (programme.getChannel().equals(chId)) {
-                    dateList.add(programme.getStart());
-                }
+    @Override
+    public int channelGuideListSize() {
+        return channelGuideList.size();
+    }
+
+    @Override
+    public void addAllChannelGuideList() {
+        channelGuideList.addAll(channelGuideDb.getAll());
+    }
+
+    @Override
+    public String getNameOfChannelById(String id) {
+        for (ChannelGuide cg : channelGuideList) {
+            if (id.equals(cg.getId()))
+                return cg.getDisplayName();
+        }
+        return null;
+    }
+
+    @Override
+    public List<Programme> getProgramsByStringForFullPeriod(String search) {
+        return programmeDb.getProgramsByNameFullPeriod(search);
+    }
+
+    @Override
+    public List<Programme> getProgramsByStringAfterMoment(String search) {
+        List<Programme> list = new ArrayList<>();
+        List<Programme> searchList = programmeDb.getProgramsByNameFullPeriod(search);
+        Calendar currentTime = Calendar.getInstance();
+        for (Programme p : searchList) {
+            Calendar stopTime = decodeDateTime(p.getStop());
+            if (currentTime.before(stopTime))
+                list.add(p);
+        }
+        return list;
+    }
+
+    @Override
+    public List<Programme> getProgramsByStringForCurrentMoment(String str) {
+        List<Programme> list = new ArrayList<>();
+        List<Programme> searchList = programmeDb.getProgramsByNameFullPeriod(str);
+        Calendar currentTime = Calendar.getInstance();
+        for (Programme p : searchList) {
+            if (p.getTitle().toLowerCase().contains(str.toLowerCase())) {
+                Calendar startTime = decodeDateTime(p.getStart());
+                Calendar stopTime = decodeDateTime(p.getStop());
+                if (currentTime.after(startTime) && currentTime.before(stopTime))
+                    list.add(p);
             }
-            Calendar startDate = decodeDateTime(dateList.get(0));
-            Calendar endDate = decodeDateTime(dateList.get(dateList.size() - 1));
+        }
+        return list;
+    }
+
+    public List<Programme> getProgramsByStringForToday(String str) {
+        List<Programme> list = new ArrayList<>();
+        List<Programme> searchList = programmeDb.getProgramsByNameFullPeriod(str);
+        Calendar currentTime = Calendar.getInstance();
+        for (Programme p : searchList) {
+            if (p.getTitle().toLowerCase().contains(str.toLowerCase())) {
+                Calendar startTime = decodeDateTime(p.getStart());
+                Calendar stopTime = decodeDateTime(p.getStop());
+                if ((currentTime.get(Calendar.MONTH) == startTime.get(Calendar.MONTH)) &&
+                        (currentTime.get(Calendar.DAY_OF_MONTH) == startTime.get(Calendar.DAY_OF_MONTH)))
+                    list.add(p);
+            }
+        }
+        return list;
+    }
+
+    private boolean checkGuideDates() {
+        boolean result;
+        try {
+            String chId = channelGuideDb.getFirstId();
+            List<Programme> programmList = programmeDb.getAllProgramsByChannel(chId);
+            Calendar startTime = decodeDateTime(programmList.get(0).getStart());
+            Calendar stopTime = decodeDateTime(programmList.get(programmList.size() - 1).getStart());
             Calendar currentTime = Calendar.getInstance();
-            result = !(currentTime.after(startDate) && currentTime.before(endDate));
+            result = !(currentTime.after(startTime) && currentTime.before(stopTime));
+        } catch (Exception e) {
+            result = true;
         }
         return result;
     }
@@ -174,61 +228,22 @@ public class GuideServiceImpl implements GuideService {
     }
 
     private String getProgramTitlebyId(String id) {
-        String result = null;
-        for (Programme programme : programmeList) {
-            if (programme.getChannel().equals(id)) {
-                Calendar startTime = decodeDateTime(programme.getStart());
-                Calendar stopTime = decodeDateTime(programme.getStop());
-                Calendar currentTime = Calendar.getInstance();
-                if (currentTime.after(startTime) && currentTime.before(stopTime)) {
-                    result = programme.getTitle();
-                }
-            }
-        }
-        return result;
+        Programme programme = programmeDb.getCurrentProgramByChannel(id);
+        return (programme != null) ? programme.getTitle() : "";
     }
 
     private String getProgramDescbyId(String id) {
-        String result = null;
-        for (Programme programme : programmeList) {
-            if (programme.getChannel().equals(id)) {
-                Calendar startTime = decodeDateTime(programme.getStart());
-                Calendar stopTime = decodeDateTime(programme.getStop());
-                Calendar currentTime = Calendar.getInstance();
-                if (currentTime.after(startTime) && currentTime.before(stopTime)) {
-                    result = programme.getDesc();
-                }
-            }
-        }
-        return result;
+        Programme programme = programmeDb.getCurrentProgramByChannel(id);
+        return (programme != null) ? programme.getDesc() : "";
     }
 
     private int getProgramPositionbyId(String id) {
-        int result = -1;
-        int n = 0;
-        for (Programme programme : programmeList) {
-            if (programme.getChannel().equals(id)) {
-                n++;
-                Calendar startTime = decodeDateTime(programme.getStart());
-                Calendar stopTime = decodeDateTime(programme.getStop());
-                Calendar currentTime = Calendar.getInstance();
-                if (currentTime.after(startTime) && currentTime.before(stopTime)) {
-                    result = n;
-                }
-            }
-        }
-        return result;
+        return programmeDb.getCurrentPosByChannel(id);
     }
 
     public List<Programme> getChannelGuide(String chName) {
-        List<Programme> result = new ArrayList<>();
-        String id = getIdByChannelName(chName);
-        for (Programme programme : programmeList) {
-            if (programme.getChannel().equals(id)) {
-                result.add(programme);
-            }
-        }
-        return result;
+        String id = channelGuideDb.getIdByName(chName);
+        return programmeDb.getAllProgramsByChannel(id);
     }
 
     public void setupGuideProvList() {
@@ -244,17 +259,13 @@ public class GuideServiceImpl implements GuideService {
     public String getTotalTimePeriod() {
         String result = null;
         final DateFormat totalSdf = new SimpleDateFormat("dd.MM");
-        List<String> dateList = new ArrayList<>();
-        if (channelGuideList.size() > 0) {
-            String chId = channelGuideList.get(0).getId();
-            for (Programme programme : programmeList) {
-                if (programme.getChannel().equals(chId)) {
-                    dateList.add(programme.getStart());
-                }
-            }
-            Calendar startDate = decodeDateTime(dateList.get(0));
-            Calendar endDate = decodeDateTime(dateList.get(dateList.size() - 1));
-            result = totalSdf.format(startDate.getTime()) + " - " + totalSdf.format(endDate.getTime());
+        try {
+            String chId = channelGuideDb.getFirstId();
+            List<Programme> programmList = programmeDb.getAllProgramsByChannel(chId);
+            Calendar startTime = decodeDateTime(programmList.get(0).getStart());
+            Calendar stopTime = decodeDateTime(programmList.get(programmList.size() - 1).getStart());
+            result = totalSdf.format(startTime.getTime()) + " - " + totalSdf.format(stopTime.getTime());
+        } catch (Exception ignored) {
         }
         return result;
     }
@@ -271,66 +282,4 @@ public class GuideServiceImpl implements GuideService {
         }
         return result;
     }
-
-    public String getChannelNameById(String id) {
-        for (ChannelGuide cg : channelGuideList) {
-            if (id.equals(cg.getId()))
-                return cg.getDisplayName();
-        }
-        return null;
-    }
-
-    public List<Programme> searchAllPeriod(String str) {
-        List<Programme> list = new ArrayList<>();
-        if (str != null) {
-            for (Programme p : programmeList) {
-                if (p.getTitle().toLowerCase().contains(str.toLowerCase()))
-                    list.add(p);
-            }
-        }
-        return list;
-    }
-
-    public List<Programme> searchAfterMoment(String str) {
-        List<Programme> list = new ArrayList<>();
-        for (Programme p : programmeList) {
-            if (p.getTitle().toLowerCase().contains(str.toLowerCase())) {
-                Calendar stopTime = decodeDateTime(p.getStop());
-                Calendar currentTime = Calendar.getInstance();
-                if (currentTime.before(stopTime))
-                    list.add(p);
-            }
-        }
-        return list;
-    }
-
-    public List<Programme> searchToday(String str) {
-        List<Programme> list = new ArrayList<>();
-        for (Programme p : programmeList) {
-            if (p.getTitle().toLowerCase().contains(str.toLowerCase())) {
-                Calendar startTime = decodeDateTime(p.getStart());
-                Calendar stopTime = decodeDateTime(p.getStop());
-                Calendar currentTime = Calendar.getInstance();
-                if ((currentTime.get(Calendar.MONTH) == startTime.get(Calendar.MONTH)) &&
-                        (currentTime.get(Calendar.DAY_OF_MONTH) == startTime.get(Calendar.DAY_OF_MONTH)))
-                    list.add(p);
-            }
-        }
-        return list;
-    }
-
-    public List<Programme> searchCurrentMoment(String str) {
-        List<Programme> list = new ArrayList<>();
-        for (Programme p : programmeList) {
-            if (p.getTitle().toLowerCase().contains(str.toLowerCase())) {
-                Calendar startTime = decodeDateTime(p.getStart());
-                Calendar stopTime = decodeDateTime(p.getStop());
-                Calendar currentTime = Calendar.getInstance();
-                if (currentTime.after(startTime) && currentTime.before(stopTime))
-                    list.add(p);
-            }
-        }
-        return list;
-    }
-
 }

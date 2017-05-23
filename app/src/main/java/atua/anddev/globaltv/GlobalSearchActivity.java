@@ -1,6 +1,5 @@
 package atua.anddev.globaltv;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -9,14 +8,12 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
-import java.io.IOException;
+import java.util.List;
 
 import atua.anddev.globaltv.adapters.ChannelHolderAdapter;
 import atua.anddev.globaltv.entity.Channel;
 
-public class GlobalSearchActivity extends AppCompatActivity implements GlobalServices,
-        ChannelHolderAdapter.OnItemClickListener {
-    private ProgressDialog progress;
+public class GlobalSearchActivity extends AppCompatActivity implements GlobalServices, ChannelHolderAdapter.OnItemClickListener {
     private String searchString;
     private ChannelHolderAdapter mAdapter;
 
@@ -28,10 +25,7 @@ public class GlobalSearchActivity extends AppCompatActivity implements GlobalSer
 
         getData();
         setupActionBar();
-        if (searchService.sizeOfSearchList() == 0)
-            runProgressBar();
-        else
-            showSearchResults();
+        showSearchResults();
     }
 
     @Override
@@ -72,54 +66,15 @@ public class GlobalSearchActivity extends AppCompatActivity implements GlobalSer
         searchString = intent.getStringExtra("search");
     }
 
-    private void runProgressBar() {
-        progress = new ProgressDialog(this);
-        progress.setMessage(getString(R.string.searching));
-        progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progress.setMax(playlistService.sizeOfActivePlaylist());
-        progress.setProgress(0);
-        progress.show();
-
-        Thread t = new Thread() {
-            @Override
-            public void run() {
-                prepare_globalSearch();
-                progress.dismiss();
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        showSearchResults();
-                    }
-                });
-            }
-        };
-        t.start();
-    }
-
-    private void prepare_globalSearch() {
-        for (int i = 0; i < playlistService.sizeOfActivePlaylist(); i++) {
-            progress.setProgress(i);
-            playlistService.readPlaylist(i);
-
-            String chName;
-            for (Channel chn : channelService.getAllChannels()) {
-                chName = chn.getName().toLowerCase();
-                if (chName.contains(searchString.toLowerCase())) {
-                    chn.setProvider(playlistService.getActivePlaylistById(i).getName());
-                    searchService.addToSearchList(chn);
-                }
-            }
-        }
-
-    }
-
     public void showSearchResults() {
+        List<Channel> searchList = searchService.searchChannelsByName(searchString);
         TextView textView = (TextView) findViewById(R.id.globalsearchTextView1);
-        textView.setText(getString(R.string.resultsfor) + " '" + searchString + "' - " +
-                searchService.sizeOfSearchList() + " " + getString(R.string.channels));
+        textView.setText(getResources().getString(R.string.resultsfor) + " '" + searchString + "' - " +
+                searchList.size() + " " + getResources().getString(R.string.channels));
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-        mAdapter = new ChannelHolderAdapter(this, R.layout.item_channellist, searchService.getSearchList(), true);
+        mAdapter = new ChannelHolderAdapter(this, R.layout.item_channellist, searchList, true);
         mAdapter.setOnItemClickListener(GlobalSearchActivity.this);
         recyclerView.setAdapter(mAdapter);
     }
@@ -131,7 +86,7 @@ public class GlobalSearchActivity extends AppCompatActivity implements GlobalSer
 
     private void changeFavorite(Channel item) {
         Boolean changesAllowed = true;
-        for (Channel fav : favoriteService.getFavoriteList()) {
+        for (Channel fav : favoriteService.getAllFavorites()) {
             if (item.getName().equals(fav.getName())
                     && item.getProvider().equals(fav.getProvider()))
                 changesAllowed = false;
@@ -140,10 +95,6 @@ public class GlobalSearchActivity extends AppCompatActivity implements GlobalSer
             favoriteService.addToFavoriteList(item);
         else
             favoriteService.deleteFromFavoritesById(favoriteService.indexNameForFavorite(item.getName()));
-        try {
-            favoriteService.saveFavorites(GlobalSearchActivity.this);
-        } catch (IOException ignored) {
-        }
         mAdapter.notifyDataSetChanged();
     }
 
@@ -155,10 +106,10 @@ public class GlobalSearchActivity extends AppCompatActivity implements GlobalSer
 
     private void openChannel(Channel channel) {
         if (Global.useInternalPlayer) {
-            Intent intent = new Intent(GlobalSearchActivity.this, PlayerActivity.class);
+            Intent intent = new Intent(this, PlayerActivity.class);
             intent.putExtra("channel", channel);
             startActivity(intent);
         } else
-            channelService.openChannel(GlobalSearchActivity.this, channel);
+            channelService.openChannel(this, channel);
     }
 }

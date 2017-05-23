@@ -12,7 +12,7 @@ import atua.anddev.globaltv.entity.Programme;
 public interface GuideService {
     List<GuideProv> guideProvList = new ArrayList<>();
     List<ChannelGuide> channelGuideList = new ArrayList<>();
-    List<Programme> programmeList = new ArrayList<>();
+    //List<Programme> programmeList = new ArrayList<Programme>();
 
     boolean checkForUpdate(Context context, int selectedGuideProv);
 
@@ -30,13 +30,17 @@ public interface GuideService {
 
     int getProgramPos(String chName);
 
-    List<Programme> searchAllPeriod(String str);
+    int channelGuideListSize();
 
-    List<Programme> searchAfterMoment(String str);
+    void addAllChannelGuideList();
 
-    List<Programme> searchCurrentMoment(String str);
+    String getNameOfChannelById(String id);
 
-    List<Programme> searchToday(String str);
+    List<Programme> getProgramsByStringForFullPeriod(String search);
 
-    String getChannelNameById(String id);
+    List<Programme> getProgramsByStringAfterMoment(String search);
+
+    List<Programme> getProgramsByStringForCurrentMoment(String str);
+
+    List<Programme> getProgramsByStringForToday(String str);
 }

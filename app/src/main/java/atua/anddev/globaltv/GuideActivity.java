@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.io.IOException;
 import java.util.List;
 
 import atua.anddev.globaltv.adapters.GuideExpListAdapter;
@@ -95,10 +94,6 @@ public class GuideActivity extends Activity implements GlobalServices, View.OnCl
             favoriteService.addToFavoriteList(item);
         else
             favoriteService.deleteFromFavoritesById(favoriteService.indexNameForFavorite(item.getName()));
-        try {
-            favoriteService.saveFavorites(GuideActivity.this);
-        } catch (IOException ignored) {
-        }
         showInfo(item);
     }
 

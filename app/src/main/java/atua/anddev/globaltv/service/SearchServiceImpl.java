@@ -2,27 +2,16 @@ package atua.anddev.globaltv.service;
 
 import java.util.List;
 
+import atua.anddev.globaltv.MainActivity;
 import atua.anddev.globaltv.entity.Channel;
+import atua.anddev.globaltv.repository.ChannelDb;
 
 public class SearchServiceImpl implements SearchService {
+    private ChannelDb channelDb = MainActivity.channelDb;
 
     @Override
-    public List<Channel> getSearchList() {
-        return searchList;
+    public List<Channel> searchChannelsByName(String search) {
+        return channelDb.searchChannelsByName(search);
     }
 
-    @Override
-    public void addToSearchList(Channel ch) {
-        searchList.add(ch);
-    }
-
-    @Override
-    public void clearSearchList() {
-        searchList.clear();
-    }
-
-    @Override
-    public int sizeOfSearchList() {
-        return searchList.size();
-    }
 }

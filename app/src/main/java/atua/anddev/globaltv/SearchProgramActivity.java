@@ -115,22 +115,21 @@ public class SearchProgramActivity extends AppCompatActivity implements GlobalSe
     private void searchProgram(String searchStr) {
         List<Programme> programmeList = null;
         final int ALL_PERIOD = 0;
-        final int TODAY      = 1;
-        final int AFTER      = 2;
-        final int NOW        = 3;
-
+        final int TODAY = 1;
+        final int AFTER = 2;
+        final int NOW = 3;
         switch (searchType) {
             case ALL_PERIOD:
-                programmeList = guideService.searchAllPeriod(searchStr);
+                programmeList = guideService.getProgramsByStringForFullPeriod(searchStr);
                 break;
             case TODAY:
-                programmeList = guideService.searchToday(searchStr);
+                programmeList = guideService.getProgramsByStringForToday(searchStr);
                 break;
             case AFTER:
-                programmeList = guideService.searchAfterMoment(searchStr);
+                programmeList = guideService.getProgramsByStringAfterMoment(searchStr);
                 break;
             case NOW:
-                programmeList = guideService.searchCurrentMoment(searchStr);
+                programmeList = guideService.getProgramsByStringForCurrentMoment(searchStr);
                 break;
         }
         mAdapter.setDataList(programmeList);

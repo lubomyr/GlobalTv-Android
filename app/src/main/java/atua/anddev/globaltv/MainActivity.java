@@ -26,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -42,6 +41,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import atua.anddev.globaltv.repository.ChannelDb;
+import atua.anddev.globaltv.repository.ChannelGuideDb;
+import atua.anddev.globaltv.repository.FavoriteDb;
+import atua.anddev.globaltv.repository.PlaylistDb;
+import atua.anddev.globaltv.repository.ProgrammeDb;
 import atua.anddev.globaltv.runnables.SaveGuideRunnable;
 
 import static atua.anddev.globaltv.service.GuideService.guideProvList;
@@ -49,13 +53,17 @@ import static atua.anddev.globaltv.service.LogoService.logoList;
 import static java.util.Arrays.asList;
 
 public class MainActivity extends Activity implements GlobalServices {
+    public static PlaylistDb playlistDb;
+    public static ChannelDb channelDb;
+    public static FavoriteDb favoriteDb;
+    public static ChannelGuideDb channelGuideDb;
+    public static ProgrammeDb programmeDb;
+    private ArrayAdapter provAdapter;
     private int selectedProvider;
     private int selectedGuideProv = 2;
-    private ArrayAdapter provAdapter;
     private String lang;
     private Configuration conf;
     private Boolean needUpdate;
-    private String myPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,15 +71,17 @@ public class MainActivity extends Activity implements GlobalServices {
         setContentView(R.layout.main);
 
         Global.myPath = this.getApplicationContext().getFilesDir().toString();
-        //myPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/data/" +
-        // context.getPackageName()+"/files";
-        myPath = Global.myPath;
-
-
+        //myPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Android/data/"+context.getPackageName()+"/files";
         if (lang == null)
             lang = Locale.getDefault().getISO3Language();
 
         conf = getResources().getConfiguration();
+
+        playlistDb = new PlaylistDb(this);
+        channelDb = new ChannelDb(this);
+        favoriteDb = new FavoriteDb(this);
+        channelGuideDb = new ChannelGuideDb(this);
+        programmeDb = new ProgrammeDb(this);
 
         if (guideProvList.size() == 0)
             guideService.setupGuideProvList();
@@ -79,20 +89,14 @@ public class MainActivity extends Activity implements GlobalServices {
         if (logoList.size() == 0)
             logoService.setupLogos();
 
-        if (!Global.guideLoaded) {
-            Thread checkGuideUpdateThread = new Thread(checkGuideForUpdate);
-            checkGuideUpdateThread.start();
-        }
+        checkForUpdateGuide();
 
         if (playlistService.sizeOfOfferedPlaylist() == 0) {
-            playlistService.setupProvider("default", MainActivity.this);
-            if (checkFile("userdata.xml"))
-                playlistService.setupProvider("user", MainActivity.this);
+            playlistService.setupProvider();
+            favoriteService.addAll();
         }
         if (playlistService.sizeOfActivePlaylist() == 0) {
-            Toast.makeText(MainActivity.this, getString(R.string.plstmanwarn), Toast.LENGTH_SHORT).show();
             addPlaylistDialog();
-            needUpdate = true;
         }
         setupPlayer();
         setupProviderView();
@@ -122,20 +126,11 @@ public class MainActivity extends Activity implements GlobalServices {
         return super.onOptionsItemSelected(item);
     }
 
-    Runnable checkGuideForUpdate = new Runnable() {
-
-        @Override
-        public void run() {
-            if (guideService.checkForUpdate(MainActivity.this, selectedGuideProv))
-                updateGuide();
-
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    Toast.makeText(MainActivity.this, "guide loaded", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    };
+    private void checkForUpdateGuide() {
+        SaveGuideRunnable saveGuideRunnable = new SaveGuideRunnable(this, selectedGuideProv);
+        Thread thread = new Thread(saveGuideRunnable);
+        thread.start();
+    }
 
     public static void saveUrl(final String filename, final String urlString)
             throws MalformedURLException, IOException {
@@ -209,10 +204,8 @@ public class MainActivity extends Activity implements GlobalServices {
     private void showLocals() {
         List<String> localsList = asList("English", "Українська", "Русский");
         Spinner spinnerView = (Spinner) findViewById(R.id.mainSpinner2);
-        SpinnerAdapter adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_expandable_list_item_1, localsList);
+        SpinnerAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, localsList);
         spinnerView.setAdapter(adapter);
-
         if (lang.equals("eng"))
             spinnerView.setSelection(0);
         if (lang.equals("ukr"))
@@ -221,7 +214,6 @@ public class MainActivity extends Activity implements GlobalServices {
             spinnerView.setSelection(2);
 
         spinnerView.setOnItemSelectedListener(new OnItemSelectedListener() {
-
             @Override
             public void onItemSelected(AdapterView<?> p1, View p2, int p3, long p4) {
 
@@ -244,9 +236,10 @@ public class MainActivity extends Activity implements GlobalServices {
                 Global.origNames = getResources().getStringArray(R.array.categories_list_orig);
                 Global.translatedNames = getResources().getStringArray(R.array.categories_list_translated);
                 applyLocals();
+
                 try {
                     checkPlaylistFile(selectedProvider);
-                } catch (Exception ignored) {
+                } catch (Exception e) {
                 }
             }
 
@@ -260,14 +253,13 @@ public class MainActivity extends Activity implements GlobalServices {
     private void setupProviderView() {
         Spinner spinnerView = (Spinner) findViewById(R.id.mainSpinner1);
         provAdapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1,
-                playlistService.activePlaylistName);
+                playlistService.getAllNamesOfActivePlaylist());
 
         spinnerView.setAdapter(provAdapter);
         spinnerView.setOnItemSelectedListener(new OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> p1, View p2, int p3, long p4) {
-
                 String s = (String) p1.getItemAtPosition(p3);
                 selectedProvider = p3;
                 checkPlaylistFile(p3);
@@ -295,25 +287,22 @@ public class MainActivity extends Activity implements GlobalServices {
         String fname = playlistService.getActivePlaylistById(num).getFile();
         try {
             String updateDateStr = playlistService.getActivePlaylistById(num).getUpdate();
-            File file = new File(myPath + "/" + fname);
-            long fileDate = file.lastModified();
-            long currDate = new Date().getTime();
+            long currDate = (new Date()).getTime();
             long diffDate, updateDate = 0;
+            String tmpText;
             try {
                 updateDate = Long.parseLong(updateDateStr);
                 diffDate = currDate - updateDate;
             } catch (Exception e) {
-                diffDate = currDate - fileDate;
-                updateDate = fileDate;
+                textView.setText(getString(R.string.playlistnotexist));
                 Log.i("GlobalTV", "Error: " + e.toString());
+                return false;
             }
-            String tmpText;
-            Calendar cal = Calendar.getInstance();
-            cal.setTimeInMillis(diffDate);
-            int daysPassed = cal.get(Calendar.DAY_OF_YEAR);
             int hoursPassed = (int) TimeUnit.MILLISECONDS.toHours(diffDate);
             needUpdate = hoursPassed > 12;
-
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(diffDate);
+            int daysPassed = cal.get(Calendar.DATE);
             switch (daysPassed) {
                 case 1:
                     DateFormat format = DateFormat.getDateTimeInstance();
@@ -334,36 +323,13 @@ public class MainActivity extends Activity implements GlobalServices {
             }
 
             textView.setText(tmpText);
-            InputStream myfile = new FileInputStream(myPath + "/" + fname);
+            InputStream myfile = new FileInputStream(Global.myPath + "/" + fname);
         } catch (FileNotFoundException e) {
-            textView.setText(getString(R.string.playlistnotexist));
+            textView.setText(getResources().getString(R.string.playlistnotexist));
             needUpdate = true;
             return false;
         }
         return true;
-    }
-
-    private boolean checkFile(String fname) {
-        try {
-            InputStream myfile = new FileInputStream(myPath + "/" + fname);
-        } catch (FileNotFoundException e) {
-            return false;
-        }
-        return true;
-    }
-
-    public void catlistActivity() {
-        Intent intent = new Intent(this, CatlistActivity.class);
-        intent.putExtra("provider", selectedProvider);
-        startActivity(intent);
-    }
-
-    public void channellistActivity() {
-        String selectedCategory = getString(R.string.all);
-        Intent intent = new Intent(this, ChannellistActivity.class);
-        intent.putExtra("category", selectedCategory);
-        intent.putExtra("provider", selectedProvider);
-        startActivity(intent);
     }
 
     public void openPlaylist(View view) {
@@ -372,23 +338,15 @@ public class MainActivity extends Activity implements GlobalServices {
                     Toast.LENGTH_SHORT).show();
             return;
         }
-        try {
-            if (needUpdate) {
-                downloadPlaylist(selectedProvider, true);
-            }
-        } finally {
-            playlistService.readPlaylist(selectedProvider);
-            try {
-                if (favoriteService.sizeOfFavoriteList() == 0)
-                    favoriteService.loadFavorites(MainActivity.this);
-            } catch (IOException e) {
-                Log.i("GlobalTV", "Error: " + e);
-            }
-            if (channelService.getCategoriesList().size() > 0)
-                catlistActivity();
-            else
-                channellistActivity();
+        if (!checkPlaylistFile(selectedProvider) || needUpdate) {
+            downloadPlaylist(selectedProvider, true);
         }
+        int grpcnt = channelService.getCategoriesNumber(playlistService.getActivePlaylistById(selectedProvider).getName());
+
+        if (grpcnt > 0)
+            catlistActivity();
+        else
+            channellistActivity();
     }
 
     public void downloadButton(View view) {
@@ -404,14 +362,14 @@ public class MainActivity extends Activity implements GlobalServices {
         downloadAllPlaylist();
     }
 
-    private void downloadPlaylist(final int num, boolean waitforfinish) {
+    void downloadPlaylist(final int num, boolean waitforfinish) {
         DownloadPlaylist dplst = new DownloadPlaylist(num);
         Thread threadDp = new Thread(dplst);
         threadDp.start();
         if (waitforfinish) {
             try {
                 threadDp.join();
-            } catch (InterruptedException ignored) {
+            } catch (InterruptedException e) {
             }
         }
     }
@@ -437,30 +395,41 @@ public class MainActivity extends Activity implements GlobalServices {
     }
 
     public void globalSearch(View view) {
-        searchService.clearSearchList();
         final EditText input = new EditText(this);
         input.setSingleLine();
         new AlertDialog.Builder(MainActivity.this)
                 .setTitle(getString(R.string.request))
                 .setMessage(getString(R.string.pleaseentertext))
                 .setView(input)
-                .setPositiveButton(getString(R.string.search),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                Editable value = input.getText();
-                                String searchString = value.toString();
-                                globalSearchActivity(searchString);
-                            }
-                        }).setNegativeButton(getString(R.string.cancel),
-                new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.search), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        // Do nothing.
+                        Editable value = input.getText();
+                        String searchString = value.toString();
+                        globalSearchActivity(searchString);
                     }
-                }).show();
+                }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Do nothing.
+            }
+        }).show();
     }
 
     public void playlistManager(View view) {
         playlistManagerActivity();
+    }
+
+    public void catlistActivity() {
+        Intent intent = new Intent(this, CatlistActivity.class);
+        intent.putExtra("provider", selectedProvider);
+        startActivity(intent);
+    }
+
+    public void channellistActivity() {
+        String selectedCategory = getResources().getString(R.string.all);
+        Intent intent = new Intent(this, ChannellistActivity.class);
+        intent.putExtra("category", selectedCategory);
+        intent.putExtra("provider", selectedProvider);
+        startActivity(intent);
     }
 
     public void globalSearchActivity(String searchString) {
@@ -484,23 +453,17 @@ public class MainActivity extends Activity implements GlobalServices {
         startActivity(intent);
     }
 
-    public void searchProgram(View view) {
-        Intent intent = new Intent(this, SearchProgramActivity.class);
+    public void updateInfoListActivity() {
+        Intent intent = new Intent(this, UpdateInfoListActivity.class);
         startActivity(intent);
     }
 
     public void globalFavorite(View view) {
-        try {
-            if (favoriteService.sizeOfFavoriteList() == 0)
-                favoriteService.loadFavorites(MainActivity.this);
-        } catch (IOException e) {
-            Log.i("GlobalTV", "Error: " + e.toString());
-        }
         globalFavoriteActivity();
     }
 
-    public void updateInfoListActivity() {
-        Intent intent = new Intent(this, UpdateInfoListActivity.class);
+    public void searchProgram(View view) {
+        Intent intent = new Intent(this, SearchProgramActivity.class);
         startActivity(intent);
     }
 
@@ -513,29 +476,18 @@ public class MainActivity extends Activity implements GlobalServices {
             public void onClick(DialogInterface p1, int p2) {
                 playlistService.addAllOfferedPlaylist();
                 provAdapter.notifyDataSetChanged();
-                try {
-                    playlistService.saveData(MainActivity.this);
-                } catch (IOException ignored) {
-                }
             }
         });
-        builder.setNegativeButton(getString(R.string.playlistsManager),
-                new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.playlistsManager), new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface p1, int p2) {
-                        playlistManagerActivity();
-                    }
-                });
+            @Override
+            public void onClick(DialogInterface p1, int p2) {
+                playlistManagerActivity();
+            }
+        });
         AlertDialog alert = builder.create();
         alert.setOwnerActivity(MainActivity.this);
         alert.show();
-    }
-
-    private void updateGuide() {
-        SaveGuideRunnable saveGuideRunnable = new SaveGuideRunnable(this, selectedGuideProv);
-        Thread thread = new Thread(saveGuideRunnable);
-        thread.start();
     }
 
     private class DownloadPlaylist implements Runnable {
@@ -547,42 +499,35 @@ public class MainActivity extends Activity implements GlobalServices {
 
         public void run() {
             try {
-                String path = myPath + "/" + playlistService.getActivePlaylistById(num).getFile();
+                String path = Global.myPath + "/" + playlistService.getActivePlaylistById(num).getFile();
                 saveUrl(path, playlistService.getActivePlaylistById(num).getUrl());
 
                 runOnUiThread(new Runnable() {
                     public void run() {
                         needUpdate = false;
                         String oldMd5 = playlistService.getActivePlaylistById(num).getMd5();
-                        String path = myPath + "/" + playlistService.getActivePlaylistById(num).getFile();
+                        String path = Global.myPath + "/" + playlistService.getActivePlaylistById(num).getFile();
                         String newMd5 = getMd5OfFile(path);
                         if (!newMd5.equals(oldMd5)) {
                             playlistService.setMd5(num, newMd5);
                             playlistService.setUpdateDate(num, new Date().getTime());
-                            try {
-                                playlistService.saveData(MainActivity.this);
-                            } catch (IOException e) {
-                                Log.i("GlobalTV", "Error: " + e.toString());
-                            }
-                            checkPlaylistFile(selectedProvider);
-                            Toast.makeText(MainActivity.this,
-                                    getString(R.string.playlistupdated,
-                                            playlistService.getActivePlaylistById(num).getName()),
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, getString(R.string.playlistupdated,
+                                    playlistService.getActivePlaylistById(num).getName()), Toast.LENGTH_SHORT).show();
+                            playlistService.readPlaylist(num);
+                            checkPlaylistFile(num);
                         }
                     }
                 });
             } catch (Exception e) {
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(MainActivity.this,
-                                getString(R.string.updatefailed,
-                                        playlistService.getActivePlaylistById(num).getName()),
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, getString(R.string.updatefailed,
+                                playlistService.getActivePlaylistById(num).getName()), Toast.LENGTH_SHORT).show();
                     }
                 });
                 Log.i("GlobalTV", "Error: " + e.toString());
             }
         }
     }
+
 }

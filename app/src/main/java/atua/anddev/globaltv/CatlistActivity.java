@@ -14,11 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CatlistActivity extends AppCompatActivity implements GlobalServices {
-    private List<String> categoryList = new ArrayList<>();
-    private int mSelectedProvider;
+    private ArrayList<String> categoryList = new ArrayList<String>();
+    private int selectedProvider;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +43,7 @@ public class CatlistActivity extends AppCompatActivity implements GlobalServices
 
     private void getData() {
         Intent intent = getIntent();
-        mSelectedProvider = intent.getIntExtra("provider", -1);
+        selectedProvider = intent.getIntExtra("provider", -1);
     }
 
     private void setupActionBar() {
@@ -55,16 +54,16 @@ public class CatlistActivity extends AppCompatActivity implements GlobalServices
     }
 
     private void createCatlist() {
+        String pname = playlistService.getActivePlaylistById(selectedProvider).getName();
         categoryList.add(getString(R.string.all));
-        categoryList.addAll(channelService.getCategoriesList());
+        categoryList.addAll(channelService.getTranslatedCategoriesList(pname));
     }
 
     public void showCatlist() {
         TextView textView = (TextView) findViewById(R.id.catlistTextView1);
         textView.setText(getString(R.string.selectCategory));
         ListView listView = (ListView) findViewById(R.id.catlistListView1);
-        ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1,
-                categoryList);
+        ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, categoryList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -73,7 +72,11 @@ public class CatlistActivity extends AppCompatActivity implements GlobalServices
                 String s = (String) p1.getItemAtPosition(p3);
                 Toast.makeText(CatlistActivity.this, s, Toast.LENGTH_SHORT).show();
                 // Open category playlist
-                channellistActivity(s);
+                String pname = playlistService.getActivePlaylistById(selectedProvider).getName();
+                if (p3 == 0)
+                    channellistActivity(s);
+                else
+                    channellistActivity(channelService.getCategoryById(pname, p3 - 1));
             }
 
         });
@@ -82,8 +85,7 @@ public class CatlistActivity extends AppCompatActivity implements GlobalServices
     public void channellistActivity(String selCat) {
         Intent intent = new Intent(this, ChannellistActivity.class);
         intent.putExtra("category", selCat);
-        intent.putExtra("provider", mSelectedProvider);
+        intent.putExtra("provider", selectedProvider);
         startActivity(intent);
     }
-
 }

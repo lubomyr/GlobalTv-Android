@@ -110,7 +110,7 @@ public class GuideExpListAdapter extends BaseExpandableListAdapter implements Gl
         if (showChannelName) {
             channelLayout.setVisibility(View.VISIBLE);
             TextView channelNameView = (TextView) view.findViewById(R.id.chName);
-            String chName = guideService.getChannelNameById(item.getChannel());
+            String chName = guideService.getNameOfChannelById(item.getChannel());
             channelNameView.setText(chName);
             ImageView iconView = (ImageView) view.findViewById(R.id.chIcon);
             String icon = logoService.getLogoByName(chName);
@@ -120,7 +120,6 @@ public class GuideExpListAdapter extends BaseExpandableListAdapter implements Gl
                 iconView.setImageDrawable(null);
         } else
             channelLayout.setVisibility(View.GONE);
-
         return view;
     }
 
@@ -144,8 +143,7 @@ public class GuideExpListAdapter extends BaseExpandableListAdapter implements Gl
         final DateFormat sdfEndOutput = new SimpleDateFormat("HH:mm");
         Calendar startTime = decodeDateTime(programme.getStart());
         Calendar stopTime = decodeDateTime(programme.getStop());
-        String timeOutput = sdfStartOutput.format(startTime.getTime()) + " - " + sdfEndOutput.format(stopTime.getTime());
-        return timeOutput;
+        return sdfStartOutput.format(startTime.getTime()) + " - " + sdfEndOutput.format(stopTime.getTime());
     }
 
     private int getColor(Programme programme) {

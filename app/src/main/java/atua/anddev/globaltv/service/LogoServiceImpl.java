@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import atua.anddev.globaltv.Global;
 import atua.anddev.globaltv.entity.Logo;
 
 public class LogoServiceImpl implements LogoService {
@@ -86,7 +85,6 @@ public class LogoServiceImpl implements LogoService {
                     String url = el.getString("url");
                     addToLogoList(name, icon, url);
                 }
-                Global.imageLoaded = true;
             } catch (JSONException e) {
                 e.printStackTrace();
             }

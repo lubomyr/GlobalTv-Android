@@ -15,7 +15,6 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class PlaylistEditActivity extends Activity implements GlobalServices {
@@ -65,7 +64,7 @@ public class PlaylistEditActivity extends Activity implements GlobalServices {
     }
 
     public void showEdit() {
-        ArrayList<String> typeList = new ArrayList<String>();
+        ArrayList<String> typeList = new ArrayList<>();
         typeList.add(getString(R.string.standardplaylist));
         typeList.add(getString(R.string.torrenttvplaylist));
         typeList.add(getString(R.string.w3u_playlist));
@@ -97,8 +96,6 @@ public class PlaylistEditActivity extends Activity implements GlobalServices {
 
             @Override
             public void onItemSelected(AdapterView<?> p1, View p2, int p3, long p4) {
-
-                String s = (String) p1.getItemAtPosition(p3);
                 selectedType = p3;
             }
         });
@@ -106,7 +103,7 @@ public class PlaylistEditActivity extends Activity implements GlobalServices {
         url = editTextUrl.getText();
     }
 
-    public void addEdit(View view) throws IOException {
+    public void addEdit(View view) {
         Boolean success = false;
         if (editAction.equals("modify")) {
             if (name.toString().length() == 0 || url.toString().length() == 0) {
@@ -130,8 +127,8 @@ public class PlaylistEditActivity extends Activity implements GlobalServices {
         }
         if (editAction.equals("addNew")) {
             if (name.toString().length() == 0 || url.toString().length() == 0) {
-                Toast.makeText(PlaylistEditActivity.this,
-                        getString(R.string.pleasefillallfields), Toast.LENGTH_SHORT).show();
+                Toast.makeText(PlaylistEditActivity.this, getString(R.string.pleasefillallfields),
+                        Toast.LENGTH_SHORT).show();
             } else {
                 success = true;
                 // check if playlist already exist in selected playlist
@@ -139,25 +136,18 @@ public class PlaylistEditActivity extends Activity implements GlobalServices {
                     playlistService.addToActivePlaylist(name.toString(), url.toString(),
                             selectedType, "", "");
                 else
-                    Toast.makeText(PlaylistEditActivity.this,
-                            getString(R.string.playlistexist), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PlaylistEditActivity.this, getString(R.string.playlistexist),
+                            Toast.LENGTH_SHORT).show();
             }
         }
-        try {
-            if (success)
-                playlistService.saveData(PlaylistEditActivity.this);
-        } catch (IOException ignored) {
-        }
         if (success) {
-            playlistService.saveData(PlaylistEditActivity.this);
             super.onBackPressed();
         }
     }
 
-    public void deletePlaylist(View view) throws IOException {
+    public void deletePlaylist(View view) {
         if (enable) {
             playlistService.deleteActivePlaylistById(editNum);
-            playlistService.saveData(PlaylistEditActivity.this);
         }
         super.onBackPressed();
     }
