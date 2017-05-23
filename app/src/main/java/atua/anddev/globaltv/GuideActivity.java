@@ -93,7 +93,7 @@ public class GuideActivity extends Activity implements GlobalServices, View.OnCl
         if (!favoriteService.isChannelFavorite(item))
             favoriteService.addToFavoriteList(item);
         else
-            favoriteService.deleteFromFavoritesById(favoriteService.indexNameForFavorite(item.getName()));
+            favoriteService.deleteFromFavorites(item);
         showInfo(item);
     }
 

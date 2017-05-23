@@ -173,7 +173,7 @@ public class ChannellistActivity extends AppCompatActivity implements GlobalServ
         if (favoriteService.indexOfFavoriteByChannel(item) == -1)
             favoriteService.addToFavoriteList(item);
         else
-            favoriteService.deleteFromFavoritesById(favoriteService.indexNameForFavorite(item.getName()));
+            favoriteService.deleteFromFavorites(item);
         if (mFavorite)
             favoriteList.remove(item);
         mAdapter.notifyDataSetChanged();

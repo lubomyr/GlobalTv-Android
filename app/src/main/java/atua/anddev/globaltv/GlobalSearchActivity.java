@@ -94,7 +94,7 @@ public class GlobalSearchActivity extends AppCompatActivity implements GlobalSer
         if (changesAllowed)
             favoriteService.addToFavoriteList(item);
         else
-            favoriteService.deleteFromFavoritesById(favoriteService.indexNameForFavorite(item.getName()));
+            favoriteService.deleteFromFavorites(item);
         mAdapter.notifyDataSetChanged();
     }
 

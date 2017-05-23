@@ -1,14 +1,24 @@
 package atua.anddev.globaltv.entity;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Keep;
+
+@Entity
 public class Logo {
     private String name;
     private String icon;
     private String url;
 
+    @Keep
     public Logo(String name, String icon, String url) {
         this.name = name;
         this.icon = icon;
         this.url = url;
+    }
+
+    @Generated(hash = 331804212)
+    public Logo() {
     }
 
     public String getName() {

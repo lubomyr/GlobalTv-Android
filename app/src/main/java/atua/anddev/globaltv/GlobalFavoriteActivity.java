@@ -92,7 +92,7 @@ public class GlobalFavoriteActivity extends AppCompatActivity implements GlobalS
     }
 
     private void changeFavorite(Channel item) {
-        favoriteService.deleteFromFavoritesByChannel(item);
+        favoriteService.deleteFromFavorites(item);
         favoriteList.remove(item);
         mAdapter.notifyDataSetChanged();
     }

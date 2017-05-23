@@ -22,9 +22,8 @@ import atua.anddev.globaltv.Global;
 import atua.anddev.globaltv.entity.ChannelGuide;
 import atua.anddev.globaltv.entity.GuideProv;
 import atua.anddev.globaltv.entity.Programme;
-
-import static atua.anddev.globaltv.MainActivity.channelGuideDb;
-import static atua.anddev.globaltv.MainActivity.programmeDb;
+import atua.anddev.globaltv.repository.ChannelGuideRepository;
+import atua.anddev.globaltv.repository.ProgrammeRepository;
 
 public class GuideServiceImpl implements GuideService {
 
@@ -104,10 +103,10 @@ public class GuideServiceImpl implements GuideService {
                 }
                 xpp.next();
             }
-            channelGuideDb.deleteAll();
-            programmeDb.deleteAll();
-            channelGuideDb.insertAll(channelGuideList);
-            programmeDb.insertAll(programmeList);
+            ChannelGuideRepository.deleteAll();
+            ProgrammeRepository.deleteAll();
+            ChannelGuideRepository.saveAll(channelGuideList);
+            ProgrammeRepository.saveAll(programmeList);
         } catch (XmlPullParserException | IOException e) {
             e.printStackTrace();
             Log.d("globaltv", "parsing error " + e.getMessage());
@@ -141,7 +140,7 @@ public class GuideServiceImpl implements GuideService {
 
     @Override
     public void addAllChannelGuideList() {
-        channelGuideList.addAll(channelGuideDb.getAll());
+        channelGuideList.addAll(ChannelGuideRepository.getAll());
     }
 
     @Override
@@ -155,13 +154,13 @@ public class GuideServiceImpl implements GuideService {
 
     @Override
     public List<Programme> getProgramsByStringForFullPeriod(String search) {
-        return programmeDb.getProgramsByNameFullPeriod(search);
+        return ProgrammeRepository.getProgramsByNameFullPeriod(search);
     }
 
     @Override
     public List<Programme> getProgramsByStringAfterMoment(String search) {
         List<Programme> list = new ArrayList<>();
-        List<Programme> searchList = programmeDb.getProgramsByNameFullPeriod(search);
+        List<Programme> searchList = ProgrammeRepository.getProgramsByNameFullPeriod(search);
         Calendar currentTime = Calendar.getInstance();
         for (Programme p : searchList) {
             Calendar stopTime = decodeDateTime(p.getStop());
@@ -174,7 +173,7 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public List<Programme> getProgramsByStringForCurrentMoment(String str) {
         List<Programme> list = new ArrayList<>();
-        List<Programme> searchList = programmeDb.getProgramsByNameFullPeriod(str);
+        List<Programme> searchList = ProgrammeRepository.getProgramsByNameFullPeriod(str);
         Calendar currentTime = Calendar.getInstance();
         for (Programme p : searchList) {
             if (p.getTitle().toLowerCase().contains(str.toLowerCase())) {
@@ -189,7 +188,7 @@ public class GuideServiceImpl implements GuideService {
 
     public List<Programme> getProgramsByStringForToday(String str) {
         List<Programme> list = new ArrayList<>();
-        List<Programme> searchList = programmeDb.getProgramsByNameFullPeriod(str);
+        List<Programme> searchList = ProgrammeRepository.getProgramsByNameFullPeriod(str);
         Calendar currentTime = Calendar.getInstance();
         for (Programme p : searchList) {
             if (p.getTitle().toLowerCase().contains(str.toLowerCase())) {
@@ -206,8 +205,8 @@ public class GuideServiceImpl implements GuideService {
     private boolean checkGuideDates() {
         boolean result;
         try {
-            String chId = channelGuideDb.getFirstId();
-            List<Programme> programmList = programmeDb.getAllProgramsByChannel(chId);
+            String chId = ChannelGuideRepository.getFirstId();
+            List<Programme> programmList = ProgrammeRepository.getAllProgramsByChannel(chId);
             Calendar startTime = decodeDateTime(programmList.get(0).getStart());
             Calendar stopTime = decodeDateTime(programmList.get(programmList.size() - 1).getStart());
             Calendar currentTime = Calendar.getInstance();
@@ -228,22 +227,22 @@ public class GuideServiceImpl implements GuideService {
     }
 
     private String getProgramTitlebyId(String id) {
-        Programme programme = programmeDb.getCurrentProgramByChannel(id);
+        Programme programme = ProgrammeRepository.getCurrentProgramByChannel(id);
         return (programme != null) ? programme.getTitle() : "";
     }
 
     private String getProgramDescbyId(String id) {
-        Programme programme = programmeDb.getCurrentProgramByChannel(id);
+        Programme programme = ProgrammeRepository.getCurrentProgramByChannel(id);
         return (programme != null) ? programme.getDesc() : "";
     }
 
     private int getProgramPositionbyId(String id) {
-        return programmeDb.getCurrentPosByChannel(id);
+        return ProgrammeRepository.getCurrentPosByChannel(id);
     }
 
     public List<Programme> getChannelGuide(String chName) {
-        String id = channelGuideDb.getIdByName(chName);
-        return programmeDb.getAllProgramsByChannel(id);
+        String id = ChannelGuideRepository.getIdByName(chName);
+        return ProgrammeRepository.getAllProgramsByChannel(id);
     }
 
     public void setupGuideProvList() {
@@ -260,8 +259,8 @@ public class GuideServiceImpl implements GuideService {
         String result = null;
         final DateFormat totalSdf = new SimpleDateFormat("dd.MM");
         try {
-            String chId = channelGuideDb.getFirstId();
-            List<Programme> programmList = programmeDb.getAllProgramsByChannel(chId);
+            String chId = ChannelGuideRepository.getFirstId();
+            List<Programme> programmList = ProgrammeRepository.getAllProgramsByChannel(chId);
             Calendar startTime = decodeDateTime(programmList.get(0).getStart());
             Calendar stopTime = decodeDateTime(programmList.get(programmList.size() - 1).getStart());
             result = totalSdf.format(startTime.getTime()) + " - " + totalSdf.format(stopTime.getTime());

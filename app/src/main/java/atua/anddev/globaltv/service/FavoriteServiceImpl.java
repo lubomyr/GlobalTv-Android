@@ -4,12 +4,10 @@ package atua.anddev.globaltv.service;
 import java.util.List;
 
 import atua.anddev.globaltv.GlobalServices;
-import atua.anddev.globaltv.MainActivity;
 import atua.anddev.globaltv.entity.Channel;
-import atua.anddev.globaltv.repository.FavoriteDb;
+import atua.anddev.globaltv.repository.FavoriteRepository;
 
 public class FavoriteServiceImpl implements FavoriteService, GlobalServices {
-    private FavoriteDb favoriteDb = MainActivity.favoriteDb;
 
     @Override
     public List<Channel> getAllFavorites() {
@@ -18,64 +16,37 @@ public class FavoriteServiceImpl implements FavoriteService, GlobalServices {
 
     @Override
     public void addAll() {
-        favorites.addAll(favoriteDb.getAllFavorites());
+        favorites.addAll(FavoriteRepository.getAll());
     }
 
     @Override
     public int indexOfFavoriteByChannel(Channel channel) {
         int result = -1;
-        for (int i = 0; i < sizeOfFavoriteList(); i++) {
-            if (channel.getName().equals(getFavoriteById(i).getName()) &&
-                    channel.getProvider().equals(getFavoriteById(i).getProvider())) {
-                result = i;
-            }
-        }
+        result = favorites.indexOf(channel);
         return result;
     }
 
     @Override
-    public void deleteFromFavoritesById(int id) {
-        List<Integer> idList = favoriteDb.getAllFavoritesID();
-        int iddb = idList.get(id);
-        favorites.remove(id);
-        favoriteDb.deleteFromFavoritesById(iddb);
-    }
-
-    @Override
-    public void deleteFromFavoritesByChannel(Channel channel) {
-        List<Integer> idList = favoriteDb.getAllFavoritesID();
-        for (int i = 0; i < sizeOfFavoriteList(); i++) {
-            if (channel.getName().equals(getFavoriteById(i).getName()) &&
-                    channel.getProvider().equals(getFavoriteById(i).getProvider())) {
-                int iddb = idList.get(i);
-                favorites.remove(i);
-                favoriteDb.deleteFromFavoritesById(iddb);
-            }
-        }
+    public void deleteFromFavorites(Channel channel) {
+        favorites.remove(channel);
+        FavoriteRepository.delete(channel);
     }
 
     @Override
     public void addToFavoriteList(Channel channel) {
         favorites.add(channel);
-        favoriteDb.insertIntoFavorites(channel);
-    }
-
-    @Override
-    public Channel getFavoriteById(int id) {
-        List<Integer> idList = favoriteDb.getAllFavoritesID();
-        int iddb = idList.get(id);
-        return favoriteDb.getFavoriteById(iddb);
+        FavoriteRepository.insert(channel);
     }
 
     @Override
     public void clearAllFavorites() {
         favorites.clear();
-        favoriteDb.deleteAllFavorites();
+        FavoriteRepository.deleteAll();
     }
 
     @Override
     public int sizeOfFavoriteList() {
-        return favoriteDb.numberOfRows();
+        return favorites.size();
     }
 
     @Override

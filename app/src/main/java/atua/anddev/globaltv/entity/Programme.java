@@ -1,6 +1,15 @@
 package atua.anddev.globaltv.entity;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Keep;
+
+@Entity
 public class Programme {
+    @Id(autoincrement = true)
+    private Long id;
+    
     private String start;
     private String stop;
     private String channel;
@@ -8,7 +17,24 @@ public class Programme {
     private String desc;
     private String category;
 
+    @Keep
     public Programme(String start, String stop, String channel, String title, String desc, String category) {
+        this.start = start;
+        this.stop = stop;
+        this.channel = channel;
+        this.title = title;
+        this.desc = desc;
+        this.category = category;
+    }
+
+    @Generated(hash = 1762154496)
+    public Programme() {
+    }
+
+    @Generated(hash = 2110306381)
+    public Programme(Long id, String start, String stop, String channel, String title, String desc,
+                     String category) {
+        this.id = id;
         this.start = start;
         this.stop = stop;
         this.channel = channel;
@@ -63,5 +89,13 @@ public class Programme {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -1,17 +1,24 @@
 package atua.anddev.globaltv.entity;
 
-/**
- * Created by lyubomyr on 27.12.16.
- */
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Keep;
+
+@Entity
 public class GuideProv {
     private String name;
     private String url;
     private String file;
 
+    @Keep
     public GuideProv(String name, String url, String file) {
         this.name = name;
         this.url = url;
         this.file = file;
+    }
+
+    @Generated(hash = 1832289109)
+    public GuideProv() {
     }
 
     public String getName() {
