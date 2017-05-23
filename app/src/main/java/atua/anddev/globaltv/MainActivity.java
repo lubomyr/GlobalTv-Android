@@ -210,7 +210,7 @@ public class MainActivity extends Activity implements GlobalServices {
         List<String> localsList = asList("English", "Українська", "Русский");
         Spinner spinnerView = (Spinner) findViewById(R.id.mainSpinner2);
         SpinnerAdapter adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_expandable_list_item_1, localsList);
+                R.layout.spinner_row, localsList);
         spinnerView.setAdapter(adapter);
 
         if (lang.equals("eng"))
@@ -259,7 +259,7 @@ public class MainActivity extends Activity implements GlobalServices {
 
     private void setupProviderView() {
         Spinner spinnerView = (Spinner) findViewById(R.id.mainSpinner1);
-        provAdapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1,
+        provAdapter = new ArrayAdapter<>(this, R.layout.spinner_row,
                 playlistService.activePlaylistName);
 
         spinnerView.setAdapter(provAdapter);
