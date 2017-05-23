@@ -77,7 +77,7 @@ public class PlayerActivity extends Activity implements MediaPlayer.OnCompletion
     }
 
     private void openWithUpdatedUrl() {
-        new Thread(new Runnable() {
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 final String url = channelService.getUpdatedUrl(channel);
@@ -89,6 +89,7 @@ public class PlayerActivity extends Activity implements MediaPlayer.OnCompletion
                     }
                 });
             }
-        }).start();
+        });
+        thread.start();
     }
 }
