@@ -19,52 +19,49 @@ import java.util.Scanner;
 
 import atua.anddev.globaltv.Global;
 import atua.anddev.globaltv.GlobalServices;
-import atua.anddev.globaltv.MainActivity;
 import atua.anddev.globaltv.entity.Channel;
 import atua.anddev.globaltv.entity.Playlist;
-import atua.anddev.globaltv.repository.PlaylistDb;
+import atua.anddev.globaltv.repository.PlaylistRepository;
 
 public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
-    private PlaylistDb playlistDb = MainActivity.playlistDb;
 
     @Override
     public List<Playlist> getSortedByDatePlaylists() {
-        return playlistDb.getSortedByDatePlaylists();
+        return PlaylistRepository.getSortedByDate();
     }
 
     @Override
     public void addNewActivePlaylist(Playlist playlist) {
         activePlaylistName.add(playlist.getName());
-        playlistDb.insertPlaylist(playlist);
+        PlaylistRepository.insert(playlist);
     }
 
     @Override
     public void setMd5(int id, String md5) {
-        List<Integer> idList = playlistDb.getPlaylistId();
-        int iddb = idList.get(id);
-        playlistDb.setPlaylistMd5ById(iddb, md5);
+        List<Playlist> list = PlaylistRepository.getAll();
+        Playlist playlist = list.get(id);
+        PlaylistRepository.updateMd5(playlist, md5);
     }
 
     @Override
     public void setUpdateDate(int id, Long update) {
-        List<Integer> idList = playlistDb.getPlaylistId();
-        int iddb = idList.get(id);
-        playlistDb.setPlaylistUpdatedById(iddb, update);
+        List<Playlist> list = PlaylistRepository.getAll();
+        Playlist playlist = list.get(id);
+        PlaylistRepository.updateDate(playlist, update.toString());
     }
 
     @Override
     public void deleteActivePlaylistById(int id) {
-        List<Integer> idList = playlistDb.getPlaylistId();
-        int iddb = idList.get(id);
-        activePlaylistName.remove(id);
-        playlistDb.deletePlaylist(iddb);
+        List<Playlist> list = PlaylistRepository.getAll();
+        Playlist playlist = list.get(id);
+        activePlaylistName.remove(playlist.getName());
+        PlaylistRepository.delete(playlist);
     }
 
     @Override
     public Playlist getActivePlaylistById(int id) {
-        List<Integer> idList = playlistDb.getPlaylistId();
-        int iddb = idList.get(id);
-        return playlistDb.getPlaylistById(iddb);
+        List<Playlist> list = PlaylistRepository.getAll();
+        return list.get(id);
     }
 
     @Override
@@ -75,22 +72,21 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
     @Override
     public void setActivePlaylistById(int id, String name, String url, int type) {
         String file = getFileName(name);
-        List<Integer> idList = playlistDb.getPlaylistId();
-        int iddb = idList.get(id);
+        List<Playlist> list = PlaylistRepository.getAll();
+        Playlist playlist = list.get(id);
+        PlaylistRepository.update(playlist, name, url, type);
         activePlaylistName.set(id, name);
-        Playlist playlist = new Playlist(name, url, file, type);
-        playlistDb.updatePlaylist(iddb, playlist);
     }
 
     @Override
     public void clearActivePlaylist() {
         activePlaylistName.clear();
-        playlistDb.deleteAllPlaylists();
+        PlaylistRepository.deleteAll();
     }
 
     @Override
     public int sizeOfActivePlaylist() {
-        return playlistDb.numberOfRows();
+        return PlaylistRepository.getAll().size();
     }
 
     @Override
@@ -101,7 +97,7 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
     @Override
     public List<String> getAllNamesOfActivePlaylist() {
         activePlaylistName.clear();
-        activePlaylistName.addAll(playlistDb.getPlaylistNames());
+        activePlaylistName.addAll(PlaylistRepository.getNames());
         return activePlaylistName;
     }
 
@@ -134,7 +130,7 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
         String file = getFileName(name);
         activePlaylistName.add(name);
         Playlist playlist = new Playlist(name, url, file, type);
-        playlistDb.insertPlaylist(playlist);
+        PlaylistRepository.insert(playlist);
     }
 
     @Override
@@ -334,5 +330,4 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
             }
         }
     }
-
 }

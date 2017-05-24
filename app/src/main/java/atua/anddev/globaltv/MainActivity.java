@@ -41,11 +41,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import atua.anddev.globaltv.repository.ChannelDb;
-import atua.anddev.globaltv.repository.ChannelGuideDb;
-import atua.anddev.globaltv.repository.FavoriteDb;
-import atua.anddev.globaltv.repository.PlaylistDb;
-import atua.anddev.globaltv.repository.ProgrammeDb;
 import atua.anddev.globaltv.runnables.SaveGuideRunnable;
 
 import static atua.anddev.globaltv.service.GuideService.guideProvList;
@@ -53,11 +48,6 @@ import static atua.anddev.globaltv.service.LogoService.logoList;
 import static java.util.Arrays.asList;
 
 public class MainActivity extends Activity implements GlobalServices {
-    public static PlaylistDb playlistDb;
-    public static ChannelDb channelDb;
-    public static FavoriteDb favoriteDb;
-    public static ChannelGuideDb channelGuideDb;
-    public static ProgrammeDb programmeDb;
     private ArrayAdapter provAdapter;
     private int selectedProvider;
     private int selectedGuideProv = 2;
@@ -76,12 +66,6 @@ public class MainActivity extends Activity implements GlobalServices {
             lang = Locale.getDefault().getISO3Language();
 
         conf = getResources().getConfiguration();
-
-        playlistDb = new PlaylistDb(this);
-        channelDb = new ChannelDb(this);
-        favoriteDb = new FavoriteDb(this);
-        channelGuideDb = new ChannelGuideDb(this);
-        programmeDb = new ProgrammeDb(this);
 
         if (guideProvList.size() == 0)
             guideService.setupGuideProvList();
@@ -492,15 +476,18 @@ public class MainActivity extends Activity implements GlobalServices {
 
     private class DownloadPlaylist implements Runnable {
         private int num;
+        private String path;
+        private String url;
 
         DownloadPlaylist(int num) {
             this.num = num;
+            path = Global.myPath + "/" + playlistService.getActivePlaylistById(num).getFile();
+            url = playlistService.getActivePlaylistById(num).getUrl();
         }
 
         public void run() {
             try {
-                String path = Global.myPath + "/" + playlistService.getActivePlaylistById(num).getFile();
-                saveUrl(path, playlistService.getActivePlaylistById(num).getUrl());
+                saveUrl(path, url);
 
                 runOnUiThread(new Runnable() {
                     public void run() {

@@ -2,7 +2,6 @@ package atua.anddev.globaltv.adapters;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import atua.anddev.globaltv.R;
 import atua.anddev.globaltv.entity.Channel;
 
 import static atua.anddev.globaltv.GlobalServices.favoriteService;
-import static atua.anddev.globaltv.GlobalServices.guideService;
 import static atua.anddev.globaltv.GlobalServices.logoService;
 
 public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdapter.ViewHolder> {
@@ -50,21 +48,27 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
         holder.chNameView.setText(item.getName());
         holder.provNameView.setText(item.getProvider());
         holder.provNameView.setVisibility(showProvName ? View.VISIBLE : View.GONE);
-        new Thread(new Runnable() {
+
+        String name = item.getName();
+
+        Thread thread = new Thread(new Runnable() {
+            String name = item.getName();
+
             @Override
             public void run() {
                 if (Global.guideLoaded) {
-                    String title = guideService.getProgramTitle(item.getName());
+                   /* String title = guideService.getProgramTitle(name);
                     title = (title != null) ? title : "";
                     final String finalTitle = title;
                     activity.runOnUiThread(new Runnable() {
                         public void run() {
                             holder.titleView.setText(Html.fromHtml(finalTitle));
                         }
-                    });
+                    });*/
                 }
             }
-        }).start();
+        });
+        thread.start();
         if (selectedItem == item) {
             holder.playView.setImageResource(R.drawable.play_active);
         } else {

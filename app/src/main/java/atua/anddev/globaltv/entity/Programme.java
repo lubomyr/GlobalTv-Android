@@ -1,12 +1,17 @@
 package atua.anddev.globaltv.entity;
 
-public class Programme {
+import io.realm.RealmObject;
+
+public class Programme extends RealmObject {
     private String start;
     private String stop;
     private String channel;
     private String title;
     private String desc;
     private String category;
+
+    public Programme() {
+    }
 
     public Programme(String start, String stop, String channel, String title, String desc, String category) {
         this.start = start;

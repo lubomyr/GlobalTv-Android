@@ -2,7 +2,9 @@ package atua.anddev.globaltv.entity;
 
 import java.io.Serializable;
 
-public class Channel implements Serializable {
+import io.realm.RealmObject;
+
+public class Channel extends RealmObject implements Serializable {
 
     private static final long serialVersionUID = -361931352168739862L;
 
@@ -11,6 +13,9 @@ public class Channel implements Serializable {
     private String category;
     private String icon;
     private String provider;
+
+    public Channel() {
+    }
 
     public Channel(String name, String url, String category, String icon, String provider) {
         this.name = name;

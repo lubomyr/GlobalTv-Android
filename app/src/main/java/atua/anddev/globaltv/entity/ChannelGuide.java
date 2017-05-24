@@ -1,9 +1,14 @@
 package atua.anddev.globaltv.entity;
 
-public class ChannelGuide {
+import io.realm.RealmObject;
+
+public class ChannelGuide extends RealmObject {
     private String id;
     private String lang;
     private String displayName;
+
+    public ChannelGuide() {
+    }
 
     public ChannelGuide(String id, String lang, String displayName) {
         this.id = id;

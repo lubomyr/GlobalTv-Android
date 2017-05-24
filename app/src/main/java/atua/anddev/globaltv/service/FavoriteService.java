@@ -14,17 +14,13 @@ public interface FavoriteService {
 
     void addToFavoriteList(Channel channel);
 
-    Channel getFavoriteById(int id);
-
     void clearAllFavorites();
 
     int sizeOfFavoriteList();
 
     int indexNameForFavorite(String name);
 
-    void deleteFromFavoritesById(int id);
-
-    void deleteFromFavoritesByChannel(Channel channel);
+    void deleteFromFavorites(Channel channel);
 
     int indexOfFavoriteByChannel(Channel channel);
 

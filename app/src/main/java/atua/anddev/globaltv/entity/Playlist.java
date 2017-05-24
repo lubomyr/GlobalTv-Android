@@ -1,12 +1,17 @@
 package atua.anddev.globaltv.entity;
 
-public class Playlist {
+import io.realm.RealmObject;
+
+public class Playlist extends RealmObject {
     private String name;
     private String url;
     private String file;
     private int type;
     private String md5;
     private String update;
+
+    public Playlist() {
+    }
 
     public Playlist(String name, String url, String file, int type, String md5, String update) {
         this.name = name;

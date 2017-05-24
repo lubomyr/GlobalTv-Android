@@ -15,6 +15,7 @@ import java.util.List;
 import atua.anddev.globaltv.adapters.GuideExpListAdapter;
 import atua.anddev.globaltv.entity.Channel;
 import atua.anddev.globaltv.entity.Programme;
+import atua.anddev.globaltv.repository.ChannelRepository;
 
 public class GuideActivity extends Activity implements GlobalServices, View.OnClickListener {
     private Channel channel;
@@ -46,7 +47,8 @@ public class GuideActivity extends Activity implements GlobalServices, View.OnCl
 
     private Channel getData() {
         Intent intent = this.getIntent();
-        return (Channel) intent.getSerializableExtra("channel");
+        String url = intent.getStringExtra("channel");
+        return ChannelRepository.getChannelByUrl(url);
     }
 
     private void showGuide(Channel channel) {
@@ -93,7 +95,7 @@ public class GuideActivity extends Activity implements GlobalServices, View.OnCl
         if (!favoriteService.isChannelFavorite(item))
             favoriteService.addToFavoriteList(item);
         else
-            favoriteService.deleteFromFavoritesById(favoriteService.indexNameForFavorite(item.getName()));
+            favoriteService.deleteFromFavorites(item);
         showInfo(item);
     }
 

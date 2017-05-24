@@ -7,9 +7,6 @@ import java.util.List;
 import atua.anddev.globaltv.entity.Channel;
 
 public interface ChannelService {
-
-    Channel getChannelById(int id);
-
     List<Channel> getChannelsByPlist(String name);
 
     List<Channel> getChannelsByCategory(String plname, String catname);
