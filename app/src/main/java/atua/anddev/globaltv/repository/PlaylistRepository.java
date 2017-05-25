@@ -14,7 +14,7 @@ public class PlaylistRepository {
         realm.beginTransaction();
         realm.copyToRealm(items);
         realm.commitTransaction();
-
+        realm.close();
     }
 
     public static void insert(Playlist item) {
@@ -22,6 +22,7 @@ public class PlaylistRepository {
         realm.beginTransaction();
         realm.copyToRealm(item);
         realm.commitTransaction();
+        realm.close();
     }
 
     public static void delete(Playlist item) {
@@ -31,6 +32,7 @@ public class PlaylistRepository {
                 .findAll();
         result.deleteAllFromRealm();
         realm.commitTransaction();
+        realm.close();
     }
 
     public static void deleteAll() {
@@ -38,6 +40,7 @@ public class PlaylistRepository {
         realm.beginTransaction();
         realm.delete(Playlist.class);
         realm.commitTransaction();
+        realm.close();
     }
 
     public static List<Playlist> getAll() {
@@ -70,6 +73,7 @@ public class PlaylistRepository {
         realm.beginTransaction();
         item.setMd5(md5);
         realm.commitTransaction();
+        realm.close();
     }
 
     public static void updateDate(Playlist item, String update) {
@@ -77,6 +81,7 @@ public class PlaylistRepository {
         realm.beginTransaction();
         item.setUpdate(update);
         realm.commitTransaction();
+        realm.close();
     }
 
     public static void update(Playlist item, String name, String url, int type) {
@@ -86,5 +91,6 @@ public class PlaylistRepository {
         item.setUrl(url);
         item.setType(type);
         realm.commitTransaction();
+        realm.close();
     }
 }

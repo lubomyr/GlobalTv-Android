@@ -21,6 +21,7 @@ public class ProgrammeRepository {
         realm.beginTransaction();
         realm.copyToRealm(items);
         realm.commitTransaction();
+        realm.close();
     }
 
     public static void insert(Programme item) {
@@ -28,6 +29,7 @@ public class ProgrammeRepository {
         realm.beginTransaction();
         realm.copyToRealm(item);
         realm.commitTransaction();
+        realm.close();
     }
 
     public static void deleteAll() {
@@ -35,6 +37,7 @@ public class ProgrammeRepository {
         realm.beginTransaction();
         realm.delete(Programme.class);
         realm.commitTransaction();
+        realm.close();
     }
 
     public static List<Programme> getAll() {

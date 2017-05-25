@@ -220,7 +220,8 @@ public class GuideServiceImpl implements GuideService {
     private String getIdByChannelName(String chName) {
         String result = null;
         for (ChannelGuide channelGuide : channelGuideList) {
-            if (chName.equals(channelGuide.getDisplayName()))
+            String str = channelGuide.getDisplayName();
+            if (chName.equals(str))
                 result = channelGuide.getId();
         }
         return result;

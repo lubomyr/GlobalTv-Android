@@ -16,7 +16,7 @@ public class FavoriteRepository {
         realm.beginTransaction();
         realm.copyToRealm(item);
         realm.commitTransaction();
-
+        realm.close();
     }
 
     public static void delete(Channel channel) {
@@ -26,6 +26,7 @@ public class FavoriteRepository {
                 .equalTo("plist", channel.getProvider()).findAll();
         result.deleteAllFromRealm();
         realm.commitTransaction();
+        realm.close();
     }
 
     public static void deleteAll() {
@@ -33,6 +34,7 @@ public class FavoriteRepository {
         realm.beginTransaction();
         realm.delete(Favorite.class);
         realm.commitTransaction();
+        realm.close();
     }
 
     public static List<Channel> getAll() {

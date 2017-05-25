@@ -14,6 +14,7 @@ public class ChannelGuideRepository {
         realm.beginTransaction();
         realm.copyToRealm(items);
         realm.commitTransaction();
+        realm.close();
     }
 
     public static void insert(ChannelGuide item) {
@@ -21,6 +22,7 @@ public class ChannelGuideRepository {
         realm.beginTransaction();
         realm.copyToRealm(item);
         realm.commitTransaction();
+        realm.close();
     }
 
     public static void deleteAll() {
@@ -28,6 +30,7 @@ public class ChannelGuideRepository {
         realm.beginTransaction();
         realm.delete(ChannelGuide.class);
         realm.commitTransaction();
+        realm.close();
     }
 
     public static List<ChannelGuide> getAll() {
@@ -49,7 +52,7 @@ public class ChannelGuideRepository {
     public static String getIdByName(String name) {
         Realm realm = Realm.getDefaultInstance();
         List<ChannelGuide> list = new ArrayList<>();
-        RealmResults<ChannelGuide> results = realm.where(ChannelGuide.class).equalTo("name", name).findAll();
+        RealmResults<ChannelGuide> results = realm.where(ChannelGuide.class).equalTo("displayName", name).findAll();
         list.addAll(results);
         return list.get(0).getId();
     }

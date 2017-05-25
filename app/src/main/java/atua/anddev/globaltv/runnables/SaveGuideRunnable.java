@@ -27,11 +27,11 @@ public class SaveGuideRunnable implements Runnable {
         if (guideService.checkForUpdate(context, selectedGuideProv)) {
             updateGuide();
         }
-        if (guideService.channelGuideListSize() == 0)
-            guideService.addAllChannelGuideList();
-        Global.guideLoaded = true;
         context.runOnUiThread(new Runnable() {
             public void run() {
+                if (guideService.channelGuideListSize() == 0)
+                    guideService.addAllChannelGuideList();
+                Global.guideLoaded = true;
                 Toast.makeText(context, "guide loaded", Toast.LENGTH_SHORT).show();
             }
         });

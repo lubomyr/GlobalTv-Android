@@ -15,6 +15,7 @@ public class ChannelRepository {
         realm.beginTransaction();
         realm.copyToRealm(items);
         realm.commitTransaction();
+        realm.close();
     }
 
     public static void deleteAll() {
@@ -22,6 +23,7 @@ public class ChannelRepository {
         realm.beginTransaction();
         realm.delete(Channel.class);
         realm.commitTransaction();
+        realm.close();
     }
 
     public static List<Channel> getAll() {
@@ -29,6 +31,7 @@ public class ChannelRepository {
         List<Channel> list = new ArrayList<>();
         RealmResults<Channel> results = realm.where(Channel.class).findAll();
         list.addAll(results);
+        realm.close();
         return list;
     }
 
@@ -55,6 +58,7 @@ public class ChannelRepository {
         RealmResults<Channel> results = realm.where(Channel.class).equalTo("provider", plist).findAll();
         results.deleteAllFromRealm();
         realm.commitTransaction();
+        realm.close();
     }
 
     public static List<Channel> getChannelsByCategory(String plist, String catname) {
