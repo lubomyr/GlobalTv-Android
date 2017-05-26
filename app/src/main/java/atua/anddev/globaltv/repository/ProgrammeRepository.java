@@ -1,6 +1,8 @@
 package atua.anddev.globaltv.repository;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ProgressDialog;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -11,17 +13,32 @@ import java.util.List;
 import atua.anddev.globaltv.BaseApplication;
 import atua.anddev.globaltv.database.greendao.ProgrammeDao;
 import atua.anddev.globaltv.entity.Programme;
+import atua.anddev.globaltv.utils.ProgressDialogUtils;
 
 public class ProgrammeRepository {
+    private static ProgressDialog progressDialog;
+
     private static ProgrammeDao getDao() {
         return BaseApplication.getDaoSession().getProgrammeDao();
     }
 
-    public static void saveAll(List<Programme> items) {
+    public static void saveAll(final Activity activity, final List<Programme> items) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog = ProgressDialogUtils.showProgressDialog(activity,
+                        "Processing ChannelGuide...", items.size());
+            }
+        });
+        int count = 0;
         ProgrammeDao dao = getDao();
         for (Programme item : items) {
             dao.insertOrReplace(item);
+
+            count++;
+            ProgressDialogUtils.setProgress(activity, progressDialog, count);
         }
+        ProgressDialogUtils.closeProgress(activity, progressDialog);
     }
 
     public static void insert(Programme item) {
@@ -54,12 +71,14 @@ public class ProgrammeRepository {
 
     public static Programme getCurrentProgramByChannel(String chId) {
         Calendar currentTime = Calendar.getInstance();
-        List<Programme> list = getDao().queryBuilder().where(ProgrammeDao.Properties.Channel.eq(chId)).list();
-        for (Programme p : list) {
-            Calendar startDate = decodeDateTime(p.getStart());
-            Calendar stopDate = decodeDateTime(p.getStop());
-            if (currentTime.after(startDate) && currentTime.before(stopDate)) {
-                return p;
+        if (chId != null) {
+            List<Programme> list = getDao().queryBuilder().where(ProgrammeDao.Properties.Channel.eq(chId)).list();
+            for (Programme p : list) {
+                Calendar startDate = decodeDateTime(p.getStart());
+                Calendar stopDate = decodeDateTime(p.getStop());
+                if (currentTime.after(startDate) && currentTime.before(stopDate)) {
+                    return p;
+                }
             }
         }
         return null;

@@ -1,5 +1,7 @@
 package atua.anddev.globaltv.repository;
 
+import android.app.Activity;
+
 import java.util.List;
 
 import atua.anddev.globaltv.BaseApplication;
@@ -11,7 +13,7 @@ public class ChannelGuideRepository {
         return BaseApplication.getDaoSession().getChannelGuideDao();
     }
 
-    public static void saveAll(List<ChannelGuide> items) {
+    public static void saveAll(Activity activity, List<ChannelGuide> items) {
         ChannelGuideDao dao = getDao();
         for (ChannelGuide item : items) {
             dao.insertOrReplace(item);
