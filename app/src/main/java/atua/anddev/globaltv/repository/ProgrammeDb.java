@@ -1,6 +1,8 @@
 package atua.anddev.globaltv.repository;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -14,6 +16,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import atua.anddev.globaltv.entity.Programme;
+import atua.anddev.globaltv.utils.ProgressDialogUtils;
 
 @SuppressLint("Recycle")
 public class ProgrammeDb extends DBHelper {
@@ -24,12 +27,21 @@ public class ProgrammeDb extends DBHelper {
     private static final String COLUMN_TITLE = "title";
     private static final String COLUMN_DESC = "desc";
     private static final String COLUMN_CATEGORY = "category";
+    private ProgressDialog progressDialog;
 
     public ProgrammeDb(Context context) {
         super(context);
     }
 
-    public void insertAll(List<Programme> items) {
+    public void insertAll(final Activity activity, final List<Programme> items) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog = ProgressDialogUtils.showProgressDialog(activity,
+                        "Processing ChannelGuide...", items.size());
+            }
+        });
+        int count = 0;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         db.beginTransaction();
@@ -42,10 +54,14 @@ public class ProgrammeDb extends DBHelper {
                 cv.put(COLUMN_DESC, item.getDesc());
                 cv.put(COLUMN_CATEGORY, item.getCategory());
                 db.insertOrThrow(TABLE_NAME, null, cv);
+
+                count++;
+                ProgressDialogUtils.setProgress(activity, progressDialog, count);
             }
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
+            ProgressDialogUtils.closeProgress(activity, progressDialog);
         }
     }
 
@@ -174,4 +190,5 @@ public class ProgrammeDb extends DBHelper {
         }
         return result;
     }
+
 }

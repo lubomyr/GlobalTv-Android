@@ -1,6 +1,7 @@
 package atua.anddev.globaltv.service;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -32,7 +33,7 @@ public class GuideServiceImpl implements GuideService {
         return checkGuideDates();
     }
 
-    public void parseGuide(Context context, int selectedGuideProv) {
+    public void parseGuide(Activity context, int selectedGuideProv) {
         Log.d("globaltv", "parsing program guide...");
         String dispName = null, id = null, start = null, stop = null, channel = null;
         String endTag, text = null, title = null, desc = null, category = null;
@@ -106,8 +107,8 @@ public class GuideServiceImpl implements GuideService {
             }
             channelGuideDb.deleteAll();
             programmeDb.deleteAll();
-            channelGuideDb.insertAll(channelGuideList);
-            programmeDb.insertAll(programmeList);
+            channelGuideDb.insertAll(context, channelGuideList);
+            programmeDb.insertAll(context, programmeList);
         } catch (XmlPullParserException | IOException e) {
             e.printStackTrace();
             Log.d("globaltv", "parsing error " + e.getMessage());

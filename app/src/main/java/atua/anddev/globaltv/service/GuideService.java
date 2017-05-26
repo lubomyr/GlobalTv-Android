@@ -1,5 +1,6 @@
 package atua.anddev.globaltv.service;
 
+import android.app.Activity;
 import android.content.Context;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public interface GuideService {
 
     boolean checkForUpdate(Context context, int selectedGuideProv);
 
-    void parseGuide(Context context, int selectedGuideProv);
+    void parseGuide(Activity context, int selectedGuideProv);
 
     String getProgramTitle(String chName);
 

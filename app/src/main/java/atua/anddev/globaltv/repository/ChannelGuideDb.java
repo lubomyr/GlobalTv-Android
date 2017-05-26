@@ -1,6 +1,7 @@
 package atua.anddev.globaltv.repository;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -21,7 +22,7 @@ public class ChannelGuideDb extends DBHelper {
         super(context);
     }
 
-    public void insertAll(List<ChannelGuide> items) {
+    public void insertAll(Activity activity, final List<ChannelGuide> items) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         db.beginTransaction();
