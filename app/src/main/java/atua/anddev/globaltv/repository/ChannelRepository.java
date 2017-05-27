@@ -14,9 +14,7 @@ public class ChannelRepository {
 
     public static void saveAll(List<Channel> items) {
         ChannelDao dao = getDao();
-        for (Channel item : items) {
-            dao.insertOrReplace(item);
-        }
+        dao.insertOrReplaceInTx(items);
     }
 
     public static void insert(Channel item) {

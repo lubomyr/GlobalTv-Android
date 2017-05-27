@@ -14,9 +14,7 @@ public class PlaylistRepository {
 
     public static void saveAll(List<Playlist> items) {
         PlaylistDao dao = getDao();
-        for (Playlist item : items) {
-            dao.insertOrReplace(item);
-        }
+        dao.insertOrReplaceInTx(items);
     }
 
     public static void insert(Playlist item) {

@@ -15,9 +15,7 @@ public class FavoriteRepository {
 
     public static void saveAll(List<Favorite> items) {
         FavoriteDao dao = getDao();
-        for (Favorite item : items) {
-            dao.insertOrReplace(item);
-        }
+        dao.insertOrReplaceInTx(items);
     }
 
     public static void insert(Channel channel) {

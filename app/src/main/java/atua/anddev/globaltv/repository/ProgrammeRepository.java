@@ -2,7 +2,6 @@ package atua.anddev.globaltv.repository;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -13,32 +12,15 @@ import java.util.List;
 import atua.anddev.globaltv.BaseApplication;
 import atua.anddev.globaltv.database.greendao.ProgrammeDao;
 import atua.anddev.globaltv.entity.Programme;
-import atua.anddev.globaltv.utils.ProgressDialogUtils;
 
 public class ProgrammeRepository {
-    private static ProgressDialog progressDialog;
-
     private static ProgrammeDao getDao() {
         return BaseApplication.getDaoSession().getProgrammeDao();
     }
 
     public static void saveAll(final Activity activity, final List<Programme> items) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                progressDialog = ProgressDialogUtils.showProgressDialog(activity,
-                        "Processing ChannelGuide...", items.size());
-            }
-        });
-        int count = 0;
         ProgrammeDao dao = getDao();
-        for (Programme item : items) {
-            dao.insertOrReplace(item);
-
-            count++;
-            ProgressDialogUtils.setProgress(activity, progressDialog, count);
-        }
-        ProgressDialogUtils.closeProgress(activity, progressDialog);
+        dao.insertOrReplaceInTx(items);
     }
 
     public static void insert(Programme item) {

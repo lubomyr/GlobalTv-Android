@@ -15,9 +15,7 @@ public class ChannelGuideRepository {
 
     public static void saveAll(Activity activity, List<ChannelGuide> items) {
         ChannelGuideDao dao = getDao();
-        for (ChannelGuide item : items) {
-            dao.insertOrReplace(item);
-        }
+        dao.insertOrReplaceInTx(items);
     }
 
     public static void insert(ChannelGuide item) {
