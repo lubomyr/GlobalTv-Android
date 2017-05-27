@@ -59,7 +59,6 @@ public class ProgrammeRepository {
     public static Programme getCurrentProgramByChannel(String chId) {
         Realm realm = Realm.getDefaultInstance();
         Calendar currentTime = Calendar.getInstance();
-        List<Programme> list = new ArrayList<>();
         RealmResults<Programme> results = realm.where(Programme.class).equalTo("channel", chId).findAll();
         for (Programme p : results) {
             Calendar startDate = decodeDateTime(p.getStart());
@@ -75,10 +74,8 @@ public class ProgrammeRepository {
         Realm realm = Realm.getDefaultInstance();
         Calendar currentTime = Calendar.getInstance();
         int result = -1, n = 0;
-        List<Programme> list = new ArrayList<>();
         RealmResults<Programme> results = realm.where(Programme.class).equalTo("channel", chId).findAll();
-        list.addAll(results);
-        for (Programme p : list) {
+        for (Programme p : results) {
             Calendar startDate = decodeDateTime(p.getStart());
             Calendar stopDate = decodeDateTime(p.getStop());
             if (currentTime.after(startDate) && currentTime.before(stopDate)) {

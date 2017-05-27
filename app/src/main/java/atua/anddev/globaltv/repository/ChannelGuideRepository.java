@@ -43,18 +43,14 @@ public class ChannelGuideRepository {
 
     public static String getFirstId() {
         Realm realm = Realm.getDefaultInstance();
-        List<ChannelGuide> list = new ArrayList<>();
-        RealmResults<ChannelGuide> results = realm.where(ChannelGuide.class).findAll();
-        list.addAll(results);
-        return list.get(0).getId();
+        ChannelGuide result = realm.where(ChannelGuide.class).findFirst();
+        return result.getId();
     }
 
     public static String getIdByName(String name) {
         Realm realm = Realm.getDefaultInstance();
-        List<ChannelGuide> list = new ArrayList<>();
-        RealmResults<ChannelGuide> results = realm.where(ChannelGuide.class).equalTo("displayName", name).findAll();
-        list.addAll(results);
-        return list.get(0).getId();
+        ChannelGuide result = realm.where(ChannelGuide.class).equalTo("displayName", name).findFirst();
+        return result.getId();
     }
 
 }

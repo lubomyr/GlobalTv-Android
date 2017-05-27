@@ -37,11 +37,9 @@ public class ChannelRepository {
 
     public static String getUrlByPlistAndName(String plist, String name) {
         Realm realm = Realm.getDefaultInstance();
-        List<Channel> list = new ArrayList<>();
-        RealmResults<Channel> results = realm.where(Channel.class).equalTo("provider", plist)
-                .equalTo("name", name).findAll();
-        list.addAll(results);
-        return list.get(0).getUrl();
+        Channel result = realm.where(Channel.class).equalTo("provider", plist)
+                .equalTo("name", name).findFirst();
+        return result.getUrl();
     }
 
     public static List<Channel> getChannelsByPlaylist(String plist) {
@@ -91,9 +89,7 @@ public class ChannelRepository {
 
     public static Channel getChannelByUrl(String url) {
         Realm realm = Realm.getDefaultInstance();
-        List<Channel> list = new ArrayList<>();
-        RealmResults<Channel> results = realm.where(Channel.class).equalTo("url", url).findAll();
-        list.addAll(results);
-        return list.get(0);
+        Channel result = realm.where(Channel.class).equalTo("url", url).findFirst();
+        return result;
     }
 }
