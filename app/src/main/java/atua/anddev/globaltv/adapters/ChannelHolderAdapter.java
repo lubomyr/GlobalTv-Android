@@ -96,6 +96,16 @@ public class ChannelHolderAdapter extends RecyclerView.Adapter<ChannelHolderAdap
         return items != null ? items.size() : 0;
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
     }
