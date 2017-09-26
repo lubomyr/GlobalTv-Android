@@ -1,5 +1,7 @@
 package atua.anddev.globaltv.repository;
 
+import org.greenrobot.greendao.query.DeleteQuery;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,13 +59,16 @@ public class ChannelRepository {
 
     public static void deleteChannelsByPlaylist(String plist) {
         ChannelDao dao = getDao();
-        dao.queryBuilder().where(ChannelDao.Properties.Provider.eq(plist)).buildDelete();
+        final DeleteQuery<Channel> tableDeleteQuery = dao.queryBuilder()
+                .where(ChannelDao.Properties.Provider.eq(plist)).buildDelete();
+        tableDeleteQuery.executeDeleteWithoutDetachingEntities();
     }
 
     public static List<Channel> getChannelsByCategory(String plist, String catname) {
         ChannelDao dao = getDao();
         return dao.queryBuilder().where(ChannelDao.Properties.Provider.eq(plist),
                 ChannelDao.Properties.Category.eq(catname)).list();
+
     }
 
     public static List<String> getCategoriesList(String plist) {
