@@ -200,13 +200,12 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
                     groupName = "";
                     groupName2 = "";
                 }
-                if ((type == 1) && lineStr.startsWith("#EXTINF:-1,") &&
-                        (lineStr.indexOf("(") == lineStr.lastIndexOf("("))) {
-                    chName = lineStr.substring(11, lineStr.indexOf("(") - 1);
+                if ((type == 1) && lineStr.contains(",") && (lineStr.indexOf("(") == lineStr.lastIndexOf("("))) {
+                    chName = lineStr.substring(lineStr.indexOf(",") + 1, lineStr.indexOf("(") - 1);
                     chCategory = lineStr.substring(lineStr.lastIndexOf("(") + 1, lineStr.lastIndexOf(")"));
                 }
-                if ((type == 1) && lineStr.startsWith("#EXTINF:-1,") && (lineStr.indexOf("(") != lineStr.lastIndexOf("("))) {
-                    chName = lineStr.substring(11, lineStr.lastIndexOf("(") - 1);
+                if ((type == 1) && lineStr.contains(",") && (lineStr.indexOf("(") != lineStr.lastIndexOf("("))) {
+                    chName = lineStr.substring(lineStr.indexOf(",") + 1, lineStr.lastIndexOf("(") - 1);
                     chCategory = lineStr.substring(lineStr.lastIndexOf("(") + 1, lineStr.lastIndexOf(")"));
                 }
                 if (lineStr.startsWith("#EXTINF:") && (type != 1)) {
