@@ -60,7 +60,7 @@ public class MainActivity extends Activity implements GlobalServices {
     public static ProgrammeDb programmeDb;
     private ArrayAdapter provAdapter;
     private int selectedProvider;
-    private int selectedGuideProv = 2;
+    private int selectedGuideProv = 0;
     private String lang;
     private Configuration conf;
     private Boolean needUpdate;
