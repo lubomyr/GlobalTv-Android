@@ -248,12 +248,10 @@ public class GuideServiceImpl implements GuideService {
     }
 
     public void setupGuideProvList() {
-        guideProvList.add(new GuideProv("Epg.in.ua", "http://epg.in.ua/epg/tvprogram_ua_ru.gz",
-                "epginua.xml.gz"));
+        guideProvList.add(new GuideProv("iptvx.one", "https://iptvx.one/epg/epg.xml.gz",
+                "epg.xml.gz"));
         guideProvList.add(new GuideProv("TeleGuide.info", "http://www.teleguide.info/download/new3/xmltv.xml.gz",
-                "teleguide.xml.gz"));
-        guideProvList.add(new GuideProv("Torrent-tv.ru", "http://api.torrent-tv.ru/ttv.xmltv.xml.gz",
-                "ttvru.xml.gz"));
+                "xmltv.xml.gz"));
     }
 
     @SuppressLint("SimpleDateFormat")
