@@ -50,7 +50,7 @@ import static java.util.Arrays.asList;
 
 public class MainActivity extends Activity implements GlobalServices {
     private int selectedProvider;
-    private int selectedGuideProv = 2;
+    private int selectedGuideProv = 0;
     private ArrayAdapter provAdapter;
     private String lang;
     private Configuration conf;
