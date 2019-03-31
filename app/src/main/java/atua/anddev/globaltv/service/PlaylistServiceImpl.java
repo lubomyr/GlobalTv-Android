@@ -180,8 +180,8 @@ public class PlaylistServiceImpl implements PlaylistService, GlobalServices {
                         || lineStr.startsWith("rtmp:") || lineStr.startsWith("rtsp:") || lineStr.startsWith("mmsh:")
                         || lineStr.startsWith("mms:") || lineStr.startsWith("rtmpt:")) {
                     chLink = lineStr;
-                    if (chName.startsWith("ALLFON.TV")) {
-                        chName = chName.substring(10, chName.length());
+                    if (chName.contains(" (allfon)")) {
+                        chName = chName.replace(" (allfon)","");
                     }
                     if (chName.startsWith(" ")) {
                         chName = chName.substring(1, chName.length());
